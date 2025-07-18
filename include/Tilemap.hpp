@@ -1,5 +1,5 @@
-#ifndef WORLD_HPP
-#define WORLD_HPP
+#ifndef TILEMAP_HPP
+#define TILEMAP_HPP
 
 #include <SFML/Graphics.hpp>
 #include <nlohmann/json.hpp>
@@ -8,10 +8,13 @@
 #include <fstream>
 #include <filesystem>
 #include <stdexcept>
+#include "Player.hpp"
+
+class Player;
 
 using json = nlohmann::json;
 
-class WorldTile {
+class Tile {
 private:
     sf::Sprite sprite;
     bool hasCollision;
@@ -20,7 +23,7 @@ private:
     int texY;
 
 public:
-    WorldTile(const sf::Texture& texture, const sf::IntRect& rect, 
+    Tile(const sf::Texture& texture, const sf::IntRect& rect, 
              bool collision = false, float scale = 5.0f, int texX = 0, int texY = 0)
         : sprite(texture, rect), 
           hasCollision(collision),
@@ -41,18 +44,18 @@ public:
     int getTexY() const { return texY; }
 };
 
-class World {
+class Tilemap {
 private:
     std::shared_ptr<sf::Texture> tileset;
-    std::vector<std::vector<WorldTile>> tiles;
+    std::vector<std::vector<Tile>> tiles;
     sf::Vector2u worldSize;
     float tileSize = 32.0f;
     float worldScale = 5.0f;
 
 public:
-    World() = default;
+    Tilemap() = default;
 
-    World(const std::string& filename) {
+    Tilemap(const std::string& filename) {
         loadFromFile(filename);
     }
 
@@ -127,7 +130,7 @@ public:
         return true;
     }
 
-    void render(sf::RenderTarget& target) const {
+    void render(sf::RenderTarget& target) {
         for (const auto& row : tiles) {
             for (const auto& tile : row) {
                 target.draw(tile.getSprite());
@@ -178,8 +181,9 @@ public:
 
     const sf::Vector2u& getWorldSize() const { return worldSize; }
     float getTileSize() const { return tileSize; }
-    float getWorldScale() const { return worldScale; }
+    float getMapScale() const { return worldScale; }
     const sf::Texture& getTileset() const { return *tileset; }
+
 };
 
 #endif
