@@ -37,8 +37,6 @@ public:
         if (checkCollisionWithWorld()) {
             isAlive = false;
         }
-
-         std::cout << "arrow.move = " << direction.x * speed * dt << '\n';
     }
 
     bool checkCollisionWithWorld() {
@@ -60,7 +58,7 @@ public:
     bool isActive() const { return isAlive; }
     const sf::FloatRect& getCollisionRect() const { return collisionRect; }
     void render(sf::RenderTarget& renderTarget) {
-        renderTarget.draw(sprite);
+        if(isAlive) renderTarget.draw(sprite);
     } 
 
 };
@@ -101,9 +99,9 @@ public:
         if (currentTime >= lifetime) {
             isAlive = false;
         }
-        
+        collisionRect = sprite.getGlobalBounds();
         // Можно добавить эффект "пульсации"
-        float scale = factor + 0.1f * sin(currentTime * 10);
+        float scale = factor + 2.f * sin(currentTime * 10);
         sprite.setScale({scale, scale});
     }
 };

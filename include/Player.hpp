@@ -5,7 +5,6 @@
 #include "Mob.hpp"
 #include <cmath>
 #include "Inventory.hpp"
-#include "AnimationController.hpp"
 #include "Projectile.hpp"
 
 enum class PlayerClass {
@@ -15,7 +14,6 @@ enum class PlayerClass {
 class Player : public Mob {
 protected:
     Inventory inventory;
-    AnimationController animController;
 
     bool hasSpawnedProjectile = false;
 
@@ -25,152 +23,7 @@ protected:
     
 public:
     Player(const std::string& texturePath, const std::shared_ptr<World>& world_): Mob(sf::Texture(texturePath), world_, sf::FloatRect {{40.f, 44.f}, {64.f, 52.f}}),
-     animController(currentSprite), arrowTexture("real img/1 Characters/Other/Arrow.png"), fireballTexture("real img/1 Characters/Other/Fireball.png") { }
-
-    void initAnimations() override {
-
-        std::vector<sf::IntRect> idleDown {
-            {{0, 0}, {32, 32}},
-            {{32, 0}, {32, 32}},
-            {{64, 0}, {32, 32}},
-            {{96, 0}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> idleUp {
-            {{0, 32}, {32, 32}},
-            {{32, 32}, {32, 32}},
-            {{64, 32}, {32, 32}},
-            {{96, 32}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> idleLeft {
-            {{0, 64}, {32, 32}},
-            {{32, 64}, {32, 32}},
-            {{64, 64}, {32, 32}},
-            {{96, 64}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> walkDown {
-            {{0, 192}, {32, 32}},
-            {{32, 192}, {32, 32}},
-            {{64, 192}, {32, 32}},
-            {{96, 192}, {32, 32}},
-            {{128, 192}, {32, 32}},
-            {{160, 192}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> walkUp {
-            {{0, 224}, {32, 32}},
-            {{32, 224}, {32, 32}},
-            {{64, 224}, {32, 32}},
-            {{96, 224}, {32, 32}},
-            {{128, 224}, {32, 32}},
-            {{160, 224}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> walkLeft {
-            {{0, 256}, {32, 32}},
-            {{32, 256}, {32, 32}},
-            {{64, 256}, {32, 32}},
-            {{96, 256}, {32, 32}},
-            {{128, 256}, {32, 32}},
-            {{160, 256}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> hurtDown {
-            {{0, 96},{32,32}},
-            {{32, 96},{32,32}},
-        };
-
-        std::vector<sf::IntRect> hurtUp {
-            {{0, 128},{32,32}},
-            {{32, 128},{32,32}},
-        };
-
-        std::vector<sf::IntRect> hurtLeft {
-            {{0, 160},{32,32}},
-            {{0, 160},{32,32}},
-        };
-
-        std::vector<sf::IntRect> deathDown {
-            {{0, 288}, {32, 32}},
-            {{32, 288}, {32, 32}},
-            {{64, 288}, {32, 32}},
-            {{96, 288}, {32, 32}},
-            {{128, 288}, {32, 32}},
-            {{160, 288}, {32, 32}},
-            {{192, 288}, {32, 32}},
-            {{224, 288}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> deathUp {
-            {{0, 320}, {32, 32}},
-            {{32, 320}, {32, 32}},
-            {{64, 320}, {32, 32}},
-            {{96, 320}, {32, 32}},
-            {{128, 320}, {32, 32}},
-            {{160, 320}, {32, 32}},
-            {{192, 320}, {32, 32}},
-            {{224, 320}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> deathLeft {
-            {{0, 352}, {32, 32}},
-            {{32, 352}, {32, 32}},
-            {{64, 352}, {32, 32}},
-            {{96, 352}, {32, 32}},
-            {{128, 352}, {32, 32}},
-            {{160, 352}, {32, 32}},
-            {{192, 352}, {32, 32}},
-            {{224, 352}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> attackDown {
-            {{0, 384}, {32, 32}},
-            {{32, 384}, {32, 32}},
-            {{64, 384}, {32, 32}},
-            {{96, 384}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> attackUp {
-            {{0, 416}, {32, 32}},
-            {{32, 416}, {32, 32}},
-            {{64, 416}, {32, 32}},
-            {{96, 416}, {32, 32}},
-        };
-
-        std::vector<sf::IntRect> attackLeft {
-            {{0, 448}, {32, 32}},
-            {{32, 448}, {32, 32}},
-            {{64, 448}, {32, 32}},
-            {{96, 448}, {32, 32}},
-        };
-
-        animController.addAnimation("idle_down", idleDown, 0.1f);
-        animController.addAnimation("idle_up", idleUp, 0.1f);
-        animController.addAnimation("idle_left", idleLeft, 0.1f);
-        animController.addAnimation("idle_right", idleLeft, 0.1f, true, true);
-
-        animController.addAnimation("walk_down", walkDown, 0.1f);
-        animController.addAnimation("walk_up", walkUp, 0.1f);
-        animController.addAnimation("walk_left", walkLeft, 0.1f);
-        animController.addAnimation("walk_right", walkLeft, 0.1f, true, true);
-
-        animController.addAnimation("hurt_down", hurtDown, 0.1f);
-        animController.addAnimation("hurt_up", hurtUp, 0.1f);
-        animController.addAnimation("hurt_left", hurtLeft, 0.1f);
-        animController.addAnimation("hurt_right", hurtLeft, 0.1f, true, true);
-
-        animController.addAnimation("death_down", deathDown, 0.1f);
-        animController.addAnimation("death_up", deathUp, 0.1f);
-        animController.addAnimation("death_left", deathLeft, 0.1f);
-        animController.addAnimation("death_right", deathLeft, 0.1f, true, true);
-        
-        animController.addAnimation("attack_down", attackDown, 0.1f);
-        animController.addAnimation("attack_up", attackUp, 0.1f);
-        animController.addAnimation("attack_left", attackLeft, 0.1f);
-        animController.addAnimation("attack_right", attackLeft, 0.1f, true, true);
-    }
+     arrowTexture("real img/1 Characters/Other/Arrow.png"), fireballTexture("real img/1 Characters/Other/Fireball.png") { }
 
     void update(const float& dt) override {
         collision.update();
@@ -185,19 +38,12 @@ public:
         return projectiles; 
     }
 
-    void setWorld(const std::shared_ptr<World>& world_) override {
-        world = world_;
-    }
-
-    bool isAttackInProgress() const override {
-        return isAttacking;
-    }
-
     void startAttacking() override {
         if (!isAttacking && attackCooldown <= 0.0f) {
             isAttacking = true; 
             attackTimer = attackAnimationTime; // Инициализируем таймер
             attackCooldown = attackCooldownTime;
+            currentState = State::Attack;
         }
     }
 
@@ -211,14 +57,10 @@ public:
                 spawnProjectile();
                 hasSpawnedProjectile = true;
             }
-                
-
             if (attackTimer <= 0.0f) {
                 isAttacking = false;
+                currentState = State::Idle;
                 hasSpawnedProjectile = false;
-                
-                // Здесь можно вызвать метод, который наносит удар,
-                // когда анимация дошла до нужного кадра
             }
         }
         
@@ -260,8 +102,9 @@ public:
             }
         }
 
+        currentState = State::Moving;
+
         currentSprite.move(dir * speed * dt);
-        std::cout << "player.move = " << dir.x * speed * dt << '\n';
     }
 
     void updateProjectiles(float dt) {
@@ -277,22 +120,22 @@ public:
         }
     }
 
-    void updateAnimation() override {
-        if (isAttacking) {
-            if (lastDirection.y < 0) animController.play("attack_up");
-            else if (lastDirection.y > 0) animController.play("attack_down");
-            else if (lastDirection.x < 0) animController.play("attack_left");
-            else animController.play("attack_right");
-            return;
-        }
-
+    void playMovementAnimation() override {
         sf::Vector2f dir{0.f, 0.f};
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) dir.y--;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) dir.y++;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) dir.x--;
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) dir.x++;
-
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
+            dir.y--;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
+            dir.y++;
+        }   
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
+            dir.x--;
+        }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
+            dir.x++;
+        }
+        
         if (dir.x != 0 || dir.y != 0) {
             lastDirection = dir;
             
@@ -304,13 +147,47 @@ public:
                 else animController.play("walk_right");
             }
         } else {
-            
             if (lastDirection.y < 0) animController.play("idle_up");
             else if (lastDirection.y > 0) animController.play("idle_down");
             else if (lastDirection.x < 0) animController.play("idle_left");
             else animController.play("idle_right");
         }
     }
+
+    // void updateAnimation() override {
+    //     if (isAttacking) {
+    //         if (lastDirection.y < 0) animController.play("attack_up");
+    //         else if (lastDirection.y > 0) animController.play("attack_down");
+    //         else if (lastDirection.x < 0) animController.play("attack_left");
+    //         else animController.play("attack_right");
+    //         return;
+    //     }
+
+    //     sf::Vector2f dir{0.f, 0.f};
+
+    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) dir.y--;
+    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) dir.y++;
+    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) dir.x--;
+    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) dir.x++;
+
+    //     if (dir.x != 0 || dir.y != 0) {
+    //         lastDirection = dir;
+            
+    //         if (std::abs(dir.y) > std::abs(dir.x)) {
+    //             if (dir.y < 0) animController.play("walk_up");
+    //             else animController.play("walk_down");
+    //         } else {
+    //             if (dir.x < 0) animController.play("walk_left");
+    //             else animController.play("walk_right");
+    //         }
+    //     } else {
+            
+    //         if (lastDirection.y < 0) animController.play("idle_up");
+    //         else if (lastDirection.y > 0) animController.play("idle_down");
+    //         else if (lastDirection.x < 0) animController.play("idle_left");
+    //         else animController.play("idle_right");
+    //     }
+    // }
 
     void render(sf::RenderTarget& target) override {
         target.draw(currentSprite);
@@ -319,14 +196,6 @@ public:
             projectile->render(target);
         }
         //collision.render(target);
-    }
-
-    sf::Sprite& getSprite() override {
-        return currentSprite;
-    }
-
-    void setPosition(const sf::Vector2f& pos) override {
-        currentSprite.setPosition(pos);
     }
 
 };

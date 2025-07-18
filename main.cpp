@@ -6,9 +6,7 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({1920, 1080}), "чмо", sf::Style::Default, sf::State::Fullscreen);
 
     //window.setVerticalSyncEnabled(true); // мб потом убрать хз
-
-
-
+    
     // for show fps
     sf::Font font;
     if (!font.openFromFile("fonts/Boblox Fix.otf")) {

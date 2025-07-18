@@ -3,6 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include "World.hpp"
+#include "AnimationController.hpp"
 #include <vector>
 
 class MobCollision {
@@ -98,6 +99,13 @@ public:
         renderTarget.draw(lineVerticalLeft);
         renderTarget.draw(lineVerticalRight);
     }
+
+    sf::FloatRect getCollisionRect() const {
+        auto rectSprite = target.getGlobalBounds();
+        rectSprite.position += collisionRect.position;
+        rectSprite.size = collisionRect.size;
+        return rectSprite;
+    }
 };
 
 class Mob {
@@ -110,32 +118,262 @@ protected:
     int health;
 
     bool isAttacking = false;
-    float attackTimer = 0.0f; // Таймер текущей атаки
-    const float attackAnimationTime = 0.4f; // Длительность анимации атаки (const)
-    float attackCooldown = 0.0f; // Таймер перезарядки
-    float attackCooldownTime; // Время между атаками (const)
+    float attackTimer = 0.0f;
+    const float attackAnimationTime = 0.4f;
+    float attackCooldown = 0.0f;
+    float attackCooldownTime;
 
     MobCollision collision;
+    AnimationController animController;
 
     std::weak_ptr<World> world;
 
-public:
-    Mob(const sf::Texture& texture_, const std::shared_ptr<World>& world_, const sf::FloatRect collisionRect): texture(texture_), world(world_), currentSprite(texture), collision(currentSprite, collisionRect) {}
-    virtual void setPosition(const sf::Vector2f& pos) = 0;
-    virtual sf::Sprite& getSprite() = 0;
-    virtual void initAnimations() = 0;
+    bool isAlive = true;
+    bool isTakingDamage = false;
+    float damageTimer = 0.0f;
+    const float damageAnimationTime = 0.2f;
+    bool isDying = false;
 
-    virtual bool isAttackInProgress() const = 0;
+    enum class State {
+        Idle, Moving, Attack, Hurt, Dying
+    };
+
+    State currentState = State::Idle;
+
+public:
+    Mob(const sf::Texture& texture_, const std::shared_ptr<World>& world_, const sf::FloatRect collisionRect): texture(texture_), world(world_), currentSprite(texture), collision(currentSprite, collisionRect), animController(currentSprite) {}
+    void setPosition(const sf::Vector2f& pos){
+        currentSprite.setPosition(pos);
+    }
+
+    sf::Sprite& getSprite(){
+        return currentSprite;
+    }
+
+    sf::FloatRect getCollisionRect() const {
+        return collision.getCollisionRect();
+    }
+
+    void initAnimations() {
+        std::vector<sf::IntRect> idleDown {
+            {{0, 0}, {32, 32}},
+            {{32, 0}, {32, 32}},
+            {{64, 0}, {32, 32}},
+            {{96, 0}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> idleUp {
+            {{0, 32}, {32, 32}},
+            {{32, 32}, {32, 32}},
+            {{64, 32}, {32, 32}},
+            {{96, 32}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> idleLeft {
+            {{0, 64}, {32, 32}},
+            {{32, 64}, {32, 32}},
+            {{64, 64}, {32, 32}},
+            {{96, 64}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> walkDown {
+            {{0, 192}, {32, 32}},
+            {{32, 192}, {32, 32}},
+            {{64, 192}, {32, 32}},
+            {{96, 192}, {32, 32}},
+            {{128, 192}, {32, 32}},
+            {{160, 192}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> walkUp {
+            {{0, 224}, {32, 32}},
+            {{32, 224}, {32, 32}},
+            {{64, 224}, {32, 32}},
+            {{96, 224}, {32, 32}},
+            {{128, 224}, {32, 32}},
+            {{160, 224}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> walkLeft {
+            {{0, 256}, {32, 32}},
+            {{32, 256}, {32, 32}},
+            {{64, 256}, {32, 32}},
+            {{96, 256}, {32, 32}},
+            {{128, 256}, {32, 32}},
+            {{160, 256}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> hurtDown {
+            {{0, 96},{32,32}},
+            {{32, 96},{32,32}},
+        };
+
+        std::vector<sf::IntRect> hurtUp {
+            {{0, 128},{32,32}},
+            {{32, 128},{32,32}},
+        };
+
+        std::vector<sf::IntRect> hurtLeft {
+            {{0, 160},{32,32}},
+            {{0, 160},{32,32}},
+        };
+
+        std::vector<sf::IntRect> deathDown {
+            {{0, 288}, {32, 32}},
+            {{32, 288}, {32, 32}},
+            {{64, 288}, {32, 32}},
+            {{96, 288}, {32, 32}},
+            {{128, 288}, {32, 32}},
+            {{160, 288}, {32, 32}},
+            {{192, 288}, {32, 32}},
+            {{224, 288}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> deathUp {
+            {{0, 320}, {32, 32}},
+            {{32, 320}, {32, 32}},
+            {{64, 320}, {32, 32}},
+            {{96, 320}, {32, 32}},
+            {{128, 320}, {32, 32}},
+            {{160, 320}, {32, 32}},
+            {{192, 320}, {32, 32}},
+            {{224, 320}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> deathLeft {
+            {{0, 352}, {32, 32}},
+            {{32, 352}, {32, 32}},
+            {{64, 352}, {32, 32}},
+            {{96, 352}, {32, 32}},
+            {{128, 352}, {32, 32}},
+            {{160, 352}, {32, 32}},
+            {{192, 352}, {32, 32}},
+            {{224, 352}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> attackDown {
+            {{0, 384}, {32, 32}},
+            {{32, 384}, {32, 32}},
+            {{64, 384}, {32, 32}},
+            {{96, 384}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> attackUp {
+            {{0, 416}, {32, 32}},
+            {{32, 416}, {32, 32}},
+            {{64, 416}, {32, 32}},
+            {{96, 416}, {32, 32}},
+        };
+
+        std::vector<sf::IntRect> attackLeft {
+            {{0, 448}, {32, 32}},
+            {{32, 448}, {32, 32}},
+            {{64, 448}, {32, 32}},
+            {{96, 448}, {32, 32}},
+        };
+
+        animController.addAnimation("idle_down", idleDown, 0.1f);
+        animController.addAnimation("idle_up", idleUp, 0.1f);
+        animController.addAnimation("idle_left", idleLeft, 0.1f);
+        animController.addAnimation("idle_right", idleLeft, 0.1f, true, true);
+
+        animController.addAnimation("walk_down", walkDown, 0.1f);
+        animController.addAnimation("walk_up", walkUp, 0.1f);
+        animController.addAnimation("walk_left", walkLeft, 0.1f);
+        animController.addAnimation("walk_right", walkLeft, 0.1f, true, true);
+
+        animController.addAnimation("hurt_down", hurtDown, 0.1f);
+        animController.addAnimation("hurt_up", hurtUp, 0.1f);
+        animController.addAnimation("hurt_left", hurtLeft, 0.1f);
+        animController.addAnimation("hurt_right", hurtLeft, 0.1f, true, true);
+
+        animController.addAnimation("death_down", deathDown, 0.1f);
+        animController.addAnimation("death_up", deathUp, 0.1f);
+        animController.addAnimation("death_left", deathLeft, 0.1f);
+        animController.addAnimation("death_right", deathLeft, 0.1f, false, true);
+        
+        animController.addAnimation("attack_down", attackDown, 0.1f);
+        animController.addAnimation("attack_up", attackUp, 0.1f);
+        animController.addAnimation("attack_left", attackLeft, 0.1f);
+        animController.addAnimation("attack_right", attackLeft, 0.1f, true, true);
+    }
+
+    bool isAttackInProgress() const {
+        return isAttacking;
+    }
     virtual void startAttacking() = 0;
     virtual void attacking(const float& dt) = 0;
 
-    virtual void setWorld(const std::shared_ptr<World>& world_) = 0;
+    void setWorld(const std::shared_ptr<World>& world_) {
+        world = world_;
+    }
 
-    virtual void updateAnimation() = 0;
     virtual void attack() = 0;
 
     void takeDamage(float damage) {
+        if (isDying) return;
+        
         health -= damage;
+        isTakingDamage = true;
+        damageTimer = damageAnimationTime;
+        
+        if (health <= 0) {
+            currentState = State::Dying;
+            startDying();
+        }
+    }
+
+    void startDying() {
+        isDying = true;
+        // Можно добавить дополнительные действия при начале смерти
+        // Например, отключение коллизий или воспроизведение звука
+    }
+
+    void updateAnimation() {
+        switch (currentState) {
+            case State::Dying:
+                playDeathAnimation();
+                break;
+            case State::Hurt:
+                playHurtAnimation();
+                break;
+            case State::Attack:
+                playAttackAnimation();
+                break;
+            case State::Moving:
+                playMovementAnimation();
+                break;
+            case State::Idle:
+                playMovementAnimation();
+                break;
+        }
+    }
+
+    void playDeathAnimation() {
+        if (lastDirection.y < 0) animController.play("death_up");
+        else if (lastDirection.y > 0) animController.play("death_down");
+        else if (lastDirection.x < 0) animController.play("death_left");
+        else animController.play("death_right");
+    }
+
+    void playHurtAnimation() {
+        if (lastDirection.y < 0) animController.play("hurt_up");
+        else if (lastDirection.y > 0) animController.play("hurt_down");
+        else if (lastDirection.x < 0) animController.play("hurt_left");
+        else animController.play("hurt_right");
+    }
+
+    void playAttackAnimation() {
+        if (lastDirection.y < 0) animController.play("attack_up");
+        else if (lastDirection.y > 0) animController.play("attack_down");
+        else if (lastDirection.x < 0) animController.play("attack_left");
+        else animController.play("attack_right");
+    }
+
+    virtual void playMovementAnimation() = 0;
+
+    bool getIsAlive() const {
+        return isAlive;
     }
 
     virtual void move(const float& dt) = 0;

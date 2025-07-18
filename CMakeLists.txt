@@ -32,6 +32,7 @@ add_executable(game main.cpp
                 include/World.hpp
                 include/AnimationController.hpp
                 include/Projectile.hpp
+                include/Enemy.hpp
                 )
 
 # Подключаем SFML к проекту

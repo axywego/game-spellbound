@@ -6,9 +6,11 @@
 #include "World.hpp"
 #include "Camera.hpp"
 #include "GameState.hpp"
+#include "Enemy.hpp"
 #include <unordered_map>
 #include <memory>
 #include <print>
+#include <algorithm>
 
 class Scene {
 protected:
@@ -126,21 +128,28 @@ private:
     Camera camera;
 
     std::function<void()> requestPause;
+
+    std::vector<std::unique_ptr<Enemy>> enemies;
+
 public:
     GameLevelScene(const World& world_, Player& player_, sf::RenderWindow& window_, std::function<void()> pauseCallback):
-     Scene(world_, window_), player(player_), camera(&player.getSprite(), *world), requestPause(pauseCallback) { }
+     Scene(world_, window_), player(player_), camera(&player.getSprite(), *world), requestPause(pauseCallback) { 
+
+        enemies.push_back(
+            std::make_unique<Rat>(world, player)
+        );
+    }
 
     void load() override {
 
-        player.setPosition(lastPlayerPos);
+
+
+        //player.setPosition(lastPlayerPos);
 
         player.setPosition({300.f, 300.f});
 
-        std::cout << "zaebal\n";
-
         player.setWorld(world);
 
-        std::cout << "zaebal2\n";
         // idk
     }
 
@@ -151,14 +160,23 @@ public:
         camera.update(dt); 
 
         player.updateProjectiles(dt);
-        
-        // for (auto& enemy : enemies) {
-        //     for (auto& projectile : player->getProjectiles()) {
-        //         if (projectile->getCollisionRect().intersects(enemy->getCollisionRect())) {
-        //             projectile->onHit(*enemy);
-        //         }
-        //     }
-        // }
+
+        enemies.erase(
+            std::remove_if(enemies.begin(), enemies.end(),
+                [](const std::unique_ptr<Enemy>& e) { 
+                    return !e->getIsAlive();
+                }),
+            enemies.end()
+        );
+
+        for(const auto& enemy : enemies) {
+            for (auto& projectile : player.getProjectiles()) {
+                if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
+                    projectile->onHit(*enemy);
+                }
+            }
+            enemy->update(dt);
+        }
 
         lastPlayerPos = player.getSprite().getPosition();
     }
@@ -167,6 +185,10 @@ public:
         camera.applyTo(renderTarget);
         world->render(renderTarget);
         player.render(renderTarget);
+
+        for(const auto& enemy : enemies) {
+            enemy->render(renderTarget);
+        }
     }
 
     void handleEvent(const std::optional<sf::Event>& event) override {

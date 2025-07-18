@@ -128,14 +128,16 @@ CMakeFiles/game.dir/main.cpp.o: /home/axypedodo/CPP/game/main.cpp \
   _deps/sfml-src/include/SFML/Window/WindowHandle.hpp \
   /home/axypedodo/CPP/game/include/AnimationController.hpp \
   /home/axypedodo/CPP/game/include/Camera.hpp \
+  /home/axypedodo/CPP/game/include/Enemy.hpp \
   /home/axypedodo/CPP/game/include/GameState.hpp \
+  /home/axypedodo/CPP/game/include/GameWorld.hpp \
   /home/axypedodo/CPP/game/include/Inventory.hpp \
   /home/axypedodo/CPP/game/include/Mob.hpp \
   /home/axypedodo/CPP/game/include/Player.hpp \
   /home/axypedodo/CPP/game/include/Projectile.hpp \
   /home/axypedodo/CPP/game/include/SceneManager.hpp \
+  /home/axypedodo/CPP/game/include/Tilemap.hpp \
   /home/axypedodo/CPP/game/include/UI.hpp \
-  /home/axypedodo/CPP/game/include/World.hpp \
   /usr/include/alloca.h \
   /usr/include/asm-generic/bitsperlong.h \
   /usr/include/asm-generic/errno-base.h \
@@ -614,13 +616,7 @@ CMakeFiles/game.dir/main.cpp.o:
 
 /usr/lib64/libXi.so:
 
-/usr/include/c++/15/bits/codecvt.h:
-
-_deps/sfml-src/include/SFML/Graphics/PrimitiveType.hpp:
-
-/usr/include/c++/15/bits/std_function.h:
-
-/usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
+/usr/lib64/libXfixes.so:
 
 /usr/include/c++/15/bits/basic_string.tcc:
 
@@ -662,12 +658,6 @@ _deps/sfml-src/include/SFML/System/Time.hpp:
 
 /usr/include/bits/typesizes.h:
 
-/usr/include/c++/15/bits/concept_check.h:
-
-/usr/include/bits/uio_lim.h:
-
-/usr/include/bits/math-vector.h:
-
 /usr/include/bits/types/struct_timespec.h:
 
 /usr/include/bits/types/struct_FILE.h:
@@ -683,8 +673,6 @@ _deps/sfml-src/include/SFML/System/Time.hpp:
 /usr/include/bits/wctype-wchar.h:
 
 /usr/include/bits/stdint-intn.h:
-
-/usr/include/c++/15/typeinfo:
 
 /usr/include/features.h:
 
@@ -713,8 +701,6 @@ _deps/sfml-src/include/SFML/System/Time.hpp:
 /usr/include/bits/pthreadtypes.h:
 
 /usr/include/bits/pthreadtypes-arch.h:
-
-/usr/include/bits/posix2_lim.h:
 
 /usr/include/bits/posix1_lim.h:
 
@@ -780,6 +766,8 @@ _deps/sfml-src/include/SFML/System/Time.hpp:
 
 /usr/include/asm-generic/types.h:
 
+/home/axypedodo/CPP/game/include/Tilemap.hpp:
+
 /home/axypedodo/CPP/game/include/SceneManager.hpp:
 
 /usr/include/alloca.h:
@@ -792,11 +780,21 @@ _deps/nlohmann_json-src/include/nlohmann/json_fwd.hpp:
 
 /home/axypedodo/CPP/game/include/Mob.hpp:
 
+/usr/include/bits/posix2_lim.h:
+
+/usr/include/c++/15/typeinfo:
+
+/home/axypedodo/CPP/game/include/Enemy.hpp:
+
 _deps/sfml-src/include/SFML/Graphics/Glsl.hpp:
 
 /usr/include/c++/15/ctime:
 
 _deps/nlohmann_json-src/include/nlohmann/detail/meta/void_t.hpp:
+
+/usr/lib64/libXext.so:
+
+/usr/include/c++/15/bits/valarray_array.h:
 
 /usr/include/c++/15/iostream:
 
@@ -822,7 +820,11 @@ _deps/nlohmann_json-src/include/nlohmann/detail/meta/is_sax.hpp:
 
 /usr/include/c++/15/bits/quoted_string.h:
 
-/usr/include/c++/15/bits/unicode-data.h:
+/usr/include/bits/uio_lim.h:
+
+/usr/include/bits/math-vector.h:
+
+/usr/include/c++/15/bits/concept_check.h:
 
 _deps/sfml-src/include/SFML/Graphics/BlendMode.hpp:
 
@@ -854,8 +856,6 @@ _deps/sfml-src/include/SFML/Graphics/RenderStates.hpp:
 
 /usr/include/c++/15/bits/ranges_base.h:
 
-/home/axypedodo/CPP/game/include/World.hpp:
-
 /home/axypedodo/CPP/game/include/GameState.hpp:
 
 /home/axypedodo/CPP/game/include/UI.hpp:
@@ -878,12 +878,6 @@ _deps/nlohmann_json-src/include/nlohmann/detail/output/serializer.hpp:
 
 _deps/nlohmann_json-src/include/nlohmann/detail/output/output_adapters.hpp:
 
-/usr/include/c++/15/bits/stl_tree.h:
-
-/usr/lib64/libGL.so:
-
-/usr/include/string.h:
-
 _deps/nlohmann_json-src/include/nlohmann/detail/output/binary_writer.hpp:
 
 /usr/include/bits/types/wint_t.h:
@@ -895,10 +889,6 @@ _deps/nlohmann_json-src/include/nlohmann/detail/meta/detected.hpp:
 _deps/nlohmann_json-src/include/nlohmann/detail/hash.hpp:
 
 /usr/include/c++/15/x86_64-redhat-linux/bits/ctype_base.h:
-
-/usr/include/c++/15/bits/ranges_cmp.h:
-
-_deps/sfml-src/include/SFML/Window/Touch.hpp:
 
 /usr/include/c++/15/tr1/bessel_function.tcc:
 
@@ -976,8 +966,6 @@ _deps/nlohmann_json-src/include/nlohmann/detail/exceptions.hpp:
 
 _deps/sfml-src/include/SFML/Window/Sensor.hpp:
 
-/usr/lib64/libXfixes.so:
-
 _deps/nlohmann_json-src/include/nlohmann/detail/string_escape.hpp:
 
 _deps/nlohmann_json-src/include/nlohmann/detail/conversions/to_chars.hpp:
@@ -1016,6 +1004,8 @@ _deps/nlohmann_json-src/include/nlohmann/detail/conversions/to_json.hpp:
 
 /usr/include/bits/stdint-least.h:
 
+/home/axypedodo/CPP/game/include/GameWorld.hpp:
+
 /usr/include/c++/15/bits/cxxabi_forced.h:
 
 /usr/include/c++/15/bits/valarray_before.h:
@@ -1045,6 +1035,14 @@ _deps/nlohmann_json-src/include/nlohmann/detail/meta/type_traits.hpp:
 /usr/include/locale.h:
 
 /usr/include/c++/15/bits/allocated_ptr.h:
+
+_deps/sfml-src/include/SFML/Graphics/PrimitiveType.hpp:
+
+/usr/include/c++/15/bits/codecvt.h:
+
+/usr/include/c++/15/bits/std_function.h:
+
+/usr/include/c++/15/x86_64-redhat-linux/bits/c++locale.h:
 
 /usr/include/c++/15/bit:
 
@@ -1361,6 +1359,18 @@ _deps/nlohmann_json-src/include/nlohmann/thirdparty/hedley/hedley.hpp:
 /usr/include/c++/15/bits/stl_construct.h:
 
 /usr/include/c++/15/bits/range_access.h:
+
+_deps/sfml-src/include/SFML/Window/Touch.hpp:
+
+/usr/include/c++/15/bits/ranges_cmp.h:
+
+/usr/include/c++/15/bits/unicode-data.h:
+
+/usr/include/c++/15/bits/stl_tree.h:
+
+/usr/include/string.h:
+
+/usr/lib64/libGL.so:
 
 /usr/include/c++/15/bits/ranges_uninitialized.h:
 
@@ -1703,7 +1713,3 @@ _deps/sfml-src/include/SFML/Window/ContextSettings.hpp:
 /usr/lib64/libGLX.so.0:
 
 /usr/lib64/libGLdispatch.so.0:
-
-/usr/include/c++/15/bits/valarray_array.h:
-
-/usr/lib64/libXext.so:

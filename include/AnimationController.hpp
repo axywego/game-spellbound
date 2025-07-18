@@ -22,9 +22,9 @@ private:
     float currentTime;
     size_t currentFrame;
     bool isInitialized = false;
-
     bool isFlippedX;
 
+    
 
     void updateSpriteTextureRect() {
         if(currentAnimation.empty()) return;
@@ -83,6 +83,13 @@ public:
 
     bool hasPenultFrame() {
         if(animations[currentAnimation].frames.size() - 2 == currentFrame){
+            return true;
+        }
+        return false;
+    }
+
+    bool hasLastFrame() {
+        if(animations[currentAnimation].frames.size() - 1 == currentFrame){
             return true;
         }
         return false;
