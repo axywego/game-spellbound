@@ -29,10 +29,11 @@ add_executable(game main.cpp
                 include/ResourceManager.hpp
                 include/SceneManager.hpp
                 include/UI.hpp
-                include/World.hpp
                 include/AnimationController.hpp
                 include/Projectile.hpp
                 include/Enemy.hpp
+                include/GameWorld.hpp
+                include/Tilemap.hpp
                 )
 
 # Подключаем SFML к проекту

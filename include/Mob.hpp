@@ -2,7 +2,7 @@
 #define MOB_HPP
 
 #include <SFML/Graphics.hpp>
-#include "World.hpp"
+#include "Tilemap.hpp"
 #include "AnimationController.hpp"
 #include <vector>
 
@@ -70,8 +70,8 @@ public:
 
     }
 
-    sf::Vector2f checkCollisions(const World& world) const {
-        const auto collisions = world.getCollisionTiles();
+    sf::Vector2f checkCollisions(const Tilemap& map) const {
+        const auto collisions = map.getCollisionTiles();
 
         sf::Vector2f incorrectDir {0.f, 0.f};
 
@@ -114,19 +114,22 @@ protected:
     sf::Sprite currentSprite;
 
     float speed;
-    sf::Vector2f lastDirection;
-    int health;
+    sf::Vector2f lastDirection{0.f, 1.f};
+    float health;
+    float damage;
 
     bool isAttacking = false;
     float attackTimer = 0.0f;
     const float attackAnimationTime = 0.4f;
     float attackCooldown = 0.0f;
     float attackCooldownTime;
+    bool hasDealtDamage = false;
+    bool hasMeleeAttacked = false;
 
     MobCollision collision;
     AnimationController animController;
 
-    std::weak_ptr<World> world;
+    Tilemap& map;
 
     bool isAlive = true;
     bool isTakingDamage = false;
@@ -140,8 +143,18 @@ protected:
 
     State currentState = State::Idle;
 
+    enum class TypeDamage {
+        Ranged, Melee
+    };
+
+    TypeDamage typeDamage;
+
 public:
-    Mob(const sf::Texture& texture_, const std::shared_ptr<World>& world_, const sf::FloatRect collisionRect): texture(texture_), world(world_), currentSprite(texture), collision(currentSprite, collisionRect), animController(currentSprite) {}
+    Mob(const sf::Texture& texture_, Tilemap& map_, const sf::FloatRect collisionRect): texture(texture_), map(map_), currentSprite(texture), collision(currentSprite, collisionRect), animController(currentSprite) {
+        initAnimations();
+        playIdleAnimation();
+    }
+
     void setPosition(const sf::Vector2f& pos){
         currentSprite.setPosition(pos);
     }
@@ -301,11 +314,22 @@ public:
     bool isAttackInProgress() const {
         return isAttacking;
     }
-    virtual void startAttacking() = 0;
+
+    void startAttacking() {
+        if (!isAttacking && attackCooldown <= 0.0f) {
+            isAttacking = true;
+            attackTimer = attackAnimationTime;
+            currentState = State::Attack;
+        }
+    }
     virtual void attacking(const float& dt) = 0;
 
-    void setWorld(const std::shared_ptr<World>& world_) {
-        world = world_;
+    void setWorld(Tilemap& map_) {
+        map = map_;
+    }
+
+    Tilemap& getWorld() const {
+        return map;
     }
 
     virtual void attack() = 0;
@@ -314,16 +338,18 @@ public:
         if (isDying) return;
         
         health -= damage;
+        if (health <= 0) {
+            startDying();
+            return;
+        }
+
         isTakingDamage = true;
         damageTimer = damageAnimationTime;
         
-        if (health <= 0) {
-            currentState = State::Dying;
-            startDying();
-        }
     }
 
     void startDying() {
+        currentState = State::Dying;
         isDying = true;
         // Можно добавить дополнительные действия при начале смерти
         // Например, отключение коллизий или воспроизведение звука
@@ -344,33 +370,45 @@ public:
                 playMovementAnimation();
                 break;
             case State::Idle:
-                playMovementAnimation();
+                playIdleAnimation();
                 break;
         }
     }
 
     void playDeathAnimation() {
-        if (lastDirection.y < 0) animController.play("death_up");
-        else if (lastDirection.y > 0) animController.play("death_down");
-        else if (lastDirection.x < 0) animController.play("death_left");
-        else animController.play("death_right");
+        playAnimation("death");
     }
 
     void playHurtAnimation() {
-        if (lastDirection.y < 0) animController.play("hurt_up");
-        else if (lastDirection.y > 0) animController.play("hurt_down");
-        else if (lastDirection.x < 0) animController.play("hurt_left");
-        else animController.play("hurt_right");
+        playAnimation("hurt");
     }
 
     void playAttackAnimation() {
-        if (lastDirection.y < 0) animController.play("attack_up");
-        else if (lastDirection.y > 0) animController.play("attack_down");
-        else if (lastDirection.x < 0) animController.play("attack_left");
-        else animController.play("attack_right");
+        playAnimation("attack");
     }
 
-    virtual void playMovementAnimation() = 0;
+    void playMovementAnimation() {
+        playAnimation("walk");
+    }
+
+    void playIdleAnimation() {
+        playAnimation("idle");
+    }
+
+    void playAnimation(const std::string& name) {
+        if (std::abs(lastDirection.x) > std::abs(lastDirection.y)){
+            if(std::signbit(lastDirection.x)) animController.play(name + "_left");
+            else animController.play(name + "_right");
+        }
+        else {
+            if(std::signbit(lastDirection.y)) animController.play(name + "_up");
+            else animController.play(name + "_down");
+        }
+    }
+
+    float getDamage() const {
+        return damage;
+    }
 
     bool getIsAlive() const {
         return isAlive;

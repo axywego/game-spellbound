@@ -3,7 +3,7 @@
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-#include "World.hpp"
+#include "Tilemap.hpp"
 #include "Mob.hpp"
 
 class Projectile {
@@ -11,18 +11,18 @@ protected:
     sf::Sprite sprite;
     sf::Vector2f direction;
 
-    std::weak_ptr<World> world;
+    Tilemap& map;
 
     float speed;
     float damage;
     bool isAlive;
     sf::FloatRect collisionRect;
 
-    const float factor = 4.5f;
+    float factor = 4.5f;
 
 public:
-    Projectile(const sf::Texture& texture_, const std::weak_ptr<World>& world_, const sf::Vector2f& startpos, const sf::Vector2f& dir, float damage_, float speed_):
-     direction(dir), speed(speed_), damage(damage_), isAlive(true), sprite(texture_), world(world_) {
+    Projectile(const sf::Texture& texture_, Tilemap& map_, const sf::Vector2f& startpos, const sf::Vector2f& dir, float damage_, float speed_):
+     direction(dir), speed(speed_), damage(damage_), isAlive(true), sprite(texture_), map(map_) {
         sprite.setPosition(startpos);
         sprite.setScale({factor, factor});
         collisionRect = sprite.getGlobalBounds();
@@ -40,7 +40,7 @@ public:
     }
 
     bool checkCollisionWithWorld() {
-        const auto collisions = world.lock()->getCollisionTiles();
+        const auto collisions = map.getCollisionTiles();
 
         for(const auto& tile : collisions){
             if(tile.getGlobalBounds().findIntersection(collisionRect)){
@@ -65,18 +65,18 @@ public:
 
 class Arrow : public Projectile {
 public:
-    Arrow(const sf::Texture& texture, const std::weak_ptr<World>& world, const sf::Vector2f& startPos, const sf::Vector2f& dir):
-     Projectile(texture, world, startPos, dir, 1.5f, 800.f) {
+    Arrow(const sf::Texture& texture, Tilemap& map, const sf::Vector2f& startPos, const sf::Vector2f& dir, float damage_):
+     Projectile(texture, map, startPos, dir, damage_, 800.f) {
 
         sf::Vector2f normalizedDir = dir;
         float length = std::sqrt(dir.x*dir.x + dir.y*dir.y);
         if (length > 0) {
             normalizedDir /= length;
         }
-        direction = normalizedDir; // Обновляем направление
+        direction = normalizedDir;
 
         float angleRad = atan2(dir.y, dir.x);
-        //sprite.setRotation(sf::radians(angleRad * 180.f / 3.1415f));
+
         sprite.setRotation(sf::radians(angleRad));
         sprite.setOrigin({0.f, sprite.getLocalBounds().size.y / 2.f});
 
@@ -89,19 +89,37 @@ private:
     float currentTime = 0.0f;
 
 public:
-    Fireball(const sf::Texture& texture, const std::weak_ptr<World>& world, const sf::Vector2f& startPos, 
-             const sf::Vector2f& dir)
-        : Projectile(texture, world, startPos, dir, 2.f, 600.f) { }
+    Fireball(const sf::Texture& texture, Tilemap& map, const sf::Vector2f& startPos, 
+             const sf::Vector2f& dir, float damage_)
+        : Projectile(texture, map, startPos, dir, damage_, 600.f) {
+
+        sf::Vector2f normalizedDir = dir;
+        float length = std::sqrt(dir.x*dir.x + dir.y*dir.y);
+        if (length > 0) {
+            normalizedDir /= length;
+        }
+        direction = normalizedDir;
+
+        sprite.setOrigin({sprite.getGlobalBounds().size.x / 2.f / factor, sprite.getGlobalBounds().size.y / 2.f / factor});
+    }
 
     void update(float dt) override {
         Projectile::update(dt);
         currentTime += dt;
+
+        if(currentTime >= lifetime - 1.f){
+            factor = std::abs(currentTime - lifetime) / factor;
+        }
+
         if (currentTime >= lifetime) {
             isAlive = false;
         }
         collisionRect = sprite.getGlobalBounds();
-        // Можно добавить эффект "пульсации"
-        float scale = factor + 2.f * sin(currentTime * 10);
+
+        //sprite.setOrigin({sprite.getGlobalBounds().size.x / 2.f, sprite.getGlobalBounds().size.y / 2.f});
+    
+        // pulse 
+        float scale = factor + 1.25f * sin(currentTime * 10);
         sprite.setScale({scale, scale});
     }
 };

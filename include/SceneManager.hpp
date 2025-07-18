@@ -3,7 +3,7 @@
 
 #include "Player.hpp"
 #include "UI.hpp"
-#include "World.hpp"
+#include "GameWorld.hpp"
 #include "Camera.hpp"
 #include "GameState.hpp"
 #include "Enemy.hpp"
@@ -11,26 +11,21 @@
 #include <memory>
 #include <print>
 #include <algorithm>
+#include <ranges>
 
 class Scene {
 protected:
     sf::RenderWindow& window;
 
-    std::shared_ptr<World> world;
     sf::Vector2f lastPlayerPos;
+
 public:
-    Scene(const World& world_, sf::RenderWindow& window_): window(window_) {
-        world = std::make_unique<World>(world_);
-    }
+    Scene(sf::RenderWindow& window_): window(window_) {}
 
     virtual void load() = 0;
     virtual void update(const float& dt) = 0;
     virtual void render(sf::RenderTarget& renderTarget) = 0;
     virtual void handleEvent(const std::optional<sf::Event>& event) = 0;
-
-    World getWorld() {
-        return *world;
-    }
 
     virtual ~Scene() = default;
 };
@@ -57,7 +52,7 @@ private:
     std::function<void()> onExitClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback): Scene(World(), window_), textureBackground("img/backgroundMenu.png"),
+    MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback): Scene(window_), textureBackground("img/backgroundMenu.png"),
      backgroundImage(textureBackground), startButton(sf::Texture("img/startBtn.png"), window), settingsButton(sf::Texture("img/settingsBtn.png"), window),
      exitButton(sf::Texture("img/exitBtn.png"), window), onStartClick(startCallback), onExitClick(exitCallback) {
         target = { 960.f, 540.f };
@@ -129,37 +124,23 @@ private:
 
     std::function<void()> requestPause;
 
-    std::vector<std::unique_ptr<Enemy>> enemies;
+    GameWorld& gameWorld;
+
+    std::vector<std::unique_ptr<Enemy>>& enemies;
 
 public:
-    GameLevelScene(const World& world_, Player& player_, sf::RenderWindow& window_, std::function<void()> pauseCallback):
-     Scene(world_, window_), player(player_), camera(&player.getSprite(), *world), requestPause(pauseCallback) { 
-
-        enemies.push_back(
-            std::make_unique<Rat>(world, player)
-        );
-    }
+    GameLevelScene(GameWorld& world_, Player& player_, sf::RenderWindow& window_, std::function<void()> pauseCallback):
+     Scene(window_), player(player_), gameWorld(world_), camera(&(player.getSprite()), world_.getTilemap()), requestPause(pauseCallback), enemies(world_.getEnemies()) {}
 
     void load() override {
 
-
-
-        //player.setPosition(lastPlayerPos);
+        gameWorld.addEnemy(std::make_unique<Rat>(gameWorld.getTilemap(), player));
 
         player.setPosition({300.f, 300.f});
-
-        player.setWorld(world);
-
         // idk
     }
 
     void update(const float& dt) override {
-        
-        player.update(dt);
-
-        camera.update(dt); 
-
-        player.updateProjectiles(dt);
 
         enemies.erase(
             std::remove_if(enemies.begin(), enemies.end(),
@@ -169,21 +150,40 @@ public:
             enemies.end()
         );
 
+        player.update(dt);
+
+        camera.update(dt); 
+
+        player.updateProjectiles(dt);
+
         for(const auto& enemy : enemies) {
+
+            //Player has distance damage
             for (auto& projectile : player.getProjectiles()) {
                 if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
                     projectile->onHit(*enemy);
                 }
             }
+
+            //Player has melee damage
+            if(auto area = player.getAttackArea()){
+                if(area->findIntersection(enemy->getCollisionRect())){
+                    enemy->takeDamage(player.getDamage());
+                }
+            }
+
             enemy->update(dt);
         }
 
         lastPlayerPos = player.getSprite().getPosition();
+
     }
 
     void render(sf::RenderTarget& renderTarget) override {
         camera.applyTo(renderTarget);
-        world->render(renderTarget);
+
+        gameWorld.render(renderTarget);
+
         player.render(renderTarget);
 
         for(const auto& enemy : enemies) {
@@ -218,7 +218,7 @@ private:
 public:
     PauseScene(sf::RenderWindow& window_,
      std::function<void()> resumeCallback, std::function<void()> menuCallback):
-     Scene(World("map.json"), window_), onResumeClick(resumeCallback), onMenuClick(menuCallback),
+     Scene(window_), onResumeClick(resumeCallback), onMenuClick(menuCallback),
      resumeButton(sf::Texture("img/startBtn.png"), window),
      menuButton(sf::Texture("img/exitBtn.png"), window)   {
 
@@ -273,6 +273,7 @@ private:
     sf::RenderWindow& window;
 
     std::unordered_map<std::string, std::shared_ptr<Scene>> scenes;
+    std::unordered_map<std::string, std::shared_ptr<GameWorld>> worlds;
     std::shared_ptr<Scene> currentScene, nextScene;
 
     GameState gameState;
@@ -289,26 +290,26 @@ private:
 public:
     SceneManager(sf::RenderWindow& window_): window(window_) {
         // initializing;
+        worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
+        
+        player = PlayerFactory::create(PlayerClass::Knight, worlds["mapa_main"]->getTilemap());
 
-        createPlayer(PlayerClass::Mage);
         initScenes();
     }
 
     void initScenes() {
-        addScene<MenuScene>("menu", window, [this](){
-            switchTo("main");
-        }, [this]() { window.close(); });
+
+        addScene<GameLevelScene>("main", *worlds["mapa_main"], getPlayer(), window, [this]() { pause(); });
+
+        addScene<MenuScene>("menu", window,
+            [this]() { switchTo("main"); }, 
+            [this]() { std::cout << "pidor\n"; window.close(); std::cout << "gavno\n"; }
+        );
 
         addScene<PauseScene>("pause", window, [this]() { resume(); }, [this]() { switchTo("menu"); });
-        addScene<GameLevelScene>("main", World("map.json"), getPlayer(), window, [this]() { pause(); });
-
+        
         switchTo("menu");
     }   
-
-    void createPlayer(PlayerClass type){
-        World world("map.json");
-        player = PlayerFactory::create(type, std::make_shared<World>(world));
-    }
 
     Player& getPlayer() {
         return *player;
@@ -353,7 +354,7 @@ public:
     void resume() {
         if(isPaused){
             currentScene = pausedScene;
-            pausedScene = nullptr;
+            //pausedScene = nullptr;
             isPaused = false;
         }
     }

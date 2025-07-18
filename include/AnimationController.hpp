@@ -32,6 +32,8 @@ private:
         auto& anim = animations[currentAnimation];
         sprite.setTextureRect(anim.frames[currentFrame]);
         sprite.setScale({(isFlippedX ? -1.f : 1.f) * factor, 1.f * factor});
+        if(currentAnimation.contains("hurt") || currentAnimation.contains("death")) sprite.setColor(sf::Color::Red);
+        else sprite.setColor(sf::Color::White);
 
     }
 
@@ -58,6 +60,8 @@ public:
                 sprite.setOrigin({sprite.getLocalBounds().size.x / 2, sprite.getLocalBounds().size.y / 2});
                 
                 sprite.setScale({(isFlippedX ? -1.f : 1.f) * factor, 1.f * factor});
+
+                if(currentAnimation.contains("hurt") || currentAnimation.contains("death")) sprite.setColor(sf::Color::Red);
             }
         }
     }
