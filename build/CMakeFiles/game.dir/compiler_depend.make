@@ -133,6 +133,7 @@ CMakeFiles/game.dir/main.cpp.o: /home/axypedodo/CPP/game/main.cpp \
   /home/axypedodo/CPP/game/include/GameWorld.hpp \
   /home/axypedodo/CPP/game/include/Inventory.hpp \
   /home/axypedodo/CPP/game/include/Mob.hpp \
+  /home/axypedodo/CPP/game/include/Other.hpp \
   /home/axypedodo/CPP/game/include/Player.hpp \
   /home/axypedodo/CPP/game/include/Projectile.hpp \
   /home/axypedodo/CPP/game/include/SceneManager.hpp \
@@ -773,6 +774,8 @@ _deps/sfml-src/include/SFML/System/Time.hpp:
 /usr/include/alloca.h:
 
 /usr/include/c++/15/bits/localefwd.h:
+
+/home/axypedodo/CPP/game/include/Other.hpp:
 
 _deps/nlohmann_json-src/include/nlohmann/json_fwd.hpp:
 

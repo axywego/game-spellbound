@@ -34,6 +34,7 @@ add_executable(game main.cpp
                 include/Enemy.hpp
                 include/GameWorld.hpp
                 include/Tilemap.hpp
+                include/Other.hpp
                 )
 
 # Подключаем SFML к проекту

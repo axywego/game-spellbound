@@ -151,7 +151,7 @@ public:
         );
 
         player.update(dt);
-
+ 
         camera.update(dt); 
 
         player.updateProjectiles(dt);
@@ -177,6 +177,7 @@ public:
 
         lastPlayerPos = player.getSprite().getPosition();
 
+        HUD::update(player, camera.getCenter());
     }
 
     void render(sf::RenderTarget& renderTarget) override {
@@ -189,6 +190,8 @@ public:
         for(const auto& enemy : enemies) {
             enemy->render(renderTarget);
         }
+
+        HUD::render(renderTarget);
     }
 
     void handleEvent(const std::optional<sf::Event>& event) override {
@@ -207,6 +210,7 @@ public:
 class PauseScene : public Scene {
 private:
     sf::View view;
+    
     //sf::Sprite backgroundImage;
 
     sf::RectangleShape overlay;
@@ -292,7 +296,7 @@ public:
         // initializing;
         worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
         
-        player = PlayerFactory::create(PlayerClass::Knight, worlds["mapa_main"]->getTilemap());
+        player = PlayerFactory::create(PlayerClass::Mage, worlds["mapa_main"]->getTilemap());
 
         initScenes();
     }
@@ -303,7 +307,7 @@ public:
 
         addScene<MenuScene>("menu", window,
             [this]() { switchTo("main"); }, 
-            [this]() { std::cout << "pidor\n"; window.close(); std::cout << "gavno\n"; }
+            [this]() { window.close(); }
         );
 
         addScene<PauseScene>("pause", window, [this]() { resume(); }, [this]() { switchTo("menu"); });

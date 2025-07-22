@@ -44,12 +44,24 @@ public:
             }
         }
 
+        if(timerDelayMana > 0.f){
+            timerDelayMana -= dt;
+        }
+
+        if(mana < maxMana && timerDelayMana <= 0.f){
+            if(timerMana >= timeToUpMana){
+                mana += manaToUpPerTime;
+                timerMana = 0.f;
+            }
+        }
+
         if(!isDying && !isTakingDamage) {            
             collision.update();
             attacking(dt);
             if(!isAttacking) move(dt);
         }
 
+        if(!isAttacking) timerMana += dt;
 
         // collision.update();
         // attacking(dt);
@@ -75,7 +87,11 @@ public:
             }
             else if(typeDamage == TypeDamage::Ranged && animController.hasPenultFrame() && !hasSpawnedProjectile) {
                 hasSpawnedProjectile = true;
-                spawnProjectile();
+                if(mana - manaCost >= 0.f){
+                    mana -= manaCost;
+                    timerDelayMana = delayBeforeUpMana;
+                    spawnProjectile();
+                }
             }
 
             if (attackTimer <= 0.0f) {
@@ -160,75 +176,6 @@ public:
         else return std::nullopt;
     }
 
-    // void playMovementAnimation() override {
-    //     sf::Vector2f dir{0.f, 0.f};
-
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)){
-    //         dir.y--;
-    //     }hasDealtDamage
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)){
-    //         dir.y++;
-    //     }   
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)){
-    //         dir.x--;
-    //     }
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)){
-    //         dir.x++;
-    //     }
-        
-    //     if (dir.x != 0 || dir.y != 0) {
-    //         lastDirection = dir;
-            
-    //         if (std::abs(dir.y) > std::abs(dir.x)) {
-    //             if (dir.y < 0) animController.play("walk_up");
-    //             else animController.play("walk_down");
-    //         } else {
-    //             if (dir.x < 0) animController.play("walk_left");
-    //             else animController.play("walk_right");
-    //         }
-    //     } else {
-    //         if (lastDirection.y < 0) animController.play("idle_up");
-    //         else if (lastDirection.y > 0) animController.play("idle_down");
-    //         else if (lastDirection.x < 0) animController.play("idle_left");
-    //         else animController.play("idle_right");
-    //     }
-    // }
-
-    // void updateAnimation() override {
-    //     if (isAttacking) {
-    //         if (lastDirection.y < 0) animController.play("attack_up");
-    //         else if (lastDirection.y > 0) animController.play("attack_down");
-    //         else if (lastDirection.x < 0) animController.play("attack_left");
-    //         else animController.play("attack_right");
-    //         return;
-    //     }
-
-    //     sf::Vector2f dir{0.f, 0.f};
-
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) dir.y--;
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) dir.y++;
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) dir.x--;
-    //     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) dir.x++;
-
-    //     if (dir.x != 0 || dir.y != 0) {
-    //         lastDirection = dir;
-            
-    //         if (std::abs(dir.y) > std::abs(dir.x)) {
-    //             if (dir.y < 0) animController.play("walk_up");
-    //             else animController.play("walk_down");
-    //         } else {
-    //             if (dir.x < 0) animController.play("walk_left");
-    //             else animController.play("walk_right");
-    //         }
-    //     } else {
-            
-    //         if (lastDirection.y < 0) animController.play("idle_up");
-    //         else if (lastDirection.y > 0) animController.play("idle_down");
-    //         else if (lastDirection.x < 0) animController.play("idle_left");
-    //         else animController.play("idle_right");
-    //     }
-    // }
-
     void render(sf::RenderTarget& target) override {
         target.draw(currentSprite);
 
@@ -255,7 +202,8 @@ class Archer : public Player {
 public:
     Archer(Tilemap& map): Player("real img/1 Characters/1/1.png", map) {
         speed = 450.f;
-        health = 4.f;
+        maxHealth = 4.f;
+        health = maxHealth;
         attackCooldownTime = 0.5f;
         typeDamage = TypeDamage::Ranged;
         damage = 1.5f;
@@ -271,7 +219,7 @@ public:
             std::make_unique<Arrow>(
                 arrowTexture, 
                 map,
-                spawnPos, 
+                spawnPos,
                 lastDirection,
                 damage
             )
@@ -291,37 +239,35 @@ private:
     void calculateAttackArea() {
         attackArea = currentSprite.getGlobalBounds();
 
-        if (lastDirection.x > 0) { // Вправо
+        if (lastDirection.x > 0) {
             attackArea.position.x += 100.f;
             attackArea.position.y += 20.f;
             attackArea.size.x = 50.f;
             attackArea.size.y = 70.f;
         } 
-        else if (lastDirection.x < 0) { // Влево
-            //attackArea.position.x += 20.f;
+        else if (lastDirection.x < 0) {
             attackArea.position.y += 20.f;
             attackArea.size.x = 50.f;
             attackArea.size.y = 70.f;
             
         }
-        else if (lastDirection.y > 0) { // Вниз
+        else if (lastDirection.y > 0) {
             attackArea.position.x += 40.f;
             attackArea.position.y += 90.f;
             attackArea.size.x = 60.f;
             attackArea.size.y = 40.f;
         }
-        else { // Вверх
+        else {
             attackArea.position.x += 40.f;
-            //attackArea.position.y -= 40.f;
             attackArea.size.x = 60.f;
             attackArea.size.y = 40.f;
-            
         }
     }
 public:
     Knight(Tilemap& map): Player("real img/1 Characters/2/2.png", map) {
         speed = 400.f;
-        health = 5.f;
+        maxHealth = 5.f;
+        health = maxHealth;
         attackCooldownTime = 0.25f;
         typeDamage = TypeDamage::Melee;
         damage = 2.5f;
@@ -345,10 +291,18 @@ class Mage : public Player {
 public:
     Mage(Tilemap& map): Player("real img/1 Characters/3/3.png", map) {
         speed = 425.f;
-        health = 3.f;
-        attackCooldownTime = 0.75f;
+        maxHealth = 3.f;
+        health = maxHealth;
+        //attackCooldownTime = 0.75f;
+        attackCooldownTime = 0.4f;
         typeDamage = TypeDamage::Ranged;
         damage = 2.f;
+        maxMana = 4.f;
+        mana = maxMana;
+        manaCost = 0.5f;
+
+        timeToUpMana = 0.5f;
+        manaToUpPerTime = 0.25f;
     }
 
     void spawnProjectile() override {
@@ -358,9 +312,9 @@ public:
         
         projectiles.push_back(
             std::make_unique<Fireball>(
-                fireballTexture, 
+                fireballTexture,
                 map,
-                spawnPos, 
+                spawnPos,
                 lastDirection,
                 damage
             )

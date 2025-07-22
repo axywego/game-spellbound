@@ -13,12 +13,29 @@ class Enemy: public Mob {
 private:
     Player& player;
     bool isMoving;
+
+    bool isFading = false;
+    bool isShowingHp = false;
+    float timerToShowHp{0.f};
+    float fadeOutTime{3.f};
+    float timeToFadeOut{0.5f};
+    float timerFadingOut{0.f};
+
+    sf::RectangleShape hpRedShape;
+    sf::RectangleShape hpBackgroundShape;
+
 protected:
     float rangeRadius;
     float attackRange;
 public:
     Enemy(const sf::Texture& texture, Tilemap& map_, const sf::FloatRect& collisionRect_, Player& player_): 
-     Mob(texture, map_, collisionRect_), player(player_) {}
+     Mob(texture, map_, collisionRect_), player(player_) {
+        hpBackgroundShape.setFillColor(sf::Color::Black);
+        hpRedShape.setFillColor(sf::Color::Red);
+        
+        hpBackgroundShape.setSize({70.f, 10.f});
+        hpRedShape.setSize({65.f, 8.f});
+    }
 
     // void startAttacking() override {
     //     if (!isAttacking && attackCooldown <= 0.0f) {
@@ -110,6 +127,7 @@ public:
         }
 
         if (isTakingDamage) {
+            isShowingHp = true;
             currentState = State::Hurt;
             damageTimer -= dt;
             if (damageTimer <= 0.0f) {
@@ -138,12 +156,49 @@ public:
 
         collision.update();
         attacking(dt);
+
+
+        if(isShowingHp){
+            timerToShowHp += dt;
+        }
+
+        if(timerToShowHp > 3.f){
+            isShowingHp = false;
+            timerFadingOut = timeToFadeOut;
+            isFading = true;
+            timerToShowHp = 0.f;
+        }
+
+        if(timerFadingOut > 0.f){
+            hpBackgroundShape.setFillColor(sf::Color(0, 0, 0, (timerFadingOut * 255) / timeToFadeOut));
+            hpRedShape.setFillColor(sf::Color(255, 0, 0, (timerFadingOut * 255) / timeToFadeOut));
+
+            timerFadingOut -= dt;
+        }
+        else if(timerFadingOut <= 0.f) {
+            isFading = false;
+            hpBackgroundShape.setFillColor(sf::Color::Black);
+            hpRedShape.setFillColor(sf::Color::Red);
+        }
         
+
+        auto spriteRect = currentSprite.getGlobalBounds();
+
+        hpBackgroundShape.setPosition({spriteRect.position.x + spriteRect.size.x / 2 - hpBackgroundShape.getSize().x / 2, spriteRect.position.y});
+
+        sf::FloatRect shapeRect = {hpBackgroundShape.getPosition(), hpBackgroundShape.getSize()};
+        hpRedShape.setPosition({shapeRect.position.x + 2.5f, shapeRect.position.y + 1.f});
+
+        hpRedShape.setSize({health * 65.f / maxHealth, hpRedShape.getSize().y});
     }
 
     void render(sf::RenderTarget& target) override {
         target.draw(currentSprite);
         collision.render(target);
+        if(isAlive && (isFading || isShowingHp)){
+            target.draw(hpBackgroundShape);
+            target.draw(hpRedShape);
+        }
     }
 };
 
@@ -153,10 +208,11 @@ private:
 public:
     Rat(Tilemap& map_, Player& player_): Enemy(sf::Texture("real img/3 Dungeon Enemies/1/1.png"), map_, sf::FloatRect({{32.f, 32.f},{60.f, 60.f}}), player_) {
         speed = 500.f;
-        health = 4.f;
+        maxHealth = 4.f;
+        health = maxHealth;
         rangeRadius = 700.f;
         attackRange = 60.f;
-        damage = 1.f;
+        damage = 0.5f;
         attackCooldownTime = 0.8f;
         typeDamage = TypeDamage::Melee;
     }

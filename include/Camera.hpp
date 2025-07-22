@@ -26,6 +26,10 @@ public:
         target = sprite;
     }
 
+    sf::Vector2f getCenter() const {
+        return camera.getCenter();
+    }
+
     void update(const float& dt) {
         auto bounds = target->getGlobalBounds();
         sf::Vector2f targetPosCenter = {bounds.position.x + bounds.size.x / 2, bounds.position.y + bounds.size.y / 2};

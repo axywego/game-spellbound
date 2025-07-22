@@ -115,14 +115,25 @@ protected:
 
     float speed;
     sf::Vector2f lastDirection{0.f, 1.f};
+    float maxHealth;
     float health;
     float damage;
+    float mana{0.f};
+    float maxMana{0.f};
+    float manaCost{0.f};
 
     bool isAttacking = false;
     float attackTimer = 0.0f;
     const float attackAnimationTime = 0.4f;
     float attackCooldown = 0.0f;
     float attackCooldownTime;
+
+    float delayBeforeUpMana{2.5f};
+    float timerDelayMana{0.f};
+    float timerMana{0.f};
+    float timeToUpMana{0.5f};
+    float manaToUpPerTime{0.25f};
+    
     bool hasDealtDamage = false;
     bool hasMeleeAttacked = false;
 
@@ -143,13 +154,17 @@ protected:
 
     State currentState = State::Idle;
 
+public:
     enum class TypeDamage {
         Ranged, Melee
     };
 
+protected:
     TypeDamage typeDamage;
 
 public:
+
+
     Mob(const sf::Texture& texture_, Tilemap& map_, const sf::FloatRect collisionRect): texture(texture_), map(map_), currentSprite(texture), collision(currentSprite, collisionRect), animController(currentSprite) {
         initAnimations();
         playIdleAnimation();
@@ -338,7 +353,8 @@ public:
         if (isDying) return;
         
         health -= damage;
-        if (health <= 0) {
+        if (health <= 0.f) {
+            health = 0.f;
             startDying();
             return;
         }
@@ -412,6 +428,30 @@ public:
 
     bool getIsAlive() const {
         return isAlive;
+    }
+
+    float getMaxHealth() const {
+        return maxHealth;
+    }
+
+    float getCurrentHealth() const {
+        return health;
+    }
+
+    TypeDamage getTypeDamage() const {
+        return typeDamage;
+    }
+
+    float getCurrentSpeed() const {
+        return speed;
+    }
+
+    float getMaxMana() const {
+        return maxMana;
+    }
+
+    float getCurrentMana() const {
+        return mana;
     }
 
     virtual void move(const float& dt) = 0;
