@@ -35,6 +35,7 @@ add_executable(game main.cpp
                 include/GameWorld.hpp
                 include/Tilemap.hpp
                 include/Other.hpp
+                include/WorldGenerator.hpp
                 )
 
 # Подключаем SFML к проекту

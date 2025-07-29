@@ -21,6 +21,12 @@ public:
         //enemies[0]->setPosition({500.f, 500.f});
     }
 
+    GameWorld(Tilemap&& map_): map(map_) {}
+
+    GameWorld(const TiledShape& tiledShape) {
+        map.createFromTiledShape(tiledShape);
+    }
+
     void addEnemy(std::unique_ptr<Enemy> e){
         enemies.push_back(std::move(e));
     }

@@ -9,10 +9,53 @@
 #include <filesystem>
 #include <stdexcept>
 #include "Player.hpp"
+#include "WorldGenerator.hpp"
 
 class Player;
 
 using json = nlohmann::json;
+
+enum class TileType {
+    CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight,
+    JointTopLeft, JointTopRight, JointBottomLeft, JointBottomRight,
+    WallLeft, WallRight, WallTop, WallBottom,
+    Floor,
+    Void
+};
+
+TileType determineTileType(const TiledShape& map, int x, int y) {
+    if (map[x][y].getFillColor() != sf::Color::White) {
+        return TileType::Void;
+    }
+
+    bool top = x > 0 && map[x-1][y].getFillColor() == sf::Color::Black;
+    bool bottom = x < map.size() && map[x+1][y].getFillColor() == sf::Color::Black;
+    bool left = y > 0 && map[x][y-1].getFillColor() == sf::Color::Black;
+    bool right = y < map[0].size() && map[x][y+1].getFillColor() == sf::Color::Black;
+
+    bool emptyTopLeft = x > 0 && y > 0 && map[x-1][y-1].getFillColor() == sf::Color::Black;
+    bool emptyTopRight = x > 0 && y < map[0].size() && map[x-1][y+1].getFillColor() == sf::Color::Black;
+    bool emptyBottomLeft = x < map.size() && y > 0 && map[x+1][y-1].getFillColor() == sf::Color::Black;
+    bool emptyBottomRight = x < map.size() && y < map[0].size() && map[x+1][y+1].getFillColor() == sf::Color::Black;
+
+    if (top && !bottom && left && !right) return TileType::CornerTopLeft;
+    if (!top && bottom && left && !right) return TileType::CornerBottomLeft;
+    if (top && !bottom && !left && right) return TileType::CornerTopRight;
+    if (!top && bottom && !left && right) return TileType::CornerBottomRight;
+    if (!top && !bottom && left && !right) return TileType::WallLeft;
+    if (top && !bottom && !left && !right) return TileType::WallTop;
+    if (!top && !bottom && !left && right) return TileType::WallRight;
+    if (!top && bottom && !left && !right) return TileType::WallBottom;
+    if (!top && !bottom && !left && !right) {
+        if(emptyBottomLeft) return TileType::JointBottomLeft;
+        else if(emptyBottomRight) return TileType::JointBottomRight;
+        else if(emptyTopLeft) return TileType::JointTopLeft;
+        else if(emptyTopRight) return TileType::JointTopRight;
+        else return TileType::Floor;
+    }
+    
+    return TileType::Void;
+}
 
 class Tile {
 private:
@@ -34,7 +77,7 @@ public:
     }
 
     void setPosition(const sf::Vector2f& pos) {
-        sprite.setPosition({pos.x * scale * 32.f, pos.y * scale * 32.f});
+        sprite.setPosition({pos.x * scale * 16.f, pos.y * scale * 16.f});
     }
 
     bool getHasCollision() const { return hasCollision; }
@@ -49,7 +92,7 @@ private:
     std::shared_ptr<sf::Texture> tileset;
     std::vector<std::vector<Tile>> tiles;
     sf::Vector2u worldSize;
-    float tileSize = 32.0f;
+    unsigned tileSize = 16;
     float worldScale = 5.0f;
 
 public:
@@ -72,25 +115,21 @@ public:
             throw std::runtime_error("JSON parse error: " + std::string(e.what()));
         }
 
-        // Проверка структуры JSON
         if (!data.contains("metadata") || !data.contains("layers") || 
             !data["layers"].contains("ground")) {
             throw std::runtime_error("Invalid map file structure");
         }
 
         try {
-            // Загрузка метаданных
             tileSize = data["metadata"]["tile_size"];
             int tsColumns = data["metadata"]["columns"];
             int tsRows = data["metadata"]["rows"];
 
-            // Загрузка текстуры
             tileset = std::make_shared<sf::Texture>();
             if (!tileset->loadFromFile(std::string(data["metadata"]["tileset"]))) {
                 throw std::runtime_error("Failed to load tileset: " + std::string(data["metadata"]["tileset"]));
             }
 
-            // Создание карты
             worldSize.y = data["layers"]["ground"].size();
             if (worldSize.y == 0) {
                 throw std::runtime_error("Empty map layer");
@@ -130,14 +169,6 @@ public:
         return true;
     }
 
-    void render(sf::RenderTarget& target) {
-        for (const auto& row : tiles) {
-            for (const auto& tile : row) {
-                target.draw(tile.getSprite());
-            }
-        }
-    }
-
     std::vector<sf::Sprite> getCollisionTiles() const {
         std::vector<sf::Sprite> collisionTiles;
         for(const auto& row : tiles){
@@ -149,7 +180,6 @@ public:
         return collisionTiles;
     }
 
-    // Метод для сохранения в формате, совместимом с MapEditor
     void saveToFile(const std::string& filename) const {
         json j;
         j["metadata"] = {
@@ -179,10 +209,108 @@ public:
         }
     }
 
+    void createFromTiledShape(const TiledShape& shape) {
+        tiles.clear();
+
+        tileset = std::make_shared<sf::Texture>("real img/2 Dungeon Tileset/1 Tiles/Tileset.png");
+        
+        worldSize.y = shape.size();
+        worldSize.x = shape[0].size();
+        
+        tiles.resize(worldSize.y);
+        for (size_t x = 0; x < worldSize.x; ++x) {
+            tiles[x].reserve(worldSize.y);
+            for (size_t y = 0; y < worldSize.y; ++y) {
+                TileType type = determineTileType(shape, y, x);
+                
+                int texX = 0, texY = 0;
+                bool collision = false;
+                
+                switch (type) {
+                    case TileType::Floor:
+                        texX = generate8Bytes(2, 4); texY = generate8Bytes(2, 4);
+                        collision = false;
+                        break;
+                    case TileType::CornerTopLeft:
+                        texX = 1; texY = 1;
+                        collision = true;
+                        break;
+                    case TileType::CornerTopRight:
+                        texX = 5; texY = 1;
+                        collision = true;
+                        break;
+                    case TileType::CornerBottomLeft:
+                        texX = 1; texY = 5;
+                        collision = true;
+                        break;
+                    case TileType::CornerBottomRight:
+                        texX = 5; texY = 5;
+                        collision = true;
+                        break;
+                    case TileType::JointTopLeft:
+                        texX = 5; texY = 5;
+                        collision = true;
+                        break;
+                    case TileType::JointTopRight:
+                        texX = 1; texY = 5;
+                        collision = true;
+                        break;
+                    case TileType::JointBottomLeft:
+                        texX = 5; texY = 1;
+                        collision = true;
+                        break;
+                    case TileType::JointBottomRight:
+                        texX = 1; texY = 1;
+                        collision = true;
+                        break;
+                    case TileType::WallLeft:
+                        texX = 1; texY = generate8Bytes(2, 4);
+                        collision = true;
+                        break;
+                    case TileType::WallRight:
+                        texX = 5; texY = generate8Bytes(2, 4);
+                        collision = true;
+                        break;
+                    case TileType::WallTop:
+                        texX = generate8Bytes(2, 4); texY = 1;
+                        collision = true;
+                        break;
+                    case TileType::WallBottom:
+                        texX = generate8Bytes(2, 4); texY = 5;
+                        collision = true;
+                        break;
+                    default:
+                        texX = 0; texY = 0;
+                        collision = false;
+                        break;
+                }
+                
+                tiles[y].emplace_back(
+                    *tileset,
+                    sf::IntRect({texX * tileSize, texY * tileSize}, {tileSize, tileSize}),
+                    collision,
+                    worldScale,
+                    texX,
+                    texY
+                );
+
+                tiles[y].back().setPosition({x, y});
+            }
+        }
+    }
+
     const sf::Vector2u& getWorldSize() const { return worldSize; }
     float getTileSize() const { return tileSize; }
     float getMapScale() const { return worldScale; }
     const sf::Texture& getTileset() const { return *tileset; }
+
+    void render(sf::RenderTarget& target) {
+        for (const auto& row : tiles) {
+            for (const auto& tile : row) {
+                target.draw(tile.getSprite());
+            }
+        }
+    }
 
 };
 

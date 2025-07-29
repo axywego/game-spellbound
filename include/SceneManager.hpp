@@ -26,6 +26,7 @@ public:
     virtual void update(const float& dt) = 0;
     virtual void render(sf::RenderTarget& renderTarget) = 0;
     virtual void handleEvent(const std::optional<sf::Event>& event) = 0;
+    virtual sf::Vector2f getCameraCenter() const = 0;
 
     virtual ~Scene() = default;
 };
@@ -115,6 +116,10 @@ public:
             }
         }
     }
+
+    sf::Vector2f getCameraCenter() const override {
+        return view.getCenter();
+    }
 };
 
 class GameLevelScene : public Scene {
@@ -136,7 +141,7 @@ public:
 
         gameWorld.addEnemy(std::make_unique<Rat>(gameWorld.getTilemap(), player));
 
-        player.setPosition({300.f, 300.f});
+        player.setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 22});
         // idk
     }
 
@@ -205,6 +210,9 @@ public:
             }
         }
     }
+    sf::Vector2f getCameraCenter() const override {
+        return camera.getCenter();
+    }
 };
 
 class PauseScene : public Scene {
@@ -269,6 +277,9 @@ public:
             onMenuClick();
         }
     }
+    sf::Vector2f getCameraCenter() const override {
+        return view.getCenter();
+    }
 };
 
 class SceneManager {
@@ -294,16 +305,18 @@ private:
 public:
     SceneManager(sf::RenderWindow& window_): window(window_) {
         // initializing;
-        worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
+        worlds.insert({"test", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
+
+        //worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
         
-        player = PlayerFactory::create(PlayerClass::Mage, worlds["mapa_main"]->getTilemap());
+        player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
 
         initScenes();
     }
 
     void initScenes() {
 
-        addScene<GameLevelScene>("main", *worlds["mapa_main"], getPlayer(), window, [this]() { pause(); });
+        addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
 
         addScene<MenuScene>("menu", window,
             [this]() { switchTo("main"); }, 
@@ -342,7 +355,7 @@ public:
         
         transitionShape.setRadius(1500);
         transitionShape.setOrigin( { transitionShape.getRadius(), transitionShape.getRadius() } );
-        transitionShape.setPosition( { 960, 540 } );
+        transitionShape.setPosition( {1920.f / 2, 1080.f / 2} );
         transitionShape.setFillColor(sf::Color::Black);
         transitionShape.setScale( { 0.f, 0.f } );
     }

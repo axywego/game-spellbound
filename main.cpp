@@ -2,6 +2,8 @@
 #include <iostream>
 #include "include/SceneManager.hpp"
 
+#include "include/WorldGenerator.hpp"
+
 int main() {
     sf::RenderWindow window(sf::VideoMode({1920, 1080}), "чмо", sf::Style::Default, sf::State::Fullscreen);
 
