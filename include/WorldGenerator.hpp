@@ -388,6 +388,10 @@ public:
     static float getRadius() {
         return radius * tileSize;
     }
+
+    static sf::Vector2f getCenter() {
+        return {mapSize.x / 2 * tileSize, mapSize.y / 2 * tileSize};
+    }
 };
 TiledShape WorldGenerator::map;
 const sf::Vector2i WorldGenerator::mapSize{100, 100};
