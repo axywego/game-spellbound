@@ -130,6 +130,7 @@ CMakeFiles/game.dir/main.cpp.o
  /home/axypedodo/CPP/game/include/AnimationController.hpp
  /home/axypedodo/CPP/game/include/Camera.hpp
  /home/axypedodo/CPP/game/include/Enemy.hpp
+ /home/axypedodo/CPP/game/include/EnemyGenerator.hpp
  /home/axypedodo/CPP/game/include/GameState.hpp
  /home/axypedodo/CPP/game/include/GameWorld.hpp
  /home/axypedodo/CPP/game/include/Inventory.hpp

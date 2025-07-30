@@ -407,4 +407,5 @@ CMakeFiles/game.dir/main.cpp.o: /home/axypedodo/CPP/game/main.cpp \
  /home/axypedodo/CPP/game/include/Enemy.hpp \
  /home/axypedodo/CPP/game/include/Camera.hpp \
  /home/axypedodo/CPP/game/include/GameState.hpp /usr/include/c++/15/print \
+ /home/axypedodo/CPP/game/include/EnemyGenerator.hpp \
  /home/axypedodo/CPP/game/include/WorldGenerator.hpp

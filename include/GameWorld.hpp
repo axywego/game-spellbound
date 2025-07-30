@@ -27,7 +27,8 @@ public:
         map.createFromTiledShape(tiledShape);
     }
 
-    void addEnemy(std::unique_ptr<Enemy> e){
+    void addEnemy(std::unique_ptr<Enemy> e, const sf::Vector2f& pos){
+        e->setPosition(pos);
         enemies.push_back(std::move(e));
     }
 

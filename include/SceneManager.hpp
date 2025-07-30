@@ -12,6 +12,7 @@
 #include <print>
 #include <algorithm>
 #include <ranges>
+#include "EnemyGenerator.hpp"
 
 class Scene {
 protected:
@@ -139,10 +140,15 @@ public:
 
     void load() override {
 
-        gameWorld.addEnemy(std::make_unique<Rat>(gameWorld.getTilemap(), player));
+        auto generatedEnemies = EnemyGenerator::generateEnemies(gameWorld.getTilemap(), player);
+        
+        for(auto& [enemy, pos] : generatedEnemies){
+            gameWorld.addEnemy(std::move(enemy), pos);
+        }
 
-        player.setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 22});
-        // idk
+        player.setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
+
+        std::println("все заебись");
     }
 
     void update(const float& dt) override {

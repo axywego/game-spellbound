@@ -274,9 +274,9 @@ class WorldGenerator {
 private:
     static TiledShape map;
     static const sf::Vector2i mapSize;
+    static const float radius;
 
 public:
-
     static void init() {
         map = TiledShape(mapSize.y, TiledShape::value_type(mapSize.x));
         for(size_t i = 0; i < mapSize.y; i++){
@@ -296,8 +296,6 @@ public:
         rad += 1.0f / (static_cast<int>(generate8Bytes(0, 4)) + 1);
 
         int numRooms = generate8Bytes(4, 6);
-        
-        float radius = mapSize.x * 0.34f;
         
         for(int i = 0; i < numRooms; i++){
             Room part;
@@ -385,8 +383,14 @@ public:
             }
         }
     }
+
+    //get radius in pixels
+    static float getRadius() {
+        return radius * tileSize;
+    }
 };
 TiledShape WorldGenerator::map;
 const sf::Vector2i WorldGenerator::mapSize{100, 100};
+const float WorldGenerator::radius{mapSize.x * 0.34f};
 
 #endif

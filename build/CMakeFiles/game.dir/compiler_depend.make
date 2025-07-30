@@ -129,6 +129,7 @@ CMakeFiles/game.dir/main.cpp.o: /home/axypedodo/CPP/game/main.cpp \
   /home/axypedodo/CPP/game/include/AnimationController.hpp \
   /home/axypedodo/CPP/game/include/Camera.hpp \
   /home/axypedodo/CPP/game/include/Enemy.hpp \
+  /home/axypedodo/CPP/game/include/EnemyGenerator.hpp \
   /home/axypedodo/CPP/game/include/GameState.hpp \
   /home/axypedodo/CPP/game/include/GameWorld.hpp \
   /home/axypedodo/CPP/game/include/Inventory.hpp \
@@ -633,6 +634,8 @@ CMakeFiles/game.dir/main.cpp.o:
 
 /usr/lib/gcc/x86_64-redhat-linux/15/libgcc_s.so:
 
+/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
+
 /usr/include/c++/15/bits/basic_string.tcc:
 
 /usr/include/c++/15/bits/streambuf.tcc:
@@ -971,6 +974,8 @@ _deps/nlohmann_json-src/include/nlohmann/json.hpp:
 
 /usr/include/c++/15/climits:
 
+/home/axypedodo/CPP/game/include/EnemyGenerator.hpp:
+
 _deps/sfml-src/include/SFML/Window.hpp:
 
 /usr/include/c++/15/bits/hashtable.h:
@@ -1096,8 +1101,6 @@ _deps/nlohmann_json-src/include/nlohmann/detail/iterators/primitive_iterator.hpp
 /usr/include/c++/15/bits/locale_conv.h:
 
 _deps/sfml-src/include/SFML/Graphics/Image.hpp:
-
-/usr/lib/gcc/x86_64-redhat-linux/15/libgcc.a:
 
 _deps/sfml-src/include/SFML/Window/Keyboard.hpp:
 

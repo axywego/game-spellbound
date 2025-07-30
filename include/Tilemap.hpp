@@ -64,15 +64,17 @@ private:
     float scale;
     int texX;
     int texY;
+    TileType type;
 
 public:
     Tile(const sf::Texture& texture, const sf::IntRect& rect, 
-             bool collision = false, float scale = 5.0f, int texX = 0, int texY = 0)
+             bool collision = false, float scale = 5.0f, int texX = 0, int texY = 0, TileType type = TileType::Void)
         : sprite(texture, rect), 
           hasCollision(collision),
           scale(scale),
           texX(texX),
-          texY(texY) {
+          texY(texY),
+          type(type) {
         sprite.setScale({scale, scale});
     }
 
@@ -80,6 +82,7 @@ public:
         sprite.setPosition({pos.x * scale * 16.f, pos.y * scale * 16.f});
     }
 
+    TileType getType() const { return type; }
     bool getHasCollision() const { return hasCollision; }
     sf::Sprite getSprite() const { return sprite; }
     sf::FloatRect getGlobalBounds() const { return sprite.getGlobalBounds(); }
@@ -155,7 +158,8 @@ public:
                         collision,
                         worldScale,
                         texX,
-                        texY
+                        texY,
+                        TileType::Void
                     );
                     tiles[y].back().setPosition(sf::Vector2f(x, y));
                 }
@@ -291,7 +295,8 @@ public:
                     collision,
                     worldScale,
                     texX,
-                    texY
+                    texY,
+                    type
                 );
 
                 tiles[y].back().setPosition({x, y});
@@ -303,6 +308,10 @@ public:
     float getTileSize() const { return tileSize; }
     float getMapScale() const { return worldScale; }
     const sf::Texture& getTileset() const { return *tileset; }
+
+    std::vector<std::vector<Tile>> getTiles() const {
+        return tiles;
+    }
 
     void render(sf::RenderTarget& target) {
         for (const auto& row : tiles) {
