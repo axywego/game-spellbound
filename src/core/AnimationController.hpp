@@ -31,6 +31,8 @@ public:
 
     void addAnimation(const std::string& name, const std::vector<sf::IntRect>& frames, float frameDuration, bool loop = true, bool flipX = false);
 
+    bool isSameAnimation(const std::string& name) const;
+
     void play(const std::string& name);
 
     void update(const float& dt);

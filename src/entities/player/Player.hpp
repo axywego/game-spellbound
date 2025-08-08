@@ -20,6 +20,8 @@ protected:
     sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
+
+    bool meleeAttacked = false;
     
 public:
     Player(const sf::Texture& texture_, const Tilemap& map_);

@@ -35,23 +35,45 @@ void GameLevelScene::update(const float& dt) {
 
     player.lock()->updateProjectiles(dt);
 
-    for(const auto& enemy : enemies) {
+    for (size_t i = 0; i < enemies.size(); i++) {
+        const auto& enemy = enemies[i];
 
         //Player has distance damage
         for (auto& projectile : player.lock()->getProjectiles()) {
             if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
-                projectile->onHit(static_cast<Mob*>(enemy.get()));
+                projectile->onHit(enemy.get());
             }
         }
         //Player has melee damage
-        if(auto area = player.lock()->getAttackArea()){
+        if(const auto area = player.lock()->getAttackArea()){
             if(area->findIntersection(enemy->getCollisionRect())){
                 enemy->takeDamage(player.lock()->getDamage());
             }
         }
-
         enemy->update(dt);
+
     }
+
+    // for(const auto& enemy : enemies) {
+    //     if (!enemy) {
+    //         std::cout << "pizda\n";
+    //     }
+    //
+    //     //Player has distance damage
+    //     for (auto& projectile : player.lock()->getProjectiles()) {
+    //         if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
+    //             projectile->onHit(enemy.get());
+    //         }
+    //     }
+    //     //Player has melee damage
+    //     if(const auto area = player.lock()->getAttackArea()){
+    //         if(area->findIntersection(enemy->getCollisionRect())){
+    //             enemy->takeDamage(player.lock()->getDamage());
+    //         }
+    //     }
+    //     i++;
+    //     enemy->update(dt);
+    // }
 
     lastPlayerPos = player.lock()->getSprite().getPosition();
 

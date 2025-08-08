@@ -15,7 +15,7 @@ private:
 
     sf::FloatRect collisionRect;
 
-    const float offset = 5.f;
+    const float offset = 8.f;
 public:
     MobCollision(sf::Sprite& target_, const sf::FloatRect collisionRect_);
 
@@ -23,7 +23,7 @@ public:
 
     sf::Vector2f checkCollisions(const Tilemap& map) const;
     
-    void render(sf::RenderTarget& renderTarget);
+    void render(sf::RenderTarget& renderTarget) const;
 
     sf::FloatRect getCollisionRect() const;
 };

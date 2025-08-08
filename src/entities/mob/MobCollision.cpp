@@ -59,12 +59,21 @@ sf::Vector2f MobCollision::checkCollisions(const Tilemap& map) const {
     return incorrectDir;
 }
 
-void MobCollision::render(sf::RenderTarget& renderTarget) {
+void MobCollision::render(sf::RenderTarget& renderTarget) const {
     renderTarget.draw(lineHorizontalDown);
     renderTarget.draw(lineHorizontalUp);
 
     renderTarget.draw(lineVerticalLeft);
     renderTarget.draw(lineVerticalRight);
+
+
+    sf::RectangleShape shape;
+    shape.setPosition(getCollisionRect().position);
+    shape.setSize(getCollisionRect().size);
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineColor(sf::Color::White);
+    shape.setOutlineThickness(1.f);
+    renderTarget.draw(shape);
 }
 
 sf::FloatRect MobCollision::getCollisionRect() const {

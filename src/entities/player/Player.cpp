@@ -56,12 +56,12 @@ void Player::attacking(const float& dt) {
     if (isAttacking) {
         attackTimer -= dt;
 
-        if(typeDamage == TypeDamage::Melee && animController.hasPenultFrame() && !hasAttacked){
-            hasAttacked = true;
+        if(typeDamage == TypeDamage::Melee && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked){
             checkMelee();
+            hasAttacked = true;
         }
 
-        else if(typeDamage == TypeDamage::Ranged && animController.hasPenultFrame() && !hasAttacked) {
+        else if(typeDamage == TypeDamage::Ranged && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked) {
             hasAttacked = true;
             if(mana - manaCost >= 0.f){
                 mana -= manaCost;
@@ -72,7 +72,10 @@ void Player::attacking(const float& dt) {
 
         if (attackTimer <= 0.0f) {
             isAttacking = false;
+
             hasAttacked = false;
+            meleeAttacked = false;
+
             attackCooldown = attackCooldownTime;
             currentState = State::Idle;
         }
@@ -143,29 +146,27 @@ void Player::updateProjectiles(float dt) {
 }
 
 std::optional<sf::FloatRect> Player::getAttackArea() {
-    if(!hasAttacked && typeDamage == TypeDamage::Melee) {
-        hasAttacked = true;
+    if(!meleeAttacked && typeDamage == TypeDamage::Melee) {
+        meleeAttacked = true;
         return attackArea;
     }
-    else return std::nullopt;
+    return std::nullopt;
 }
 
 void Player::render(sf::RenderTarget& target) {
     target.draw(currentSprite);
 
-    for(auto& projectile : projectiles) {
+    for(const auto& projectile : projectiles) {
         projectile->render(target);
     }
 
-    if(attackArea.position.x != 0){
-        sf::RectangleShape shape;
-        shape.setPosition(attackArea.position);
-        shape.setSize(attackArea.size);
-        shape.setFillColor(sf::Color::Transparent);
-        shape.setOutlineColor(sf::Color::White);
-        shape.setOutlineThickness(1.f);
-        target.draw(shape);
-    }
+    sf::RectangleShape shape;
+    shape.setPosition(attackArea.position);
+    shape.setSize(attackArea.size);
+    shape.setFillColor(sf::Color::Transparent);
+    shape.setOutlineColor(sf::Color::White);
+    shape.setOutlineThickness(1.f);
+    target.draw(shape);
     //collision.render(target);
 }
 

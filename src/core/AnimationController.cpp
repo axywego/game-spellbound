@@ -15,6 +15,10 @@ void AnimationController::addAnimation(const std::string& name, const std::vecto
     animations.insert({name, {frames, frameDuration, loop, flipX}});
 }
 
+bool AnimationController::isSameAnimation(const std::string &name) const {
+    return currentAnimation.contains(name);
+}
+
 void AnimationController::play(const std::string& name) {
     if(currentAnimation != name || animations[name].flipX != isFlippedX) {
         currentAnimation = name;
