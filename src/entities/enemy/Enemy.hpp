@@ -42,7 +42,7 @@ public:
 
     void attacking(const float& dt) override;
 
-    void meleeAttack();
+    void meleeAttack() const;
 
     float getDistanceToPlayer() const;
 

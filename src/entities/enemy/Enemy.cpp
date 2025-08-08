@@ -50,7 +50,7 @@ void Enemy::attacking(const float& dt) {
     }
 }
 
-void Enemy::meleeAttack() {
+void Enemy::meleeAttack() const {
     if(getDistanceToPlayer() <= attackRange) player.lock()->takeDamage(damage);
 }
 
@@ -83,7 +83,6 @@ void Enemy::update(const float& dt) {
     if (isDying) {
         if(animController.hasLastFrame()){
             isAlive = false;
-            //std::cout << isAlive << '\n';
         }
     }
 
@@ -108,6 +107,9 @@ void Enemy::update(const float& dt) {
             else if(attackCooldown <= 0.f) {
                 currentState = State::Attack;
                 startAttacking();
+            }
+            else {
+                currentState = State::Idle;
             }
         }
         else {

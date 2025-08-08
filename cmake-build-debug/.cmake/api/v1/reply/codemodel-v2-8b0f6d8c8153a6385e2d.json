@@ -396,7 +396,7 @@
 				{
 					"directoryIndex" : 0,
 					"id" : "SPELLBOUND_GAME::@6890427a1f51a3e7e1df",
-					"jsonFile" : "target-SPELLBOUND_GAME-Debug-905f831d341d209550d2.json",
+					"jsonFile" : "target-SPELLBOUND_GAME-Debug-a27e6afa53de5ca65a42.json",
 					"name" : "SPELLBOUND_GAME",
 					"projectIndex" : 0
 				},
@@ -417,7 +417,7 @@
 				{
 					"directoryIndex" : 9,
 					"id" : "sfml-audio::@a153e5727587c53fce98",
-					"jsonFile" : "target-sfml-audio-Debug-0c333a1e5b115d4d517b.json",
+					"jsonFile" : "target-sfml-audio-Debug-1baeee74de17065a5d94.json",
 					"name" : "sfml-audio",
 					"projectIndex" : 1
 				},

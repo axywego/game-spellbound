@@ -144893,7 +144893,7 @@ public:
 
     void attacking(const float& dt) override;
 
-    void meleeAttack();
+    void meleeAttack() const;
 
     float getDistanceToPlayer() const;
 
@@ -144902,6 +144902,8 @@ public:
     void move(const float& dt) override ;
 
     void update(const float& dt) override ;
+
+    void updateShowingHP(const float& dt);
 
     void render(sf::RenderTarget& target) override ;
 };
@@ -144957,7 +144959,7 @@ void Enemy::attacking(const float& dt) {
     }
 }
 
-void Enemy::meleeAttack() {
+void Enemy::meleeAttack() const {
     if(getDistanceToPlayer() <= attackRange) player.lock()->takeDamage(damage);
 }
 
@@ -145016,6 +145018,9 @@ void Enemy::update(const float& dt) {
                 currentState = State::Attack;
                 startAttacking();
             }
+            else {
+                currentState = State::Idle;
+            }
         }
         else {
             currentState = State::Idle;
@@ -145025,7 +145030,10 @@ void Enemy::update(const float& dt) {
     collision.update();
     attacking(dt);
 
+    updateShowingHP(dt);
+}
 
+void Enemy::updateShowingHP(const float& dt) {
     if(isShowingHp){
         timerToShowHp += dt;
     }

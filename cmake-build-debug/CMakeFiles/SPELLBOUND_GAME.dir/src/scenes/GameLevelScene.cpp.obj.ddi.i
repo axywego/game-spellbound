@@ -144948,7 +144948,7 @@ public:
 
     void attacking(const float& dt) override;
 
-    void meleeAttack();
+    void meleeAttack() const;
 
     float getDistanceToPlayer() const;
 
@@ -144957,6 +144957,8 @@ public:
     void move(const float& dt) override ;
 
     void update(const float& dt) override ;
+
+    void updateShowingHP(const float& dt);
 
     void render(sf::RenderTarget& target) override ;
 };
