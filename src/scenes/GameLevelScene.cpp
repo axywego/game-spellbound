@@ -21,19 +21,18 @@ void GameLevelScene::load() {
 
 void GameLevelScene::update(const float& dt) {
 
-    enemies.erase(
-        std::remove_if(enemies.begin(), enemies.end(),
-                       [](const std::unique_ptr<Enemy>& e) {
-                           return !e->getIsAlive();
-                       }),
-        enemies.end()
-    );
+    std::erase_if(enemies,
+              [](const std::unique_ptr<Enemy>& e) {
+                  return !e->getIsAlive();
+              });
 
     player.lock()->update(dt);
 
     camera.update(dt);
 
     player.lock()->updateProjectiles(dt);
+
+    const auto& playerMeleeAreaAttack = player.lock()->getAttackArea();
 
     for (size_t i = 0; i < enemies.size(); i++) {
         const auto& enemy = enemies[i];
@@ -44,36 +43,15 @@ void GameLevelScene::update(const float& dt) {
                 projectile->onHit(enemy.get());
             }
         }
+
         //Player has melee damage
-        if(const auto area = player.lock()->getAttackArea()){
-            if(area->findIntersection(enemy->getCollisionRect())){
-                enemy->takeDamage(player.lock()->getDamage());
-            }
+        if(playerMeleeAreaAttack && playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())){
+            enemy->takeDamage(player.lock()->getDamage());
         }
+
         enemy->update(dt);
 
     }
-
-    // for(const auto& enemy : enemies) {
-    //     if (!enemy) {
-    //         std::cout << "pizda\n";
-    //     }
-    //
-    //     //Player has distance damage
-    //     for (auto& projectile : player.lock()->getProjectiles()) {
-    //         if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
-    //             projectile->onHit(enemy.get());
-    //         }
-    //     }
-    //     //Player has melee damage
-    //     if(const auto area = player.lock()->getAttackArea()){
-    //         if(area->findIntersection(enemy->getCollisionRect())){
-    //             enemy->takeDamage(player.lock()->getDamage());
-    //         }
-    //     }
-    //     i++;
-    //     enemy->update(dt);
-    // }
 
     lastPlayerPos = player.lock()->getSprite().getPosition();
 

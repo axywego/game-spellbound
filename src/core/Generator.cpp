@@ -6,8 +6,8 @@ uint64_t generate8Bytes(const uint64_t& from, const uint64_t& to) {
 
     nanos = (nanos >> 32) ^ (nanos & 0xFFFFFFFF);
     nanos = nanos * 0x45d9f3b;
-    auto newRand = std::hash<std::uint64_t>{}(nanos);
-    nanos = nanos ^ (nanos >> 16);
+    const auto newRand = std::hash<std::uint64_t>{}(nanos);
+    nanos = nanos | newRand ^ (nanos >> 16);
 
     return from + (nanos % (to - from + 1));
 }
