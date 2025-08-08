@@ -7,7 +7,7 @@ class Shaman : public Enemy {
 private:
 
 public:
-    Shaman(const Tilemap& map_, std::weak_ptr<Player> player_);
+    Shaman(const Tilemap& map_, const std::weak_ptr<Player> &player_);
 
     void spawnProjectile() override;
     void spawnMobs() override;

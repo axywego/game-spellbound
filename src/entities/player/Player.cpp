@@ -1,9 +1,8 @@
 #include "Player.hpp"
 
-Player::Player(const std::string& texturePath, const Tilemap& map_):
-Mob(sf::Texture(texturePath), map_, sf::FloatRect {{40.f, 44.f},
-{64.f, 52.f}}), arrowTexture("real img/1 Characters/Other/Arrow.png"),
-fireballTexture("real img/1 Characters/Other/Fireball.png") { }
+Player::Player(const sf::Texture& texture_, const Tilemap& map_):
+Mob(texture_, map_, sf::FloatRect {{40.f, 44.f},
+{64.f, 52.f}}) { }
 
 void Player::update(const float& dt) {
     if (isDying) {

@@ -341,6 +341,7 @@ CMakeFiles\SPELLBOUND_GAME.dir\src\entities\mob\Projectile.cpp.obj.ddi: \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/AnimationController.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/MobCollision.hpp \
+ D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp \
  C:/msys64/ucrt64/include/c++/15.1.0/algorithm \
  C:/msys64/ucrt64/include/c++/15.1.0/bits/ranges_algo.h \
  C:/msys64/ucrt64/include/c++/15.1.0/pstl/glue_algorithm_defs.h

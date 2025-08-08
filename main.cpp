@@ -1,5 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
+#include "src/core/ResourceManager.hpp"
 #include "src/scenes/SceneManager.hpp"
 
 int main() {

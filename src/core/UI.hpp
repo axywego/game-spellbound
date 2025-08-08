@@ -4,6 +4,7 @@
 #include <string>
 #include "../entities/player/Player.hpp"
 #include "StringFormat.hpp"
+#include "ResourceManager.hpp"
 
 class HUD {
 private:

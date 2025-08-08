@@ -16,13 +16,13 @@ class Player : public Mob {
 protected:
 
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    sf::Texture arrowTexture;
-    sf::Texture fireballTexture;
+    sf::Texture arrowTexture {ResourceManager::getInstance().getTexture("player_arrow")};
+    sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
     
 public:
-    Player(const std::string& texturePath, const Tilemap& map_);
+    Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
     const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;

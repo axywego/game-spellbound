@@ -137170,6 +137170,35 @@ public:
     sf::FloatRect getCollisionRect() const;
 };
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 8 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
 
 class Mob {
 protected:
@@ -141948,13 +141977,13 @@ class Player : public Mob {
 protected:
 
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    sf::Texture arrowTexture;
-    sf::Texture fireballTexture;
+    sf::Texture arrowTexture {ResourceManager::getInstance().getTexture("player_arrow")};
+    sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
 
 public:
-    Player(const std::string& texturePath, const Tilemap& map_);
+    Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
     const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;
@@ -141985,6 +142014,7 @@ public:
 
 std::string makeFormatedFloat(const float& n);
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/UI.hpp" 2
+
 
 class HUD {
 private:
@@ -144940,7 +144970,7 @@ private:
     float transitionSpeed { 2.f };
     bool isTransition { true };
 
-    sf::Texture textureBackground;
+    sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
     Button startButton;
@@ -144951,7 +144981,7 @@ private:
     std::function<void()> onExitClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback);
+    MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback, const std::function<void()> &exitCallback);
 
     void load() override ;
 
@@ -144965,13 +144995,15 @@ public:
 };
 # 2 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/scenes/MenuScene.cpp" 2
 
-MenuScene::MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback):
-Scene(window_), textureBackground("img/backgroundMenu.png"), backgroundImage(textureBackground),
-startButton(sf::Texture("img/startBtn.png"), window),
-settingsButton(sf::Texture("img/settingsBtn.png"), window),
-exitButton(sf::Texture("img/exitBtn.png"), window),
+MenuScene::MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback,
+    const std::function<void()> &exitCallback):
+Scene(window_), backgroundImage(textureBackground),
+startButton(ResourceManager::getInstance().getTexture("start_button"), window),
+settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
+exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),
 onStartClick(startCallback),
 onExitClick(exitCallback) {
+
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
     view.setCenter(target);

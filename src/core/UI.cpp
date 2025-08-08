@@ -136,19 +136,31 @@ void HUD::render(sf::RenderTarget& target){
     target.draw(textSpeed);
 }
 
-sf::Texture HUD::textureHealthMana("real img/4 GUI/4 Bars/BarsMap.png");
+// sf::Texture HUD::textureHealthMana("real img/4 GUI/4 Bars/BarsMap.png");
+// std::vector<sf::Sprite> HUD::spritesHP;
+// std::vector<sf::Sprite> HUD::spritesMana;
+// sf::Vector2i HUD::posLeft {54, 18};
+// sf::Vector2i HUD::posCenter {62, 18};
+// sf::Vector2i HUD::posRight {98, 18};
+// sf::Texture HUD::textureIcons("real img/4 GUI/3 Icons/Iconset1.png");
+// sf::Sprite HUD::spriteDamage(textureIcons);
+// sf::Sprite HUD::spriteSpeed(textureIcons);
+// sf::Font HUD::font("fonts/Cafe24PROUP.ttf");
+// sf::Text HUD::textDamage(font);
+// sf::Text HUD::textSpeed(font);
+
+sf::Texture HUD::textureHealthMana {ResourceManager::getInstance().getTexture("health")};
 std::vector<sf::Sprite> HUD::spritesHP;
 std::vector<sf::Sprite> HUD::spritesMana;
 sf::Vector2i HUD::posLeft {54, 18};
 sf::Vector2i HUD::posCenter {62, 18};
 sf::Vector2i HUD::posRight {98, 18};
-sf::Texture HUD::textureIcons("real img/4 GUI/3 Icons/Iconset1.png");
+sf::Texture HUD::textureIcons {ResourceManager::getInstance().getTexture("icons")};
 sf::Sprite HUD::spriteDamage(textureIcons);
 sf::Sprite HUD::spriteSpeed(textureIcons);
-sf::Font HUD::font("fonts/Cafe24PROUP.ttf");
+sf::Font HUD::font("../resources/fonts/Cafe24PROUP.ttf");
 sf::Text HUD::textDamage(font);
 sf::Text HUD::textSpeed(font);
-
 
 
 Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_): texture(texture_), sprite(texture), window(window_) { }

@@ -1,9 +1,13 @@
 #include "PauseScene.hpp"
 
-PauseScene::PauseScene(sf::RenderWindow& window_, std::function<void()> resumeCallback, std::function<void()> menuCallback):
-Scene(window_), onResumeClick(resumeCallback), onMenuClick(menuCallback),
-resumeButton(sf::Texture("img/startBtn.png"), window),
-menuButton(sf::Texture("img/exitBtn.png"), window)   {
+PauseScene::PauseScene(sf::RenderWindow& window_, const std::function<void()> &resumeCallback,
+    const std::function<void()> &menuCallback):
+
+Scene(window_),
+resumeButton(ResourceManager::getInstance().getTexture("start_button"), window),
+menuButton(ResourceManager::getInstance().getTexture("exit_button"), window),
+onResumeClick(resumeCallback),
+onMenuClick(menuCallback) {
 
     view.setSize({1920.f, 1080.f});
     view.setCenter({960.f, 540.f});

@@ -1,12 +1,14 @@
 #include "MenuScene.hpp"
 
-MenuScene::MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback):
-Scene(window_), textureBackground("img/backgroundMenu.png"), backgroundImage(textureBackground),
-startButton(sf::Texture("img/startBtn.png"), window),
-settingsButton(sf::Texture("img/settingsBtn.png"), window),
-exitButton(sf::Texture("img/exitBtn.png"), window),
+MenuScene::MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback,
+    const std::function<void()> &exitCallback):
+Scene(window_), backgroundImage(textureBackground),
+startButton(ResourceManager::getInstance().getTexture("start_button"), window),
+settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
+exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),
 onStartClick(startCallback),
 onExitClick(exitCallback) {
+
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
     view.setCenter(target);

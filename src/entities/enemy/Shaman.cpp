@@ -1,7 +1,7 @@
 #include "Shaman.hpp"
 
-Shaman::Shaman(const Tilemap& map_, std::weak_ptr<Player> player_):
-Enemy(sf::Texture("real img/3 Dungeon Enemies/4/4.png"), map_,
+Shaman::Shaman(const Tilemap& map_, const std::weak_ptr<Player> &player_):
+Enemy(ResourceManager::getInstance().getTexture("enemy_shaman"), map_,
 sf::FloatRect({{32.f, 32.f},{60.f, 60.f}}), player_) {
     speed = 230.f;
     maxHealth = 2.f;

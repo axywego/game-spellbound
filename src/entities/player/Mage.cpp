@@ -1,6 +1,6 @@
 #include "Mage.hpp"
 
-Mage::Mage(const Tilemap& map): Player("real img/1 Characters/3/3.png", map) {
+Mage::Mage(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_mage"), map) {
     speed = 425.f;
     maxHealth = 3.f;
     health = maxHealth;

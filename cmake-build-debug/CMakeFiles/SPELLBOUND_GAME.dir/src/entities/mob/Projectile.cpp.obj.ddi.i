@@ -137141,6 +137141,35 @@ public:
     sf::FloatRect getCollisionRect() const;
 };
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 8 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
 
 class Mob {
 protected:

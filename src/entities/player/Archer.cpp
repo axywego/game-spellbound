@@ -1,6 +1,8 @@
 #include "Archer.hpp"
 
-Archer::Archer(const Tilemap& map): Player("real img/1 Characters/1/1.png", map) {
+#include "../../core/ResourceManager.hpp"
+
+Archer::Archer(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_archer"), map) {
     speed = 450.f;
     maxHealth = 4.f;
     health = maxHealth;

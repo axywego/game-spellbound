@@ -17,7 +17,6 @@ void Enemy::attacking(const float& dt) {
     if (isAttacking) {
         attackTimer -= dt;
 
-        // attackTimer говорит о том, когда будет атака( на каком моменте анимации )
         if(typeDamage == TypeDamage::Melee && !hasAttacked && attackTimer <= .1f){
             meleeAttack();
             hasAttacked = true;

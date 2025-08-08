@@ -343,6 +343,7 @@ CMakeFiles\SPELLBOUND_GAME.dir\src\generators\EnemyGenerator.cpp.obj.ddi: \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/AnimationController.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/MobCollision.hpp \
+ D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/player/Player.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Projectile.hpp \
  C:/msys64/ucrt64/include/c++/15.1.0/algorithm \

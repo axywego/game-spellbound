@@ -35562,8 +35562,8 @@ namespace __cxx11 {
 extern "C" {
 
 
-unsigned long long* __local_stdio_printf_options(void);
-unsigned long long* __local_stdio_scanf_options(void);
+unsigned long long* __attribute__((__cdecl__)) __local_stdio_printf_options(void);
+unsigned long long* __attribute__((__cdecl__)) __local_stdio_scanf_options(void);
 # 39 "C:/msys64/ucrt64/include/corecrt_stdio_config.h" 3
 }
 # 11 "C:/msys64/ucrt64/include/wchar.h" 2 3
@@ -35802,7 +35802,7 @@ __attribute__ ((__dllimport__)) FILE *__attribute__((__cdecl__)) __acrt_iob_func
 typedef off32_t off_t;
 # 258 "C:/msys64/ucrt64/include/wchar.h" 2 3
 # 1 "C:/msys64/ucrt64/include/_mingw_stat64.h" 1 3
-# 19 "C:/msys64/ucrt64/include/_mingw_stat64.h" 3
+# 29 "C:/msys64/ucrt64/include/_mingw_stat64.h" 3
   struct _stat32 {
     _dev_t st_dev;
    _ino_t st_ino;
@@ -35816,22 +35816,6 @@ typedef off32_t off_t;
     __time32_t st_mtime;
     __time32_t st_ctime;
   };
-
-
-  struct stat {
-    _dev_t st_dev;
-    _ino_t st_ino;
-    unsigned short st_mode;
-    short st_nlink;
-    short st_uid;
-    short st_gid;
-    _dev_t st_rdev;
-    _off_t st_size;
-    time_t st_atime;
-    time_t st_mtime;
-    time_t st_ctime;
-  };
-
 
   struct _stat32i64 {
     _dev_t st_dev;
@@ -35881,7 +35865,7 @@ typedef off32_t off_t;
 
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _wstat32(const wchar_t *_Name,struct _stat32 *_Stat);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _wstat32i64(const wchar_t *_Name,struct _stat32i64 *_Stat);
-  int __attribute__((__cdecl__)) _wstat64i32(const wchar_t *_Name,struct _stat64i32 *_Stat);
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _wstat64i32(const wchar_t *_Name,struct _stat64i32 *_Stat);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _wstat64(const wchar_t *_Name,struct _stat64 *_Stat);
 # 277 "C:/msys64/ucrt64/include/wchar.h" 3
   __attribute__ ((__dllimport__)) wchar_t *_cgetws(wchar_t *_Buffer) ;
@@ -36066,7 +36050,7 @@ __asm__("__mingw_snwprintf");
                                                       __attribute__ ((__nonnull__ (3)))
 int vsnwprintf (wchar_t *__stream, size_t __n, const wchar_t *__format, __builtin_va_list __local_argv)
 __asm__("__mingw_vsnwprintf");
-# 520 "C:/msys64/ucrt64/include/wchar.h" 3
+# 497 "C:/msys64/ucrt64/include/wchar.h" 3
   __attribute__ ((__dllimport__)) FILE *__attribute__((__cdecl__)) _wfsopen(const wchar_t *_Filename,const wchar_t *_Mode,int _ShFlag);
 
 
@@ -36084,24 +36068,17 @@ __asm__("__mingw_vsnwprintf");
   __attribute__ ((__dllimport__)) wchar_t *__attribute__((__cdecl__)) _getws(wchar_t *_String) ;
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _putws(const wchar_t *_Str);
 
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _scwprintf(const wchar_t * __restrict__ _Format,...);
 
-  inline __attribute__((__cdecl__))
-  int __attribute__((__cdecl__)) _scwprintf(const wchar_t * __restrict__ _Format,...)
-  {
-    __builtin_va_list __ap;
-    int __ret;
-    __builtin_va_start(__ap, _Format);
-    __ret = __stdio_common_vswprintf((*__local_stdio_printf_options()) | 0x0002ULL, __null, 0, _Format, __null, __ap);
-    __builtin_va_end(__ap);
-    return __ret;
-  }
-  int __attribute__((__cdecl__)) _snwprintf(wchar_t * __restrict__ _Dest,size_t _Count,const wchar_t * __restrict__ _Format,...) ;
-  inline __attribute__((__cdecl__))
-  int __attribute__((__cdecl__)) _vsnwprintf(wchar_t * __restrict__ _Dest,size_t _Count,const wchar_t * __restrict__ _Format,va_list _Args)
-  {
-    return __stdio_common_vswprintf((*__local_stdio_printf_options()) | 0x0001ULL, _Dest, _Count, _Format, __null, _Args);
-  }
-# 587 "C:/msys64/ucrt64/include/wchar.h" 3
+
+
+
+
+
+
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _snwprintf(wchar_t * __restrict__ _Dest,size_t _Count,const wchar_t * __restrict__ _Format,...) ;
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _vsnwprintf(wchar_t * __restrict__ _Dest,size_t _Count,const wchar_t * __restrict__ _Format,va_list _Args) ;
+# 542 "C:/msys64/ucrt64/include/wchar.h" 3
   inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vfwscanf_l(FILE *_File, const wchar_t *_Format, _locale_t _Locale, va_list _ArgList)
   {
     return __stdio_common_vfwscanf((*__local_stdio_scanf_options()), _File, _Format, _Locale, _ArgList);
@@ -36320,10 +36297,9 @@ __asm__("__mingw_vsnwprintf");
   {
     return __stdio_common_vswprintf((*__local_stdio_printf_options()) | 0x0002ULL, __null, 0, _Format, _Locale, _ArgList);
   }
-  inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vscwprintf(const wchar_t *_Format, va_list _ArgList)
-  {
-    return _vscwprintf_l(_Format, __null, _ArgList);
-  }
+
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _vscwprintf(const wchar_t * __restrict__ _Format,va_list _ArgList);
+
   inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _scwprintf_l(const wchar_t *_Format, _locale_t _Locale, ...)
   {
     __builtin_va_list _ArgList;
@@ -36346,10 +36322,7 @@ __asm__("__mingw_vsnwprintf");
   {
     return _vswprintf_c_l(_DstBuf, _MaxCount, _Format, _Locale, _ArgList);
   }
-  inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _vswprintf(wchar_t *_DstBuf, const wchar_t *_Format, va_list _ArgList)
-  {
-    return _vswprintf_c_l(_DstBuf, (size_t)-1, _Format, __null, _ArgList);
-  }
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _vswprintf(wchar_t * __restrict__ _Dest,const wchar_t * __restrict__ _Format,va_list _Args);
   inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _swprintf_c_l(wchar_t *_DstBuf, size_t _MaxCount, const wchar_t *_Format, _locale_t _Locale, ...)
   {
     __builtin_va_list _ArgList;
@@ -36368,41 +36341,23 @@ __asm__("__mingw_vsnwprintf");
     __builtin_va_end(_ArgList);
     return _Ret;
   }
-  inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) _swprintf(wchar_t *_DstBuf, const wchar_t *_Format, ...)
-  {
-    __builtin_va_list _ArgList;
-    int _Ret;
-    __builtin_va_start(_ArgList, _Format);
-    _Ret = _vswprintf_c_l(_DstBuf, (size_t)-1, _Format, __null, _ArgList);
-    __builtin_va_end(_ArgList);
-    return _Ret;
-  }
-# 896 "C:/msys64/ucrt64/include/wchar.h" 3
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _swprintf(wchar_t * __restrict__ _Dest,const wchar_t * __restrict__ _Format,...);
+# 839 "C:/msys64/ucrt64/include/wchar.h" 3
 # 1 "C:/msys64/ucrt64/include/swprintf.inl" 1 3
-# 14 "C:/msys64/ucrt64/include/swprintf.inl" 3
+# 12 "C:/msys64/ucrt64/include/swprintf.inl" 3
 extern "C++" {
 
-inline __attribute__((__cdecl__))
                                                       __attribute__ ((__nonnull__ (2)))
-int vswprintf (wchar_t *__stream, const wchar_t *__format, __builtin_va_list __local_argv)
-{
-  return _vswprintf( __stream, __format, __local_argv );
-}
+int vswprintf (wchar_t *__stream, const wchar_t *__format, __builtin_va_list __local_argv) __asm__("_vswprintf");
 
-inline __attribute__((__cdecl__))
                                                       __attribute__ ((__nonnull__ (2)))
-int swprintf (wchar_t *__stream, const wchar_t *__format, ...)
-{
-# 37 "C:/msys64/ucrt64/include/swprintf.inl" 3
-  return _swprintf( __stream, __format, __builtin_va_arg_pack() );
+int swprintf (wchar_t *__stream, const wchar_t *__format, ...) __asm__("_swprintf");
 
 }
-
-}
-# 897 "C:/msys64/ucrt64/include/wchar.h" 2 3
-# 910 "C:/msys64/ucrt64/include/wchar.h" 3
+# 840 "C:/msys64/ucrt64/include/wchar.h" 2 3
+# 853 "C:/msys64/ucrt64/include/wchar.h" 3
   __attribute__ ((__dllimport__)) wchar_t *__attribute__((__cdecl__)) _wtempnam(const wchar_t *_Directory,const wchar_t *_FilePrefix);
-# 924 "C:/msys64/ucrt64/include/wchar.h" 3
+# 867 "C:/msys64/ucrt64/include/wchar.h" 3
   __attribute__ ((__dllimport__)) FILE *__attribute__((__cdecl__)) _wfdopen(int _FileHandle ,const wchar_t *_Mode);
   __attribute__ ((__dllimport__)) FILE *__attribute__((__cdecl__)) _wfopen(const wchar_t * __restrict__ _Filename,const wchar_t * __restrict__ _Mode) ;
   __attribute__ ((__dllimport__)) FILE *__attribute__((__cdecl__)) _wfreopen(const wchar_t * __restrict__ _Filename,const wchar_t * __restrict__ _Mode,FILE * __restrict__ _OldFile) ;
@@ -36421,7 +36376,7 @@ int swprintf (wchar_t *__stream, const wchar_t *__format, ...)
   __attribute__ ((__dllimport__)) wint_t __attribute__((__cdecl__)) _fgetwc_nolock(FILE *_File);
   __attribute__ ((__dllimport__)) wint_t __attribute__((__cdecl__)) _fputwc_nolock(wchar_t _Ch,FILE *_File);
   __attribute__ ((__dllimport__)) wint_t __attribute__((__cdecl__)) _ungetwc_nolock(wint_t _Ch,FILE *_File);
-# 1045 "C:/msys64/ucrt64/include/wchar.h" 3
+# 989 "C:/msys64/ucrt64/include/wchar.h" 3
   __attribute__ ((__dllimport__)) wchar_t *__attribute__((__cdecl__)) _wcsdup(const wchar_t *_Str);
 
 
@@ -36528,9 +36483,9 @@ int swprintf (wchar_t *__stream, const wchar_t *__format, ...)
 
 
   wchar_t *__attribute__((__cdecl__)) _wctime(const time_t *_Time) ;
-# 1162 "C:/msys64/ucrt64/include/wchar.h" 3
+# 1106 "C:/msys64/ucrt64/include/wchar.h" 3
   errno_t __attribute__((__cdecl__)) _wctime_s(wchar_t *, size_t, const time_t *);
-# 1175 "C:/msys64/ucrt64/include/wchar.h" 3
+# 1119 "C:/msys64/ucrt64/include/wchar.h" 3
   typedef struct _Mbstatet {
     unsigned long _Wchar;
     unsigned short _Byte, _State;
@@ -36542,6 +36497,7 @@ int swprintf (wchar_t *__stream, const wchar_t *__format, ...)
   typedef wchar_t _Wint_t;
 
   wint_t __attribute__((__cdecl__)) btowc(int);
+  int __attribute__((__cdecl__)) mbsinit(const mbstate_t *ps);
   size_t __attribute__((__cdecl__)) mbrlen(const char * __restrict__ _Ch,size_t _SizeInBytes,mbstate_t * __restrict__ _State);
   size_t __attribute__((__cdecl__)) mbrtowc(wchar_t * __restrict__ _DstCh,const char * __restrict__ _SrcCh,size_t _SizeInBytes,mbstate_t * __restrict__ _State);
   size_t __attribute__((__cdecl__)) mbsrtowcs(wchar_t * __restrict__ _Dest,const char ** __restrict__ _PSrc,size_t _Count,mbstate_t * __restrict__ _State) ;
@@ -36557,23 +36513,17 @@ int swprintf (wchar_t *__stream, const wchar_t *__format, ...)
   wchar_t * __attribute__((__cdecl__)) wmempcpy (wchar_t *_Dst, const wchar_t *_Src, size_t _Size);
   wchar_t *__attribute__((__cdecl__)) wmemmove(wchar_t *s1, const wchar_t *s2, size_t n) ;
   int __attribute__((__cdecl__)) fwide(FILE *stream,int mode);
-
-
-  inline __attribute__((__cdecl__)) int __attribute__((__cdecl__)) mbsinit(const mbstate_t *_P) { return (!_P || _P->_Wchar == 0); }
-
-
-
   __extension__ long long __attribute__((__cdecl__)) wcstoll(const wchar_t * __restrict__ nptr,wchar_t ** __restrict__ endptr, int base);
   __extension__ unsigned long long __attribute__((__cdecl__)) wcstoull(const wchar_t * __restrict__ nptr,wchar_t ** __restrict__ endptr, int base);
 
 
   void *__attribute__((__cdecl__)) memmove(void *_Dst,const void *_Src,size_t _MaxCount);
   void *__attribute__((__cdecl__)) memcpy(void * __restrict__ _Dst,const void * __restrict__ _Src,size_t _MaxCount) ;
-# 1264 "C:/msys64/ucrt64/include/wchar.h" 3
+# 1200 "C:/msys64/ucrt64/include/wchar.h" 3
 int __attribute__((__cdecl__)) __mingw_str_wide_utf8 (const wchar_t * const wptr, char **mbptr, size_t * buflen);
-# 1278 "C:/msys64/ucrt64/include/wchar.h" 3
+# 1214 "C:/msys64/ucrt64/include/wchar.h" 3
 int __attribute__((__cdecl__)) __mingw_str_utf8_wide (const char *const mbptr, wchar_t ** wptr, size_t * buflen);
-# 1287 "C:/msys64/ucrt64/include/wchar.h" 3
+# 1223 "C:/msys64/ucrt64/include/wchar.h" 3
 void __attribute__((__cdecl__)) __mingw_str_free(void *ptr);
 
 
@@ -36917,7 +36867,7 @@ extern "C" {
 
 
 }
-# 1298 "C:/msys64/ucrt64/include/wchar.h" 2 3
+# 1234 "C:/msys64/ucrt64/include/wchar.h" 2 3
 # 50 "C:/msys64/ucrt64/include/c++/15.1.0/cwchar" 2 3
 # 64 "C:/msys64/ucrt64/include/c++/15.1.0/cwchar" 3
 namespace std
@@ -38603,35 +38553,25 @@ int vsnprintf (char *__stream, size_t __n, const char *__format, __builtin_va_li
 
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _flushall(void);
   FILE *__attribute__((__cdecl__)) fopen(const char * __restrict__ _Filename,const char * __restrict__ _Mode) ;
-  FILE *fopen64(const char * __restrict__ filename,const char * __restrict__ mode);
+  FILE *__attribute__((__cdecl__)) fopen64(const char * __restrict__ filename,const char * __restrict__ mode);
   int __attribute__((__cdecl__)) fputc(int _Ch,FILE *_File);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _fputchar(int _Ch);
   int __attribute__((__cdecl__)) fputs(const char * __restrict__ _Str,FILE * __restrict__ _File);
   size_t __attribute__((__cdecl__)) fread(void * __restrict__ _DstBuf,size_t _ElementSize,size_t _Count,FILE * __restrict__ _File);
   FILE *__attribute__((__cdecl__)) freopen(const char * __restrict__ _Filename,const char * __restrict__ _Mode,FILE * __restrict__ _File) ;
+  FILE *__attribute__((__cdecl__)) freopen64(const char * __restrict__ _Filename,const char * __restrict__ _Mode,FILE * __restrict__ _File);
   int __attribute__((__cdecl__)) fsetpos(FILE *_File,const fpos_t *_Pos);
   int __attribute__((__cdecl__)) fsetpos64(FILE *_File,const fpos_t *_Pos);
   int __attribute__((__cdecl__)) fseek(FILE *_File,long _Offset,int _Origin);
   long __attribute__((__cdecl__)) ftell(FILE *_File);
 
-
-
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _fseeki64(FILE *_File,long long _Offset,int _Origin);
   __attribute__ ((__dllimport__)) long long __attribute__((__cdecl__)) _ftelli64(FILE *_File);
-
-  inline __attribute__((__cdecl__)) int fseeko(FILE *_File, _off_t _Offset, int _Origin) {
-    return fseek(_File, _Offset, _Origin);
-  }
-  inline __attribute__((__cdecl__)) int fseeko64(FILE *_File, _off64_t _Offset, int _Origin) {
-    return _fseeki64(_File, _Offset, _Origin);
-  }
-  inline __attribute__((__cdecl__)) _off_t ftello(FILE *_File) {
-    return ftell(_File);
-  }
-  inline __attribute__((__cdecl__)) _off64_t ftello64(FILE *_File) {
-    return _ftelli64(_File);
-  }
-# 622 "C:/msys64/ucrt64/include/stdio.h" 3
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) fseeko(FILE *_File, _off_t _Offset, int _Origin);
+  __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) fseeko64(FILE *_File, _off64_t _Offset, int _Origin);
+  __attribute__ ((__dllimport__)) _off_t __attribute__((__cdecl__)) ftello(FILE *_File);
+  __attribute__ ((__dllimport__)) _off64_t __attribute__((__cdecl__)) ftello64(FILE *_File);
+# 605 "C:/msys64/ucrt64/include/stdio.h" 3
   size_t __attribute__((__cdecl__)) fwrite(const void * __restrict__ _Str,size_t _Size,size_t _Count,FILE * __restrict__ _File);
   int __attribute__((__cdecl__)) getc(FILE *_File);
   int __attribute__((__cdecl__)) getchar(void);
@@ -38688,6 +38628,7 @@ int vsnprintf (char *__stream, size_t __n, const char *__format, __builtin_va_li
   __attribute__((__format__(__ms_printf__, 1,0))) __attribute__ ((__nonnull__ (1)))
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _vscprintf(const char * __restrict__ _Format,va_list _ArgList);
   FILE *__attribute__((__cdecl__)) tmpfile(void) ;
+  FILE *__attribute__((__cdecl__)) tmpfile64(void);
   char *__attribute__((__cdecl__)) tmpnam(char *_Buffer);
   int __attribute__((__cdecl__)) ungetc(int _Ch,FILE *_File);
 
@@ -38696,15 +38637,15 @@ int vsnprintf (char *__stream, size_t __n, const char *__format, __builtin_va_li
   int __attribute__((__cdecl__)) _vsnprintf(char * __restrict__ _Dest,size_t _Count,const char * __restrict__ _Format,va_list _Args) ;
   __attribute__((__format__ (__gnu_printf__, 3, 4))) __attribute__ ((__nonnull__ (3)))
   int __attribute__((__cdecl__)) _snprintf(char * __restrict__ _Dest,size_t _Count,const char * __restrict__ _Format,...) ;
-# 905 "C:/msys64/ucrt64/include/stdio.h" 3
+# 889 "C:/msys64/ucrt64/include/stdio.h" 3
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _set_printf_count_output(int _Value);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _get_printf_count_output(void);
-# 1297 "C:/msys64/ucrt64/include/stdio.h" 3
+# 1210 "C:/msys64/ucrt64/include/stdio.h" 3
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _fgetc_nolock(FILE *_File);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _fputc_nolock(int _Char, FILE *_File);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _getc_nolock(FILE *_File);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _putc_nolock(int _Char, FILE *_File);
-# 1312 "C:/msys64/ucrt64/include/stdio.h" 3
+# 1225 "C:/msys64/ucrt64/include/stdio.h" 3
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _lock_file(FILE *_File);
   __attribute__ ((__dllimport__)) void __attribute__((__cdecl__)) _unlock_file(FILE *_File);
 
@@ -38717,7 +38658,7 @@ int vsnprintf (char *__stream, size_t __n, const char *__format, __builtin_va_li
   __extension__ __attribute__ ((__dllimport__)) long long __attribute__((__cdecl__)) _ftelli64_nolock(FILE *_File);
   __attribute__ ((__dllimport__)) size_t __attribute__((__cdecl__)) _fwrite_nolock(const void * __restrict__ _DstBuf,size_t _Size,size_t _Count,FILE * __restrict__ _File);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _ungetc_nolock(int _Ch,FILE *_File);
-# 1334 "C:/msys64/ucrt64/include/stdio.h" 3
+# 1247 "C:/msys64/ucrt64/include/stdio.h" 3
   char *__attribute__((__cdecl__)) tempnam(const char *_Directory,const char *_FilePrefix) ;
 
 
@@ -38731,7 +38672,7 @@ int vsnprintf (char *__stream, size_t __n, const char *__format, __builtin_va_li
   int __attribute__((__cdecl__)) getw(FILE *_File) ;
   int __attribute__((__cdecl__)) putw(int _Ch,FILE *_File) ;
   int __attribute__((__cdecl__)) rmtmp(void) ;
-# 1417 "C:/msys64/ucrt64/include/stdio.h" 3
+# 1330 "C:/msys64/ucrt64/include/stdio.h" 3
   __attribute__ ((__dllimport__)) intptr_t __attribute__((__cdecl__)) _spawnv(int _Mode,const char *_Filename,const char *const *_ArgList);
   __attribute__ ((__dllimport__)) intptr_t __attribute__((__cdecl__)) _spawnve(int _Mode,const char *_Filename,const char *const *_ArgList,const char *const *_Env);
   __attribute__ ((__dllimport__)) intptr_t __attribute__((__cdecl__)) _spawnvp(int _Mode,const char *_Filename,const char *const *_ArgList);
@@ -39271,7 +39212,7 @@ extern "C" {
 
 
 }
-# 1436 "C:/msys64/ucrt64/include/stdio.h" 2 3
+# 1349 "C:/msys64/ucrt64/include/stdio.h" 2 3
 # 13 "C:/msys64/ucrt64/include/locale.h" 2 3
 
 
@@ -39324,13 +39265,16 @@ extern "C" {
   __attribute__ ((__dllimport__)) unsigned int __attribute__((__cdecl__)) ___lc_codepage_func(void);
 
 
+  unsigned int __attribute__((__cdecl__)) __mingw_filename_cp(void);
+
+
 
 
 
 
 
   __attribute__ ((__dllimport__)) _locale_t __attribute__((__cdecl__)) _wcreate_locale(int _Category, const wchar_t *_Locale);
-# 117 "C:/msys64/ucrt64/include/locale.h" 3
+# 120 "C:/msys64/ucrt64/include/locale.h" 3
 }
 
 
@@ -40078,21 +40022,69 @@ struct timezone {
 }
 # 323 "C:/msys64/ucrt64/include/time.h" 3
 # 1 "C:/msys64/ucrt64/include/pthread_time.h" 1 3
-# 26 "C:/msys64/ucrt64/include/pthread_time.h" 3
+# 27 "C:/msys64/ucrt64/include/pthread_time.h" 3
 # 1 "C:/msys64/ucrt64/include/pthread_compat.h" 1 3 4
 # 78 "C:/msys64/ucrt64/include/pthread_compat.h" 3 4
 typedef int clockid_t;
-# 27 "C:/msys64/ucrt64/include/pthread_time.h" 2 3
-# 73 "C:/msys64/ucrt64/include/pthread_time.h" 3
+# 28 "C:/msys64/ucrt64/include/pthread_time.h" 2 3
+# 74 "C:/msys64/ucrt64/include/pthread_time.h" 3
 extern "C" {
 
 
- int __attribute__((__cdecl__)) nanosleep(const struct timespec *request, struct timespec *remain);
+ int __attribute__((__cdecl__)) nanosleep32(const struct _timespec32 *request, struct _timespec32 *remain);
+ int __attribute__((__cdecl__)) nanosleep64(const struct _timespec64 *request, struct _timespec64 *remain);
+__inline__ __attribute__((__always_inline__)) int __attribute__((__cdecl__)) nanosleep(const struct timespec *request, struct timespec *remain)
+{
 
- int __attribute__((__cdecl__)) clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *request, struct timespec *remain);
- int __attribute__((__cdecl__)) clock_getres(clockid_t clock_id, struct timespec *res);
- int __attribute__((__cdecl__)) clock_gettime(clockid_t clock_id, struct timespec *tp);
- int __attribute__((__cdecl__)) clock_settime(clockid_t clock_id, const struct timespec *tp);
+
+
+  return nanosleep64 ((struct _timespec64 *)request, (struct _timespec64 *)remain);
+
+}
+
+ int __attribute__((__cdecl__)) clock_nanosleep32(clockid_t clock_id, int flags, const struct _timespec32 *request, struct _timespec32 *remain);
+ int __attribute__((__cdecl__)) clock_nanosleep64(clockid_t clock_id, int flags, const struct _timespec64 *request, struct _timespec64 *remain);
+__inline__ __attribute__((__always_inline__)) int __attribute__((__cdecl__)) clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *request, struct timespec *remain)
+{
+
+
+
+  return clock_nanosleep64 (clock_id, flags, (struct _timespec64 *)request, (struct _timespec64 *)remain);
+
+}
+
+ int __attribute__((__cdecl__)) clock_getres32(clockid_t clock_id, struct _timespec32 *res);
+ int __attribute__((__cdecl__)) clock_getres64(clockid_t clock_id, struct _timespec64 *res);
+__inline__ __attribute__((__always_inline__)) int __attribute__((__cdecl__)) clock_getres(clockid_t clock_id, struct timespec *res)
+{
+
+
+
+  return clock_getres64 (clock_id, (struct _timespec64 *)res);
+
+}
+
+ int __attribute__((__cdecl__)) clock_gettime32(clockid_t clock_id, struct _timespec32 *tp);
+ int __attribute__((__cdecl__)) clock_gettime64(clockid_t clock_id, struct _timespec64 *tp);
+__inline__ __attribute__((__always_inline__)) int __attribute__((__cdecl__)) clock_gettime(clockid_t clock_id, struct timespec *tp)
+{
+
+
+
+  return clock_gettime64 (clock_id, (struct _timespec64 *)tp);
+
+}
+
+ int __attribute__((__cdecl__)) clock_settime32(clockid_t clock_id, const struct _timespec32 *tp);
+ int __attribute__((__cdecl__)) clock_settime64(clockid_t clock_id, const struct _timespec64 *tp);
+__inline__ __attribute__((__always_inline__)) int __attribute__((__cdecl__)) clock_settime(clockid_t clock_id, const struct timespec *tp)
+{
+
+
+
+  return clock_settime64 (clock_id, (struct _timespec64 *)tp);
+
+}
 
 
 }
@@ -40137,12 +40129,21 @@ extern "C" {
 
 
 extern "C" {
-# 143 "C:/msys64/ucrt64/include/pthread.h" 3
+# 141 "C:/msys64/ucrt64/include/pthread.h" 3
  void * pthread_timechange_handler_np(void * dummy);
- int pthread_delay_np (const struct timespec *interval);
+ int pthread_delay32_np (const struct _timespec32 *interval);
+ int pthread_delay64_np (const struct _timespec64 *interval);
+__inline__ __attribute__((__always_inline__)) int pthread_delay_np (const struct timespec *interval)
+{
+
+
+
+  return pthread_delay64_np ((const struct _timespec64 *) interval);
+
+}
  int pthread_num_processors_np(void);
  int pthread_set_num_processors_np(int n);
-# 163 "C:/msys64/ucrt64/include/pthread.h" 3
+# 170 "C:/msys64/ucrt64/include/pthread.h" 3
 typedef long pthread_once_t;
 typedef unsigned pthread_mutexattr_t;
 typedef unsigned pthread_key_t;
@@ -40158,7 +40159,7 @@ struct _pthread_cleanup
     void *arg;
     _pthread_cleanup *next;
 };
-# 205 "C:/msys64/ucrt64/include/pthread.h" 3
+# 212 "C:/msys64/ucrt64/include/pthread.h" 3
 typedef struct pthread_attr_t pthread_attr_t;
 struct pthread_attr_t
 {
@@ -40181,7 +40182,7 @@ typedef intptr_t pthread_mutex_t;
 typedef intptr_t pthread_cond_t;
 typedef intptr_t pthread_rwlock_t;
 typedef void *pthread_barrier_t;
-# 245 "C:/msys64/ucrt64/include/pthread.h" 3
+# 252 "C:/msys64/ucrt64/include/pthread.h" 3
  extern void (**_pthread_key_dest)(void *);
  int pthread_key_create(pthread_key_t *key, void (* dest)(void *));
  int pthread_key_delete(pthread_key_t key);
@@ -40211,12 +40212,29 @@ typedef void *pthread_barrier_t;
  int pthread_setname_np(pthread_t thread, const char *name);
  int pthread_getname_np(pthread_t thread, char *name, size_t len);
 
-
  int pthread_rwlock_init(pthread_rwlock_t *rwlock_, const pthread_rwlockattr_t *attr);
  int pthread_rwlock_wrlock(pthread_rwlock_t *l);
- int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *ts);
+ int pthread_rwlock_timedwrlock32(pthread_rwlock_t *rwlock, const struct _timespec32 *ts);
+ int pthread_rwlock_timedwrlock64(pthread_rwlock_t *rwlock, const struct _timespec64 *ts);
+__inline__ __attribute__((__always_inline__)) int pthread_rwlock_timedwrlock(pthread_rwlock_t *rwlock, const struct timespec *ts)
+{
+
+
+
+  return pthread_rwlock_timedwrlock64 (rwlock, (const struct _timespec64 *) ts);
+
+}
  int pthread_rwlock_rdlock(pthread_rwlock_t *l);
- int pthread_rwlock_timedrdlock(pthread_rwlock_t *l, const struct timespec *ts);
+ int pthread_rwlock_timedrdlock32(pthread_rwlock_t *l, const struct _timespec32 *ts);
+ int pthread_rwlock_timedrdlock64(pthread_rwlock_t *l, const struct _timespec64 *ts);
+__inline__ __attribute__((__always_inline__)) int pthread_rwlock_timedrdlock(pthread_rwlock_t *l, const struct timespec *ts)
+{
+
+
+
+  return pthread_rwlock_timedrdlock64 (l, (const struct _timespec64 *) ts);
+
+}
  int pthread_rwlock_unlock(pthread_rwlock_t *l);
  int pthread_rwlock_tryrdlock(pthread_rwlock_t *l);
  int pthread_rwlock_trywrlock(pthread_rwlock_t *l);
@@ -40227,11 +40245,38 @@ typedef void *pthread_barrier_t;
  int pthread_cond_signal (pthread_cond_t *cv);
  int pthread_cond_broadcast (pthread_cond_t *cv);
  int pthread_cond_wait (pthread_cond_t *cv, pthread_mutex_t *external_mutex);
- int pthread_cond_timedwait(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct timespec *t);
- int pthread_cond_timedwait_relative_np(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct timespec *t);
+ int pthread_cond_timedwait32(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct _timespec32 *t);
+ int pthread_cond_timedwait64(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct _timespec64 *t);
+__inline__ __attribute__((__always_inline__)) int pthread_cond_timedwait(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct timespec *t)
+{
+
+
+
+  return pthread_cond_timedwait64 (cv, external_mutex, (const struct _timespec64 *) t);
+
+}
+ int pthread_cond_timedwait32_relative_np(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct _timespec32 *t);
+ int pthread_cond_timedwait64_relative_np(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct _timespec64 *t);
+__inline__ __attribute__((__always_inline__)) int pthread_cond_timedwait_relative_np(pthread_cond_t *cv, pthread_mutex_t *external_mutex, const struct timespec *t)
+{
+
+
+
+  return pthread_cond_timedwait64_relative_np (cv, external_mutex, (const struct _timespec64 *) t);
+
+}
 
  int pthread_mutex_lock(pthread_mutex_t *m);
- int pthread_mutex_timedlock(pthread_mutex_t *m, const struct timespec *ts);
+ int pthread_mutex_timedlock32(pthread_mutex_t *m, const struct _timespec32 *ts);
+ int pthread_mutex_timedlock64(pthread_mutex_t *m, const struct _timespec64 *ts);
+__inline__ __attribute__((__always_inline__)) int pthread_mutex_timedlock(pthread_mutex_t *m, const struct timespec *ts)
+{
+
+
+
+  return pthread_mutex_timedlock64 (m, (const struct _timespec64 *) ts);
+
+}
  int pthread_mutex_unlock(pthread_mutex_t *m);
  int pthread_mutex_trylock(pthread_mutex_t *m);
  int pthread_mutex_init(pthread_mutex_t *m, const pthread_mutexattr_t *a);
@@ -40285,7 +40330,6 @@ typedef void *pthread_barrier_t;
        clockid_t *clock_id);
  int pthread_condattr_setclock(pthread_condattr_t *attr,
        clockid_t clock_id);
- int __pthread_clock_nanosleep(clockid_t clock_id, int flags, const struct timespec *rqtp, struct timespec *rmtp);
 
  int pthread_barrierattr_init(void **attr);
  int pthread_barrierattr_destroy(void **attr);
@@ -40297,18 +40341,15 @@ typedef void *pthread_barrier_t;
  void * pthread_gethandle (pthread_t t);
  void * pthread_getevent (void);
 
- unsigned long long _pthread_rel_time_in_ms(const struct timespec *ts);
- unsigned long long _pthread_time_in_ms(void);
- unsigned long long _pthread_time_in_ms_from_timespec(const struct timespec *ts);
  int _pthread_tryjoin (pthread_t t, void **res);
  int pthread_rwlockattr_destroy(pthread_rwlockattr_t *a);
  int pthread_rwlockattr_getpshared(pthread_rwlockattr_t *a, int *s);
  int pthread_rwlockattr_init(pthread_rwlockattr_t *a);
  int pthread_rwlockattr_setpshared(pthread_rwlockattr_t *a, int s);
-# 379 "C:/msys64/ucrt64/include/pthread.h" 3
+# 426 "C:/msys64/ucrt64/include/pthread.h" 3
 # 1 "C:/msys64/ucrt64/include/pthread_unistd.h" 1 3
-# 380 "C:/msys64/ucrt64/include/pthread.h" 2 3
-# 641 "C:/msys64/ucrt64/include/pthread.h" 3
+# 427 "C:/msys64/ucrt64/include/pthread.h" 2 3
+# 688 "C:/msys64/ucrt64/include/pthread.h" 3
 }
 # 36 "C:/msys64/ucrt64/include/c++/15.1.0/x86_64-w64-mingw32/bits/gthr-default.h" 2 3
 # 62 "C:/msys64/ucrt64/include/c++/15.1.0/x86_64-w64-mingw32/bits/gthr-default.h" 3
@@ -127567,9 +127608,7 @@ extern "C" {
          double rslt);
   void __mingw_setusermatherr (int (__attribute__((__cdecl__)) *)(struct _exception *));
   __attribute__ ((__dllimport__)) void __setusermatherr(int (__attribute__((__cdecl__)) *)(struct _exception *));
-
-
-
+# 182 "C:/msys64/ucrt64/include/math.h" 3
   double __attribute__((__cdecl__)) sin(double _X);
   double __attribute__((__cdecl__)) cos(double _X);
   double __attribute__((__cdecl__)) tan(double _X);
@@ -127592,7 +127631,7 @@ extern "C" {
   extern float __attribute__((__cdecl__)) fabsf (float x);
   extern long double __attribute__((__cdecl__)) fabsl (long double);
   extern double __attribute__((__cdecl__)) fabs (double _X);
-# 231 "C:/msys64/ucrt64/include/math.h" 3
+# 242 "C:/msys64/ucrt64/include/math.h" 3
   double __attribute__((__cdecl__)) ldexp(double _X,int _Y);
   double __attribute__((__cdecl__)) frexp(double _X,int *_Y);
   double __attribute__((__cdecl__)) modf(double _X,double *_Y);
@@ -127601,7 +127640,7 @@ extern "C" {
   void __attribute__((__cdecl__)) sincos (double __x, double *p_sin, double *p_cos);
   void __attribute__((__cdecl__)) sincosl (long double __x, long double *p_sin, long double *p_cos);
   void __attribute__((__cdecl__)) sincosf (float __x, float *p_sin, float *p_cos);
-# 256 "C:/msys64/ucrt64/include/math.h" 3
+# 267 "C:/msys64/ucrt64/include/math.h" 3
   struct _complex {
     double x;
     double y;
@@ -127619,7 +127658,7 @@ extern "C" {
 
 
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) _matherr (struct _exception *);
-# 283 "C:/msys64/ucrt64/include/math.h" 3
+# 294 "C:/msys64/ucrt64/include/math.h" 3
   __attribute__ ((__dllimport__)) double __attribute__((__cdecl__)) _chgsign (double _X);
   __attribute__ ((__dllimport__)) double __attribute__((__cdecl__)) _copysign (double _Number,double _Sign);
   __attribute__ ((__dllimport__)) double __attribute__((__cdecl__)) _logb (double);
@@ -127644,25 +127683,25 @@ __attribute__ ((__dllimport__)) double __attribute__((__cdecl__)) yn (int, doubl
 
 
 __attribute__ ((__dllimport__)) double __attribute__((__cdecl__)) chgsign (double);
-# 315 "C:/msys64/ucrt64/include/math.h" 3
+# 326 "C:/msys64/ucrt64/include/math.h" 3
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) finite (double);
   __attribute__ ((__dllimport__)) int __attribute__((__cdecl__)) fpclass (double);
-# 359 "C:/msys64/ucrt64/include/math.h" 3
+# 370 "C:/msys64/ucrt64/include/math.h" 3
 typedef float float_t;
 typedef double double_t;
-# 394 "C:/msys64/ucrt64/include/math.h" 3
+# 405 "C:/msys64/ucrt64/include/math.h" 3
   extern int __attribute__((__cdecl__)) __fpclassifyl (long double);
   extern int __attribute__((__cdecl__)) __fpclassifyf (float);
   extern int __attribute__((__cdecl__)) __fpclassify (double);
-# 507 "C:/msys64/ucrt64/include/math.h" 3
+# 518 "C:/msys64/ucrt64/include/math.h" 3
   extern int __attribute__((__cdecl__)) __isnan (double);
   extern int __attribute__((__cdecl__)) __isnanf (float);
   extern int __attribute__((__cdecl__)) __isnanl (long double);
-# 594 "C:/msys64/ucrt64/include/math.h" 3
+# 605 "C:/msys64/ucrt64/include/math.h" 3
   extern int __attribute__((__cdecl__)) __signbit (double);
   extern int __attribute__((__cdecl__)) __signbitf (float);
   extern int __attribute__((__cdecl__)) __signbitl (long double);
-# 651 "C:/msys64/ucrt64/include/math.h" 3
+# 662 "C:/msys64/ucrt64/include/math.h" 3
   extern float __attribute__((__cdecl__)) sinf(float _X);
   extern long double __attribute__((__cdecl__)) sinl(long double);
 
@@ -127907,11 +127946,11 @@ __extension__ long long __attribute__((__cdecl__)) llrintl (long double);
   extern double __attribute__((__cdecl__)) copysign (double, double);
   extern float __attribute__((__cdecl__)) copysignf (float, float);
   extern long double __attribute__((__cdecl__)) copysignl (long double, long double);
-# 916 "C:/msys64/ucrt64/include/math.h" 3
+# 927 "C:/msys64/ucrt64/include/math.h" 3
   extern double __attribute__((__cdecl__)) nan(const char *tagp);
   extern float __attribute__((__cdecl__)) nanf(const char *tagp);
   extern long double __attribute__((__cdecl__)) nanl(const char *tagp);
-# 927 "C:/msys64/ucrt64/include/math.h" 3
+# 938 "C:/msys64/ucrt64/include/math.h" 3
   extern double __attribute__((__cdecl__)) nextafter (double, double);
   extern float __attribute__((__cdecl__)) nextafterf (float, float);
   extern long double __attribute__((__cdecl__)) nextafterl (long double, long double);
@@ -127947,7 +127986,7 @@ __extension__ long long __attribute__((__cdecl__)) llrintl (long double);
   extern double __attribute__((__cdecl__)) fma (double, double, double);
   extern float __attribute__((__cdecl__)) fmaf (float, float, float);
   extern long double __attribute__((__cdecl__)) fmal (long double, long double, long double);
-# 1010 "C:/msys64/ucrt64/include/math.h" 3
+# 1021 "C:/msys64/ucrt64/include/math.h" 3
    __attribute__ ((__dllimport__)) float __attribute__((__cdecl__)) _copysignf (float _Number,float _Sign);
    __attribute__ ((__dllimport__)) float __attribute__((__cdecl__)) _chgsignf (float _X);
    __attribute__ ((__dllimport__)) float __attribute__((__cdecl__)) _logbf(float _X);
@@ -127959,7 +127998,7 @@ __extension__ long long __attribute__((__cdecl__)) llrintl (long double);
 
 
    extern long double __attribute__((__cdecl__)) _chgsignl (long double);
-# 1405 "C:/msys64/ucrt64/include/math.h" 3
+# 1416 "C:/msys64/ucrt64/include/math.h" 3
 }
 
 
@@ -137019,6 +137058,36 @@ public:
 };
 # 2 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/world/Tilemap.cpp" 2
 
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 4 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/world/Tilemap.cpp" 2
+
 TileType determineTileType(const TiledShape& map, int x, int y) {
     if (map[x][y].getFillColor() != sf::Color::White) {
         return TileType::Void;
@@ -137088,7 +137157,7 @@ std::vector<sf::Sprite> Tilemap::getCollisionTiles() const {
 void Tilemap::createFromTiledShape(const TiledShape& shape) {
     tiles.clear();
 
-    tileset = std::make_shared<sf::Texture>("real img/2 Dungeon Tileset/1 Tiles/Tileset.png");
+    tileset = std::make_shared<sf::Texture>(ResourceManager::getInstance().getTexture("dungeon"));
 
     worldSize.y = shape.size();
     worldSize.x = shape[0].size();

@@ -137144,6 +137144,35 @@ public:
     sf::FloatRect getCollisionRect() const;
 };
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 8 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
 
 class Mob {
 protected:
@@ -141922,13 +141951,13 @@ class Player : public Mob {
 protected:
 
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    sf::Texture arrowTexture;
-    sf::Texture fireballTexture;
+    sf::Texture arrowTexture {ResourceManager::getInstance().getTexture("player_arrow")};
+    sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
 
 public:
-    Player(const std::string& texturePath, const Tilemap& map_);
+    Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
     const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;
@@ -141959,6 +141988,7 @@ public:
 
 std::string makeFormatedFloat(const float& n);
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/UI.hpp" 2
+
 
 class HUD {
 private:
@@ -142135,20 +142165,19 @@ void HUD::render(sf::RenderTarget& target){
     target.draw(textDamage);
     target.draw(textSpeed);
 }
-
-sf::Texture HUD::textureHealthMana("real img/4 GUI/4 Bars/BarsMap.png");
+# 152 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/UI.cpp"
+sf::Texture HUD::textureHealthMana {ResourceManager::getInstance().getTexture("health")};
 std::vector<sf::Sprite> HUD::spritesHP;
 std::vector<sf::Sprite> HUD::spritesMana;
 sf::Vector2i HUD::posLeft {54, 18};
 sf::Vector2i HUD::posCenter {62, 18};
 sf::Vector2i HUD::posRight {98, 18};
-sf::Texture HUD::textureIcons("real img/4 GUI/3 Icons/Iconset1.png");
+sf::Texture HUD::textureIcons {ResourceManager::getInstance().getTexture("icons")};
 sf::Sprite HUD::spriteDamage(textureIcons);
 sf::Sprite HUD::spriteSpeed(textureIcons);
-sf::Font HUD::font("fonts/Cafe24PROUP.ttf");
+sf::Font HUD::font("../resources/fonts/Cafe24PROUP.ttf");
 sf::Text HUD::textDamage(font);
 sf::Text HUD::textSpeed(font);
-
 
 
 Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_): texture(texture_), sprite(texture), window(window_) { }

@@ -1,7 +1,7 @@
 #include "Rat.hpp"
 
-Rat::Rat(const Tilemap& map_, std::weak_ptr<Player> player_):
-Enemy(sf::Texture("real img/3 Dungeon Enemies/1/1.png"), map_,
+Rat::Rat(const Tilemap& map_, const std::weak_ptr<Player> &player_):
+Enemy(ResourceManager::getInstance().getTexture("enemy_rat"), map_,
 sf::FloatRect({{32.f, 32.f},{60.f, 60.f}}),
 player_) {
     speed = 500.f;

@@ -137145,6 +137145,35 @@ public:
     sf::FloatRect getCollisionRect() const;
 };
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 8 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
 
 class Mob {
 protected:
@@ -141928,13 +141957,13 @@ class Player : public Mob {
 protected:
 
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    sf::Texture arrowTexture;
-    sf::Texture fireballTexture;
+    sf::Texture arrowTexture {ResourceManager::getInstance().getTexture("player_arrow")};
+    sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
 
 public:
-    Player(const std::string& texturePath, const Tilemap& map_);
+    Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
     const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;

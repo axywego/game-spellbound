@@ -1,5 +1,7 @@
 #include "Tilemap.hpp"
 
+#include "../core/ResourceManager.hpp"
+
 TileType determineTileType(const TiledShape& map, int x, int y) {
     if (map[x][y].getFillColor() != sf::Color::White) {
         return TileType::Void;
@@ -69,7 +71,7 @@ std::vector<sf::Sprite> Tilemap::getCollisionTiles() const {
 void Tilemap::createFromTiledShape(const TiledShape& shape) {
     tiles.clear();
 
-    tileset = std::make_shared<sf::Texture>("real img/2 Dungeon Tileset/1 Tiles/Tileset.png");
+    tileset = std::make_shared<sf::Texture>(ResourceManager::getInstance().getTexture("dungeon"));
 
     worldSize.y = shape.size();
     worldSize.x = shape[0].size();

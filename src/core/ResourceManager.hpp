@@ -7,9 +7,21 @@
 
 class ResourceManager {
 private:
-    static std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getTextures();
-public:
-    static const sf::Texture& loadTexture(const std::string& filename);
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
 
-    static void clearAll();
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
 };

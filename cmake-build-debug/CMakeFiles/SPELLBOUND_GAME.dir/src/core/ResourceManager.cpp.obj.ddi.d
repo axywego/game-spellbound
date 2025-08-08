@@ -306,4 +306,5 @@ CMakeFiles\SPELLBOUND_GAME.dir\src\core\ResourceManager.cpp.obj.ddi: \
  D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/sfml-src/include/SFML/System/FileInputStream.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/sfml-src/include/SFML/System/InputStream.hpp \
  D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/sfml-src/include/SFML/System/MemoryInputStream.hpp \
- D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/sfml-src/include/SFML/System/Sleep.hpp
+ D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/sfml-src/include/SFML/System/Sleep.hpp \
+ C:/msys64/ucrt64/include/c++/15.1.0/iostream

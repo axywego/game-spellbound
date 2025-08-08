@@ -18,7 +18,7 @@ private:
     std::function<void()> onResumeClick;
     std::function<void()> onMenuClick;
 public:
-    PauseScene(sf::RenderWindow& window_, std::function<void()> resumeCallback, std::function<void()> menuCallback);
+    PauseScene(sf::RenderWindow& window_, const std::function<void()> &resumeCallback, const std::function<void()> &menuCallback);
 
     void load() override ;
 

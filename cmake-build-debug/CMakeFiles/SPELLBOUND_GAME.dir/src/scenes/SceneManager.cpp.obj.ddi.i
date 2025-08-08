@@ -137173,6 +137173,35 @@ public:
     sf::FloatRect getCollisionRect() const;
 };
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
+# 1 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/ResourceManager.hpp" 1
+       
+
+
+
+
+
+
+class ResourceManager {
+private:
+    std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
+    std::mutex textures_mutex;
+
+    ResourceManager() = default;
+    ~ResourceManager() = default;
+public:
+    ResourceManager(const ResourceManager&) = delete;
+    ResourceManager& operator=(const ResourceManager&) = delete;
+
+    static ResourceManager& getInstance();
+
+    void loadTextures();
+
+    sf::Texture& getTexture(const std::string& name);
+
+    const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
+
+};
+# 8 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/entities/mob/Mob.hpp" 2
 
 class Mob {
 protected:
@@ -141951,13 +141980,13 @@ class Player : public Mob {
 protected:
 
     std::vector<std::unique_ptr<Projectile>> projectiles;
-    sf::Texture arrowTexture;
-    sf::Texture fireballTexture;
+    sf::Texture arrowTexture {ResourceManager::getInstance().getTexture("player_arrow")};
+    sf::Texture fireballTexture {ResourceManager::getInstance().getTexture("player_fireball")};
 
     sf::FloatRect attackArea;
 
 public:
-    Player(const std::string& texturePath, const Tilemap& map_);
+    Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
     const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;
@@ -141988,6 +142017,7 @@ public:
 
 std::string makeFormatedFloat(const float& n);
 # 7 "D:/MY_PROJECTS/SPELLBOUND-GAME/src/core/UI.hpp" 2
+
 
 class HUD {
 private:
@@ -144945,7 +144975,7 @@ private:
     std::function<void()> onResumeClick;
     std::function<void()> onMenuClick;
 public:
-    PauseScene(sf::RenderWindow& window_, std::function<void()> resumeCallback, std::function<void()> menuCallback);
+    PauseScene(sf::RenderWindow& window_, const std::function<void()> &resumeCallback, const std::function<void()> &menuCallback);
 
     void load() override ;
 
@@ -144977,7 +145007,7 @@ private:
     float transitionSpeed { 2.f };
     bool isTransition { true };
 
-    sf::Texture textureBackground;
+    sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
     Button startButton;
@@ -144988,7 +145018,7 @@ private:
     std::function<void()> onExitClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback);
+    MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback, const std::function<void()> &exitCallback);
 
     void load() override ;
 
@@ -145126,11 +145156,12 @@ public:
 
 
 
+
 class Rat : public Enemy {
 private:
 
 public:
-    Rat(const Tilemap& map_, std::weak_ptr<Player> player_);
+    Rat(const Tilemap& map_, const std::weak_ptr<Player> &player_);
 
     void spawnProjectile() override;
     void spawnMobs() override;
@@ -145146,7 +145177,7 @@ class Shaman : public Enemy {
 private:
 
 public:
-    Shaman(const Tilemap& map_, std::weak_ptr<Player> player_);
+    Shaman(const Tilemap& map_, const std::weak_ptr<Player> &player_);
 
     void spawnProjectile() override;
     void spawnMobs() override;

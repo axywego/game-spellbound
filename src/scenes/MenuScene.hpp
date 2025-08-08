@@ -16,7 +16,7 @@ private:
     float transitionSpeed { 2.f };
     bool isTransition { true };
 
-    sf::Texture textureBackground;
+    sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
     Button startButton;
@@ -27,7 +27,7 @@ private:
     std::function<void()> onExitClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, std::function<void()> startCallback, std::function<void()> exitCallback);
+    MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback, const std::function<void()> &exitCallback);
 
     void load() override ;
 

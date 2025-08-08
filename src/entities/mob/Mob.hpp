@@ -4,6 +4,7 @@
 #include <vector>
 #include "../../core/AnimationController.hpp"
 #include "MobCollision.hpp"
+#include "../../core/ResourceManager.hpp"
 
 class Mob {
 protected:

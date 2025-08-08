@@ -1,6 +1,6 @@
 #include "Knight.hpp"
 
-Knight::Knight(const Tilemap& map): Player("real img/1 Characters/2/2.png", map) {
+Knight::Knight(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_knight"), map) {
     speed = 400.f;
     maxHealth = 5.f;
     health = maxHealth;
