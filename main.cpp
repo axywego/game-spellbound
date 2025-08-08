@@ -1,13 +1,12 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
-#include "include/SceneManager.hpp"
-
-#include "include/WorldGenerator.hpp"
+#include "src/scenes/SceneManager.hpp"
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1920, 1080}), "чмо", sf::Style::Default, sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({1920, 1080}), "ndnn", sf::State::Fullscreen);
 
-    //window.setVerticalSyncEnabled(true); // мб потом убрать хз
+    window.setMouseCursorVisible(true);
+    window.setVerticalSyncEnabled(true);
 
     sf::Clock clock;
 
@@ -19,17 +18,20 @@ int main() {
         float dt = deltaTime.asSeconds();
 
         while (const std::optional event = window.pollEvent()) {
-            manager.handleEvent(event);            
+            manager.handleEvent(event);
         }
+
+        sf::Vector2i mousePos = sf::Mouse::getPosition(window);
 
         manager.update(dt);
 
         window.clear();
-        
+
         manager.render(window);
 
         window.display();
 
     }
+
     return 0;
 }

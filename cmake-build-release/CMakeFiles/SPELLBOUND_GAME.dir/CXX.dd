@@ -1,0 +1,55 @@
+ninja_dyndep_version = 1.0
+build CMakeFiles/SPELLBOUND_GAME.dir/main.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/AnimationController.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/Camera.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/ResourceManager.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/UI.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/enemy/Enemy.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/enemy/EnemyFactory.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/enemy/Rat.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/enemy/Shaman.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/mob/Mob.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/mob/MobCollision.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/mob/Projectile.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/Archer.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/Knight.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/Mage.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/Player.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/PlayerFactory.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/generators/EnemyGenerator.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/generators/WorldGenerator.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/scenes/GameLevelScene.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/scenes/MenuScene.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/scenes/PauseScene.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/scenes/SceneManager.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/world/GameWorld.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/world/Tilemap.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/StringFormat.cpp.obj: dyndep
+
+build CMakeFiles/SPELLBOUND_GAME.dir/src/core/Generator.cpp.obj: dyndep
+

@@ -1,0 +1,9 @@
+"C:\Program Files\JetBrains\CLion 2024.3.4\bin\cmake\win\x64\bin\cmake.exe" -DCMAKE_BUILD_TYPE=Debug "-DCMAKE_MAKE_PROGRAM=C:/Program Files/JetBrains/CLion 2024.3.4/bin/ninja/win/x64/ninja.exe" -G Ninja -S D:\MY_PROJECTS\SPELLBOUND-GAME -B D:\MY_PROJECTS\SPELLBOUND-GAME\cmake-build-debug
+-- Could NOT find PkgConfig (missing: PKG_CONFIG_EXECUTABLE) 
+-- Configuring libogg 1.3.5
+-- Configuring vorbis 1.3.7
+-- SFML include dir: 
+-- SFML libraries: 
+-- Configuring done (5.6s)
+-- Generating done (0.4s)
+-- Build files have been written to: D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug

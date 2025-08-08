@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/SPELLBOUND_GAME.dir/src/core/Camera.cpp.o",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

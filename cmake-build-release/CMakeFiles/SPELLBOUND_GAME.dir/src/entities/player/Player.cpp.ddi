@@ -1,0 +1,11 @@
+{
+"rules": [
+{
+"primary-output": "CMakeFiles/SPELLBOUND_GAME.dir/src/entities/player/Player.cpp.o",
+"requires": [
+]
+}
+],
+"version": 0,
+"revision": 0
+}

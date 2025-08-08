@@ -1,0 +1,14 @@
+# Target labels
+ ogg-populate
+# Source files and their labels
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/CMakeFiles/ogg-populate
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/CMakeFiles/ogg-populate.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/CMakeFiles/ogg-populate-complete.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-build.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-configure.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-download.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-install.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-mkdir.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-patch.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-test.rule
+D:/MY_PROJECTS/SPELLBOUND-GAME/cmake-build-debug/_deps/ogg-subbuild/ogg-populate-prefix/src/ogg-populate-stamp/ogg-populate-update.rule
