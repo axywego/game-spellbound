@@ -47,7 +47,7 @@ void Player::update(const float& dt) {
     updateAnimation();
 }
 
-const std::vector<std::unique_ptr<Projectile>>& Player::getProjectiles() const {
+std::vector<std::unique_ptr<Projectile>>& Player::getProjectiles() {
     return projectiles;
 }
 

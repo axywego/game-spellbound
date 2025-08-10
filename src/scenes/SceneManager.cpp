@@ -6,7 +6,7 @@ SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
 
     //worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
 
-    player = PlayerFactory::create(PlayerClass::Knight, worlds["test"]->getTilemap());
+    player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
 
     initScenes();
 }

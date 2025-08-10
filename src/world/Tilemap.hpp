@@ -5,6 +5,7 @@
 #include <memory>
 #include <stdexcept>
 #include "../generators/WorldGenerator.hpp"
+#include "../core/Utils.hpp"
 
 enum class TileType {
     CornerTopLeft, CornerTopRight, CornerBottomLeft, CornerBottomRight,
@@ -41,7 +42,7 @@ public:
 class Tilemap {
 private:
     std::shared_ptr<sf::Texture> tileset;
-    std::vector<std::vector<Tile>> tiles;
+    std::vector<Tile> tiles;
     sf::Vector2u worldSize;
     unsigned tileSize = 16;
     float worldScale = 5.0f;
@@ -49,7 +50,7 @@ private:
 public:
     Tilemap() = default;
 
-    std::vector<sf::Sprite> getCollisionTiles() const;
+    std::vector<Tile> getCollisionTiles() const;
 
     void createFromTiledShape(const TiledShape& shape);
 
@@ -57,9 +58,10 @@ public:
     float getTileSize() const;
     float getMapScale() const;
     const sf::Texture& getTileset() const;
+    std::vector<Tile> getCollisionTilesInRange(const sf::Vector2f& pos, const float& range) const;
 
-    std::vector<std::vector<Tile>> getTiles() const;
+    std::vector<Tile> getTiles() const;
 
-    void render(sf::RenderTarget& target);
+    void render(sf::RenderTarget& target) const;
 
 };

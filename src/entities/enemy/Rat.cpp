@@ -13,6 +13,7 @@ player_) {
     attackCooldownTime = 0.8f;
     timeToStayAfterAttack = 3.f;
     typeDamage = TypeDamage::Melee;
+    raycastView.setRange(rangeRadius);
 }
 
 void Rat::spawnProjectile() {}

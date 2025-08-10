@@ -5,7 +5,9 @@
 #include <cmath>
 #include "../mob/Mob.hpp"
 #include "../player/Player.hpp"
+#include "../../core/Raycast.hpp"
 #include <functional>
+
 
 enum class EnemyClass {
     Rat, Goblin, Demon, Shaman
@@ -27,13 +29,15 @@ private:
 
 protected:
 
+    Raycast raycastView;
+
     std::function<void(std::unique_ptr<Enemy>, sf::Vector2f)> spawnCallback;
 
     std::weak_ptr<Player> player;
     float rangeRadius{};
     float attackRange{};
 public:
-    Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_, std::weak_ptr<Player> player_);
+    Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_, const std::weak_ptr<Player> &player_);
 
     void setSpawnCallback(const std::function<void(std::unique_ptr<Enemy>, sf::Vector2f)> &callBack);
 

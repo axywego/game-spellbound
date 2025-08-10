@@ -1,7 +1,9 @@
 #include "Enemy.hpp"
 
-Enemy::Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_, std::weak_ptr<Player> player_):
-        Mob(texture, map_, collisionRect_), player(player_) {
+Enemy::Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_,
+    const std::weak_ptr<Player> &player_)
+:
+Mob(texture, map_, collisionRect_), player(player_), raycastView(currentSprite, map_) {
     hpBackgroundShape.setFillColor(sf::Color::Black);
     hpRedShape.setFillColor(sf::Color::Red);
 
@@ -74,6 +76,51 @@ void Enemy::move(const float& dt) {
     }
 }
 
+// void Enemy::update(const float& dt) {
+//
+//     animController.update(dt);
+//     updateAnimation();
+//
+//     if (isDying) {
+//         if(animController.hasLastFrame()){
+//             isAlive = false;
+//         }
+//     }
+//
+//     if (isTakingDamage) {
+//         isShowingHp = true;
+//         currentState = State::Hurt;
+//         damageTimer -= dt;
+//         if (damageTimer <= 0.0f) {
+//             isTakingDamage = false;
+//         }
+//     }
+//
+//     attacking(dt);
+//
+//     if(!isTakingDamage && !isAttacking && currentState != State::Dying) {
+//         const float distance = getDistanceToPlayer();
+//
+//         if(raycastView.isInView(player.lock()->getCollisionRect()) && distance > attackRange) {
+//             currentState = State::Moving;
+//             move(dt);
+//         }
+//         else if(attackCooldown <= 0.f && timerStayAfterAttack <= 0.f) {
+//             currentState = State::Attack;
+//             startAttacking();
+//         }
+//         else {
+//             currentState = State::Idle;
+//         }
+//     }
+//
+//     raycastView.update();
+//
+//     collision.update();
+//
+//     updateShowingHP(dt);
+// }
+
 void Enemy::update(const float& dt) {
 
     animController.update(dt);
@@ -94,27 +141,26 @@ void Enemy::update(const float& dt) {
         }
     }
 
-    if(!isTakingDamage && !isAttacking && currentState != State::Dying) {
-        if(getDistanceToPlayer() < rangeRadius){
-            if(timerStayAfterAttack > 0.f) {
-                currentState = State::Idle;
-            }
-            else if(getDistanceToPlayer() > attackRange){
-                currentState = State::Moving;
-                move(dt);
-            }
-            else if(attackCooldown <= 0.f) {
-                currentState = State::Attack;
-                startAttacking();
-            }
-            else {
-                currentState = State::Idle;
-            }
+    if(!isTakingDamage && !isAttacking && !isDying) {
+        bool isInView = raycastView.isInView(player.lock()->getSprite().getGlobalBounds());
+
+        if (timerStayAfterAttack > 0.f || !isInView) {
+            currentState = State::Idle;
+        }
+        else if(isInView && getDistanceToPlayer() > attackRange){
+            currentState = State::Moving;
+            move(dt);
+        }
+        else if(attackCooldown <= 0.f && timerStayAfterAttack <= 0.f) {
+            currentState = State::Attack;
+            startAttacking();
         }
         else {
             currentState = State::Idle;
         }
     }
+
+    //raycastView.update();
 
     collision.update();
     attacking(dt);
@@ -164,4 +210,5 @@ void Enemy::render(sf::RenderTarget& target) {
         target.draw(hpBackgroundShape);
         target.draw(hpRedShape);
     }
+    raycastView.render(target);
 }

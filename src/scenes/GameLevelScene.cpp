@@ -19,26 +19,73 @@ void GameLevelScene::load() {
 
 }
 
+// void GameLevelScene::update(const float& dt) {
+//
+//     std::erase_if(enemies,
+//               [](const std::unique_ptr<Enemy>& e) {
+//                   return !e->getIsAlive();
+//               });
+//
+//     player.lock()->update(dt);
+//
+//     camera.update(dt);
+//
+//     player.lock()->updateProjectiles(dt);
+//
+//     const auto& playerMeleeAreaAttack = player.lock()->getAttackArea();
+//
+//     for (size_t i = 0; i < enemies.size(); i++) {
+//         const auto& enemy = enemies[i];
+//
+//         //Player has distance damage
+//         for (auto& projectile : player.lock()->getProjectiles()) {
+//             if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
+//                 projectile->onHit(enemy.get());
+//             }
+//         }
+//
+//         //Player has melee damage
+//         if(playerMeleeAreaAttack && playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())){
+//             enemy->takeDamage(player.lock()->getDamage());
+//         }
+//
+//         enemy->update(dt);
+//
+//     }
+//
+//     lastPlayerPos = player.lock()->getSprite().getPosition();
+//
+//     HUD::update(*player.lock(), camera.getCenter());
+// }
+
 void GameLevelScene::update(const float& dt) {
+
+    const auto playerPtr = player.lock();
 
     std::erase_if(enemies,
               [](const std::unique_ptr<Enemy>& e) {
                   return !e->getIsAlive();
               });
 
-    player.lock()->update(dt);
+    playerPtr->update(dt);
 
     camera.update(dt);
 
-    player.lock()->updateProjectiles(dt);
+    playerPtr->updateProjectiles(dt);
 
-    const auto& playerMeleeAreaAttack = player.lock()->getAttackArea();
+    auto& playerProjectiles = playerPtr->getProjectiles();
 
-    for (size_t i = 0; i < enemies.size(); i++) {
-        const auto& enemy = enemies[i];
+    const auto& playerMeleeAreaAttack = playerPtr->getAttackArea();
+
+    std::erase_if(playerProjectiles, [&](const auto& p) {
+        return !isOnScreen(p->getCollisionRect(), window);
+    });
+
+    for (auto& enemy : enemies) {
+        if (!isOnScreen(enemy->getSprite(), window)) continue;
 
         //Player has distance damage
-        for (auto& projectile : player.lock()->getProjectiles()) {
+        for (auto& projectile : playerProjectiles) {
             if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
                 projectile->onHit(enemy.get());
             }
@@ -50,12 +97,10 @@ void GameLevelScene::update(const float& dt) {
         }
 
         enemy->update(dt);
-
     }
+    lastPlayerPos = playerPtr->getSprite().getPosition();
 
-    lastPlayerPos = player.lock()->getSprite().getPosition();
-
-    HUD::update(*player.lock(), camera.getCenter());
+    HUD::update(*playerPtr, camera.getCenter());
 }
 
 void GameLevelScene::render(sf::RenderTarget& renderTarget) {
@@ -66,6 +111,7 @@ void GameLevelScene::render(sf::RenderTarget& renderTarget) {
     player.lock()->render(renderTarget);
 
     for(const auto& enemy : enemies) {
+        if (!isOnScreen(enemy->getSprite(), renderTarget)) continue;
         enemy->render(renderTarget);
     }
 
@@ -83,6 +129,7 @@ void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
         }
     }
 }
+
 sf::Vector2f GameLevelScene::getCameraCenter() const {
     return camera.getCenter();
 }

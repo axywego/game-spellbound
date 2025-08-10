@@ -42,6 +42,10 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/world/Tilemap.cpp
         src/core/StringFormat.cpp
         src/core/Generator.cpp
+        src/core/Raycast.cpp
+        src/core/Raycast.hpp
+        src/core/Utiils.cpp
+        src/core/Utils.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

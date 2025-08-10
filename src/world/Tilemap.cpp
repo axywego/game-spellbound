@@ -57,13 +57,11 @@ Tile::Tile(const sf::Texture &texture, const sf::IntRect &rect, bool collision, 
     sprite.setScale({scale, scale});
 }
 
-std::vector<sf::Sprite> Tilemap::getCollisionTiles() const {
-    std::vector<sf::Sprite> collisionTiles;
-    for(const auto& row : tiles){
-        for(const auto& tile : row) {
-            if(tile.getHasCollision())
-                collisionTiles.push_back(tile.getSprite());
-        }
+std::vector<Tile> Tilemap::getCollisionTiles() const {
+    std::vector<Tile> collisionTiles;
+    for(const auto& tile : tiles){
+        if(tile.getHasCollision())
+            collisionTiles.push_back(tile);
     }
     return collisionTiles;
 }
@@ -76,9 +74,8 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
     worldSize.y = shape.size();
     worldSize.x = shape[0].size();
 
-    tiles.resize(worldSize.y);
+    //tiles.resize(worldSize.y * worldSize.x);
     for (size_t x = 0; x < worldSize.x; ++x) {
-        tiles[x].reserve(worldSize.y);
         for (size_t y = 0; y < worldSize.y; ++y) {
             TileType type = determineTileType(shape, y, x);
 
@@ -144,8 +141,8 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                     break;
             }
 
-            tiles[y].emplace_back(
-                    *tileset,
+            tiles.push_back(
+                    Tile(*tileset,
                     sf::IntRect({
                         static_cast<int>(texX * tileSize), static_cast<int>(texY * tileSize)
                         },
@@ -157,10 +154,10 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                     worldScale,
                     texX,
                     texY,
-                    type
+                    type)
             );
 
-            tiles[y].back().setPosition({static_cast<float>(x), static_cast<float>(y)});
+            tiles.back().setPosition({static_cast<float>(x), static_cast<float>(y)});
         }
     }
 }
@@ -170,14 +167,25 @@ float Tilemap::getTileSize() const { return tileSize; }
 float Tilemap::getMapScale() const { return worldScale; }
 const sf::Texture& Tilemap::getTileset() const { return *tileset; }
 
-std::vector<std::vector<Tile>> Tilemap::getTiles() const {
+std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
+    std::vector<Tile> ret;
+    for (const auto& tile : tiles) {
+        const auto& posTile = tile.getGlobalBounds().position;
+        if (const float lengthSquare = powf(posTile.x - pos.x, 2.f) + powf(posTile.y - pos.y, 2.f);
+          lengthSquare <= range * range && tile.getHasCollision()) {
+            ret.push_back(tile);
+        }
+    }
+    return ret;
+}
+
+std::vector<Tile> Tilemap::getTiles() const {
     return tiles;
 }
 
-void Tilemap::render(sf::RenderTarget& target) {
-    for (const auto& row : tiles) {
-        for (const auto& tile : row) {
+void Tilemap::render(sf::RenderTarget& target) const {
+    for (const auto& tile : tiles) {
+        if (isOnScreen(tile.getSprite(), target))
             target.draw(tile.getSprite());
-        }
     }
 }

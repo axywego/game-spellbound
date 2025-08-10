@@ -22,7 +22,7 @@ void Projectile::update(float dt) {
 bool Projectile::checkCollisionWithWorld() {
     const auto collisions = map.getCollisionTiles();
 
-    return std::ranges::any_of(collisions, [this](const sf::Sprite& tile) {
+    return std::ranges::any_of(collisions, [this](const auto& tile) {
         return tile.getGlobalBounds().findIntersection(collisionRect).has_value();
     });
 }
@@ -33,11 +33,16 @@ void Projectile::onHit(Mob* target) {
 }
 
 bool Projectile::isActive() const { return isAlive; }
-const sf::FloatRect& Projectile::getCollisionRect() const { return collisionRect; }
+
+void Projectile::destroy() {
+    isAlive = false;
+}
+
+sf::FloatRect Projectile::getCollisionRect() const { return collisionRect; }
+
 void Projectile::render(sf::RenderTarget& renderTarget) {
     if(isAlive) renderTarget.draw(sprite);
 }
-
 
 Arrow::Arrow(const sf::Texture& texture, const Tilemap& map, const sf::Vector2f& startPos, const sf::Vector2f& dir, float damage_):
         Projectile(texture, map, startPos, dir, damage_, 800.f) {

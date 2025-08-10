@@ -12,6 +12,7 @@ sf::FloatRect({{32.f, 32.f},{60.f, 60.f}}), player_) {
     attackCooldownTime = 15.f;
     timeToStayAfterAttack = 1.f;
     typeDamage = TypeDamage::Summon;
+    raycastView.setRange(rangeRadius);
 }
 
 void Shaman::spawnProjectile() {}

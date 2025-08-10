@@ -27,7 +27,7 @@ public:
     Player(const sf::Texture& texture_, const Tilemap& map_);
     void update(const float& dt) override;
 
-    const std::vector<std::unique_ptr<Projectile>>& getProjectiles() const;
+    std::vector<std::unique_ptr<Projectile>>& getProjectiles();
 
     virtual void spawnProjectile();
     virtual void checkMelee();

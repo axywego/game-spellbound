@@ -1,7 +1,7 @@
 #include "Knight.hpp"
 
 Knight::Knight(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_knight"), map) {
-    speed = 400.f;
+    speed = 1500.f;//400
     maxHealth = 5.f;
     health = maxHealth;
     attackCooldownTime = 0.25f;

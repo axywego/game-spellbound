@@ -14,42 +14,39 @@ std::vector<std::pair<std::unique_ptr<Enemy>, sf::Vector2f>> EnemyGenerator::gen
 
     std::vector<sf::Vector2f> positionsFloor;
 
-    for(const auto& row : map.getTilemap().getTiles()){
-        for(const auto& tile : row){
-            if(tile.getType() == TileType::Floor) {
-                const auto& bounds = tile.getGlobalBounds();
-                const auto& center = WorldGenerator::getCenter();
-                const float radius = WorldGenerator::getRadius() - (limitsTiles.x / 2) * tileSize;
+    for(const auto& tile : map.getTilemap().getTiles()){
+        if(tile.getType() == TileType::Floor) {
+            const auto& bounds = tile.getGlobalBounds();
+            const auto& center = WorldGenerator::getCenter();
+            const float radius = WorldGenerator::getRadius() - (limitsTiles.x / 2) * tileSize;
 
-                float dx = bounds.position.x - center.x;
-                float dy = bounds.position.y - center.y;
-                float squaredDist = dx*dx + dy*dy;
-                if(dx*dx + dy*dy >= radius * radius){
-                    positionsFloor.push_back(bounds.position);
-                }
+            float dx = bounds.position.x - center.x;
+            float dy = bounds.position.y - center.y;
+            float squaredDist = dx*dx + dy*dy;
+            if(dx*dx + dy*dy >= radius * radius){
+                positionsFloor.push_back(bounds.position);
             }
         }
     }
 
-
-    // for(short i = 0; i < numShaman; i++){
-    //     auto index = generate8Bytes(0, positionsFloor.size()-1);
-    //     auto e = EnemyFactory::create(EnemyClass::Rat, map, player);
-    //
-    //     res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
-    //     positionsFloor.erase(positionsFloor.begin() + index);
-    // }
-
-    for(short i = 0; i < numShaman; i++){
+    for(short i = 0; i < numRat; i++){
         auto index = generate8Bytes(0, positionsFloor.size()-1);
-        auto e = EnemyFactory::create(EnemyClass::Shaman, map.getTilemap(), player);
-        e->setSpawnCallback([&](auto&& mob, auto&& pos) {
-            map.addEnemy(std::move(mob), std::move(pos));
-        });
+        auto e = EnemyFactory::create(EnemyClass::Rat, map.getTilemap(), player);
 
         res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
         positionsFloor.erase(positionsFloor.begin() + index);
     }
+
+    // for(short i = 0; i < numShaman; i++){
+    //     auto index = generate8Bytes(0, positionsFloor.size()-1);
+    //     auto e = EnemyFactory::create(EnemyClass::Shaman, map.getTilemap(), player);
+    //     e->setSpawnCallback([&](auto&& mob, auto&& pos) {
+    //         map.addEnemy(std::move(mob), std::move(pos));
+    //     });
+    //
+    //     res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
+    //     positionsFloor.erase(positionsFloor.begin() + index);
+    // }
 
 
     return res;

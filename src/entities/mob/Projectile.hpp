@@ -31,7 +31,10 @@ public:
     virtual void onHit(Mob* target);
 
     bool isActive() const;
-    const sf::FloatRect& getCollisionRect() const;
+
+    void destroy();
+
+    sf::FloatRect getCollisionRect() const;
     void render(sf::RenderTarget& renderTarget);
 };
 
