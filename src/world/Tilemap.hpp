@@ -49,6 +49,7 @@ private:
     float worldScale = 5.0f;
 
     std::vector<std::vector<std::vector<const Tile*>>> spatialGrid;
+    std::vector<std::vector<std::vector<const Tile*>>> spatialCollisionGrid;
     float cellSize = tileSize * worldScale;
 
 public:
@@ -59,6 +60,7 @@ public:
     void createFromTiledShape(const TiledShape& shape);
 
     void buildSpatialGrid();
+    void buildSpatialCollisionGrid();
 
     const sf::Vector2u& getWorldSize() const;
     float getTileSize() const;

@@ -162,6 +162,7 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
     }
     std::cout << "sheesh" << std::endl;
     buildSpatialGrid();
+    buildSpatialCollisionGrid();
     //std::cout << "sheesh" << std::endl;
 }
 
@@ -186,7 +187,29 @@ void Tilemap::buildSpatialGrid() {
             spatialGrid[gridX][gridY].emplace_back(&tile);
         }
     }
+}
 
+void Tilemap::buildSpatialCollisionGrid() {
+    int worldWidthPixels = worldSize.x * cellSize;
+    int worldHeightPixels = worldSize.y * cellSize;
+
+    int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
+    int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
+
+    spatialCollisionGrid.clear();
+    spatialCollisionGrid.resize(gridWidth);
+    for (auto& col : spatialCollisionGrid) {
+        col.resize(gridHeight);
+    }
+
+    for (const auto& tile : collisionTiles) {
+        int gridX = tile.getGlobalBounds().position.x / cellSize;
+        int gridY = tile.getGlobalBounds().position.y / cellSize;
+
+        if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
+            spatialCollisionGrid[gridX][gridY].emplace_back(&tile);
+        }
+    }
 }
 
 const sf::Vector2u& Tilemap::getWorldSize() const { return worldSize; }
@@ -196,13 +219,32 @@ const sf::Texture& Tilemap::getTileset() const { return *tileset; }
 
 std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
     std::vector<Tile> ret;
-    for (const auto& tile : collisionTiles) {
-        const auto& posTile = tile.getGlobalBounds().position;
-        if (const float lengthSquare = powf(posTile.x - pos.x, 2.f) + powf(posTile.y - pos.y, 2.f);
-          lengthSquare <= range * range) {
-            ret.push_back(tile);
+    // for (const auto& tile : collisionTiles) {
+    //     const auto& posTile = tile.getGlobalBounds().position;
+    //     if (const float lengthSquare = powf(posTile.x - pos.x, 2.f) + powf(posTile.y - pos.y, 2.f);
+    //       lengthSquare <= range * range) {
+    //         ret.push_back(tile);
+    //     }
+    // }
+
+    sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
+
+    const int minGridX = std::max(0, static_cast<int>(bounds.position.x / cellSize));
+    const int maxGridX = std::min(static_cast<int>(spatialCollisionGrid.size() - 1),
+                           static_cast<int>((bounds.position.x + bounds.size.x) / cellSize));
+
+    const int minGridY = std::max(0, static_cast<int>(bounds.position.y / cellSize));
+    const int maxGridY = std::min(static_cast<int>(spatialCollisionGrid[0].size() - 1),
+                           static_cast<int>((bounds.position.y + bounds.size.y) / cellSize));
+
+    for (int gy = minGridY; gy <= maxGridY; ++gy) {
+        for (int gx = minGridX; gx <= maxGridX; ++gx) {
+            for (const Tile* tile : spatialCollisionGrid[gx][gy]) {
+                ret.push_back(*tile);
+            }
         }
     }
+
     return ret;
 }
 

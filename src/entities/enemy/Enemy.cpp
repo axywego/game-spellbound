@@ -3,7 +3,7 @@
 Enemy::Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_,
     const std::weak_ptr<Player> &player_)
 :
-Mob(texture, map_, collisionRect_), player(player_), raycastView(currentSprite, map_) {
+Mob(texture, map_, collisionRect_), player(player_), raycastView(currentSprite, map_, player_.lock()->getSprite()) {
     hpBackgroundShape.setFillColor(sf::Color::Black);
     hpRedShape.setFillColor(sf::Color::Red);
 

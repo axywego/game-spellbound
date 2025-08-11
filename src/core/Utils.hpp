@@ -1,6 +1,13 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
+#include <cmath>
+
+float distance(const sf::Vector2f& a, const sf::Vector2f& b);
+
+sf::Vector2f directivityVector(const sf::Vector2f& a, const sf::Vector2f& b);
+
+float squaredDistance(const sf::Vector2f& a, const sf::Vector2f& b);
 
 std::optional<sf::Vector2f> findIntersection(
     const sf::FloatRect& rect,

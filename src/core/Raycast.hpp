@@ -9,15 +9,13 @@
 
 class Raycast {
 private:
-    size_t numOfLines{30};
-    std::vector<sf::VertexArray> lines;
     float range{0.f};
+    sf::VertexArray line;
     sf::Sprite& targetSprite;
+    sf::Sprite& spriteToFind;
     const Tilemap& tilemap;
 public:
-    Raycast(sf::Sprite& targetSprite_, const Tilemap& tilemap_);
-
-    void init();
+    Raycast(sf::Sprite& targetSprite_, const Tilemap& tilemap_, sf::Sprite& spriteToFind_);
 
     void setRange(const float& range_);
 

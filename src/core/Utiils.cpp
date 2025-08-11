@@ -1,5 +1,19 @@
 #include "Utils.hpp"
 
+float distance(const sf::Vector2f& a, const sf::Vector2f& b) {
+    return sqrtf(powf(a.x - b.x, 2) + powf(a.y - b.y, 2));
+}
+
+sf::Vector2f directivityVector(const sf::Vector2f& a, const sf::Vector2f& b) {
+    return (a - b) / distance(a, b);
+}
+
+float squaredDistance(const sf::Vector2f& a, const sf::Vector2f& b) {
+    const float dx = a.x - b.x;
+    const float dy = a.y - b.y;
+    return dx * dx + dy * dy;
+}
+
 std::optional<sf::Vector2f> findIntersection(
     const sf::FloatRect& rect,
     const sf::Vector2f& lineStart,
@@ -12,22 +26,14 @@ std::optional<sf::Vector2f> findIntersection(
     const sf::Vector2f rectTopRight(rect.position.x + rect.size.x, rect.position.y);
     const sf::Vector2f rectBottomRight(rect.position.x + rect.size.x, rect.position.y + rect.size.y);
     const sf::Vector2f rectBottomLeft(rect.position.x, rect.position.y + rect.size.y);
+    std::vector<sf::Vector2f> points{rectTopLeft, rectTopRight, rectBottomRight, rectBottomLeft};
 
-    std::optional<sf::Vector2f> intersection;
+    sf::Vector2f firstPoint, secondPoint;
+    std::sort(points.begin(), points.end(), [&](const auto& a, const auto& b) {
+        return squaredDistance(lineStart, a) < squaredDistance(lineStart, b);
+    });
 
-    intersection = lineIntersection(lineStart, lineEnd, rectTopLeft, rectTopRight);
-    if (intersection) return intersection;
-
-    intersection = lineIntersection(lineStart, lineEnd, rectTopRight, rectBottomRight);
-    if (intersection) return intersection;
-
-    intersection = lineIntersection(lineStart, lineEnd, rectBottomRight, rectBottomLeft);
-    if (intersection) return intersection;
-
-    intersection = lineIntersection(lineStart, lineEnd, rectBottomLeft, rectTopLeft);
-    if (intersection) return intersection;
-
-    return std::nullopt;
+    return lineIntersection(lineStart, lineEnd, points[0], points[1]);
 }
 
 std::optional<sf::Vector2f> lineIntersection(
@@ -35,7 +41,7 @@ std::optional<sf::Vector2f> lineIntersection(
     const sf::Vector2f& B1, const sf::Vector2f& B2
 ) {
     const float denom = (A1.x - A2.x) * (B1.y - B2.y) - (A1.y - A2.y) * (B1.x - B2.x);
-    if (denom == 0) return std::nullopt;
+    if (std::abs(denom) < 1e-6f) return std::nullopt;  // Учтена погрешность float
 
     const float t = ((A1.x - B1.x) * (B1.y - B2.y) - (A1.y - B1.y) * (B1.x - B2.x)) / denom;
     const float u = -((A1.x - A2.x) * (A1.y - B1.y) - (A1.y - A2.y) * (A1.x - B1.x)) / denom;
