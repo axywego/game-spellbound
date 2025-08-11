@@ -43,9 +43,13 @@ class Tilemap {
 private:
     std::shared_ptr<sf::Texture> tileset;
     std::vector<Tile> tiles;
+    std::vector<Tile> collisionTiles;
     sf::Vector2u worldSize;
-    unsigned tileSize = 16;
+    float tileSize = 16.f;
     float worldScale = 5.0f;
+
+    std::vector<std::vector<std::vector<const Tile*>>> spatialGrid;
+    float cellSize = tileSize * worldScale;
 
 public:
     Tilemap() = default;
@@ -53,6 +57,8 @@ public:
     std::vector<Tile> getCollisionTiles() const;
 
     void createFromTiledShape(const TiledShape& shape);
+
+    void buildSpatialGrid();
 
     const sf::Vector2u& getWorldSize() const;
     float getTileSize() const;

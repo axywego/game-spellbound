@@ -23,5 +23,5 @@ public:
 
     Tilemap& getTilemap();
 
-    void render(sf::RenderTarget& target);
+    void render(sf::RenderTarget& target) const;
 };

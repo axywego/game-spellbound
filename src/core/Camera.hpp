@@ -20,5 +20,5 @@ public:
 
     void update(const float& dt);
 
-    void applyTo(sf::RenderTarget& renderTarget);
+    void applyTo(sf::RenderTarget& renderTarget) const;
 };

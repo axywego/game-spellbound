@@ -23,6 +23,6 @@ Tilemap& GameWorld::getTilemap() {
     return map;
 }
 
-void GameWorld::render(sf::RenderTarget& target) {
+void GameWorld::render(sf::RenderTarget& target) const {
     map.render(target);
 }

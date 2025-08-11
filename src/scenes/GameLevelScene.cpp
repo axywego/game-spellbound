@@ -1,5 +1,6 @@
 #include "GameLevelScene.hpp"
 
+#include <map>
 #include <utility>
 
 GameLevelScene::GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_,
@@ -93,7 +94,7 @@ void GameLevelScene::update(const float& dt) {
 
         //Player has melee damage
         if(playerMeleeAreaAttack && playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())){
-            enemy->takeDamage(player.lock()->getDamage());
+            enemy->takeDamage(playerPtr->getDamage());
         }
 
         enemy->update(dt);

@@ -34,7 +34,6 @@ void Raycast::update() {
     const auto collisionTiles = tilemap.getCollisionTilesInRange(lineStart, range);
 
     std::mutex linesMutex;
-
     auto processRays = [&](size_t start, size_t end) {
         for (size_t i = start; i < end; ++i) {
             const float rad = angles[i];

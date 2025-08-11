@@ -40,9 +40,6 @@ void Player::update(const float& dt) {
 
     if(!isAttacking) timerMana += dt;
 
-    // collision.update();
-    // attacking(dt);
-    // if(!isAttacking) move(dt);
     animController.update(dt);
     updateAnimation();
 }

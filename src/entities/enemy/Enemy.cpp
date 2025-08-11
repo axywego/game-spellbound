@@ -160,7 +160,7 @@ void Enemy::update(const float& dt) {
         }
     }
 
-    //raycastView.update();
+    raycastView.update();
 
     collision.update();
     attacking(dt);

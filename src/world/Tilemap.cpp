@@ -1,5 +1,7 @@
 #include "Tilemap.hpp"
 
+#include <iostream>
+
 #include "../core/ResourceManager.hpp"
 
 TileType determineTileType(const TiledShape& map, int x, int y) {
@@ -58,11 +60,6 @@ Tile::Tile(const sf::Texture &texture, const sf::IntRect &rect, bool collision, 
 }
 
 std::vector<Tile> Tilemap::getCollisionTiles() const {
-    std::vector<Tile> collisionTiles;
-    for(const auto& tile : tiles){
-        if(tile.getHasCollision())
-            collisionTiles.push_back(tile);
-    }
     return collisionTiles;
 }
 
@@ -141,8 +138,7 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                     break;
             }
 
-            tiles.push_back(
-                    Tile(*tileset,
+            auto tile = Tile(*tileset,
                     sf::IntRect({
                         static_cast<int>(texX * tileSize), static_cast<int>(texY * tileSize)
                         },
@@ -154,12 +150,43 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                     worldScale,
                     texX,
                     texY,
-                    type)
-            );
+                    type);
 
-            tiles.back().setPosition({static_cast<float>(x), static_cast<float>(y)});
+            tile.setPosition({static_cast<float>(x), static_cast<float>(y)});
+
+            tiles.push_back(tile);
+            if (collision) {
+                collisionTiles.push_back(tile);
+            }
         }
     }
+    std::cout << "sheesh" << std::endl;
+    buildSpatialGrid();
+    //std::cout << "sheesh" << std::endl;
+}
+
+void Tilemap::buildSpatialGrid() {
+    int worldWidthPixels = worldSize.x * cellSize;
+    int worldHeightPixels = worldSize.y * cellSize;
+
+    int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
+    int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
+
+    spatialGrid.clear();
+    spatialGrid.resize(gridWidth);
+    for (auto& col : spatialGrid) {
+        col.resize(gridHeight);
+    }
+
+    for (const auto& tile : tiles) {
+        int gridX = tile.getGlobalBounds().position.x / cellSize;
+        int gridY = tile.getGlobalBounds().position.y / cellSize;
+
+        if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
+            spatialGrid[gridX][gridY].emplace_back(&tile);
+        }
+    }
+
 }
 
 const sf::Vector2u& Tilemap::getWorldSize() const { return worldSize; }
@@ -169,10 +196,10 @@ const sf::Texture& Tilemap::getTileset() const { return *tileset; }
 
 std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
     std::vector<Tile> ret;
-    for (const auto& tile : tiles) {
+    for (const auto& tile : collisionTiles) {
         const auto& posTile = tile.getGlobalBounds().position;
         if (const float lengthSquare = powf(posTile.x - pos.x, 2.f) + powf(posTile.y - pos.y, 2.f);
-          lengthSquare <= range * range && tile.getHasCollision()) {
+          lengthSquare <= range * range) {
             ret.push_back(tile);
         }
     }
@@ -184,8 +211,28 @@ std::vector<Tile> Tilemap::getTiles() const {
 }
 
 void Tilemap::render(sf::RenderTarget& target) const {
-    for (const auto& tile : tiles) {
-        if (isOnScreen(tile.getSprite(), target))
-            target.draw(tile.getSprite());
+    const sf::View& view = target.getView();
+    const sf::Vector2f viewCenter = view.getCenter();
+    const sf::Vector2f viewSize = view.getSize();
+
+    const sf::FloatRect viewBounds({{viewCenter.x - viewSize.x/2, viewCenter.y - viewSize.y/2},
+        {viewSize.x, viewSize.y}});
+
+    const int minGridX = std::max(0, static_cast<int>(viewBounds.position.x / cellSize));
+    const int maxGridX = std::min(static_cast<int>(spatialGrid.size() - 1),
+                           static_cast<int>((viewBounds.position.x + viewBounds.size.x) / cellSize));
+
+    const int minGridY = std::max(0, static_cast<int>(viewBounds.position.y / cellSize));
+    const int maxGridY = std::min(static_cast<int>(spatialGrid[0].size() - 1),
+                           static_cast<int>((viewBounds.position.y + viewBounds.size.y) / cellSize));
+
+    for (int gy = minGridY; gy <= maxGridY; ++gy) {
+        for (int gx = minGridX; gx <= maxGridX; ++gx) {
+            for (const Tile* tile : spatialGrid[gx][gy]) {
+                if (isOnScreen(tile->getSprite(), target)) {
+                    target.draw(tile->getSprite());
+                }
+            }
+        }
     }
 }

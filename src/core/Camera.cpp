@@ -43,6 +43,6 @@ void Camera::update(const float& dt) {
     camera.setCenter(newPos);
 }
 
-void Camera::applyTo(sf::RenderTarget& renderTarget){
+void Camera::applyTo(sf::RenderTarget& renderTarget) const {
     renderTarget.setView(camera);
 }
