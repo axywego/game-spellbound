@@ -19,21 +19,34 @@ std::optional<sf::Vector2f> findIntersection(
     const sf::Vector2f& lineStart,
     const sf::Vector2f& lineEnd
 ) {
+    // Проверка точек внутри прямоугольника
     if (rect.contains(lineStart)) return lineStart;
     if (rect.contains(lineEnd)) return lineEnd;
 
-    const sf::Vector2f rectTopLeft(rect.position.x, rect.position.y);
-    const sf::Vector2f rectTopRight(rect.position.x + rect.size.x, rect.position.y);
-    const sf::Vector2f rectBottomRight(rect.position.x + rect.size.x, rect.position.y + rect.size.y);
-    const sf::Vector2f rectBottomLeft(rect.position.x, rect.position.y + rect.size.y);
-    std::vector<sf::Vector2f> points{rectTopLeft, rectTopRight, rectBottomRight, rectBottomLeft};
+    const sf::Vector2f rectPoints[4] = {
+        {rect.position.x, rect.position.y},
+        {rect.position.x + rect.size.x, rect.position.y},
+        {rect.position.x + rect.size.x, rect.position.y + rect.size.y},
+        {rect.position.x, rect.position.y + rect.size.y}
+    };
 
-    sf::Vector2f firstPoint, secondPoint;
-    std::sort(points.begin(), points.end(), [&](const auto& a, const auto& b) {
-        return squaredDistance(lineStart, a) < squaredDistance(lineStart, b);
-    });
+    std::optional<sf::Vector2f> closestIntersection;
+    float minDistance = std::numeric_limits<float>::max();
 
-    return lineIntersection(lineStart, lineEnd, points[0], points[1]);
+    for (int i = 0; i < 4; ++i) {
+        const sf::Vector2f& p1 = rectPoints[i];
+        const sf::Vector2f& p2 = rectPoints[(i + 1) % 4];
+
+        if (auto intersection = lineIntersection(lineStart, lineEnd, p1, p2)) {
+            float dist = squaredDistance(lineStart, *intersection);
+            if (dist < minDistance) {
+                minDistance = dist;
+                closestIntersection = intersection;
+            }
+        }
+    }
+
+    return closestIntersection;
 }
 
 std::optional<sf::Vector2f> lineIntersection(
