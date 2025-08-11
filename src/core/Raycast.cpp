@@ -25,17 +25,12 @@ void Raycast::update() {
 
     const auto collisionTiles = tilemap.getCollisionTilesInRange(pos, range);
 
-    std::vector<sf::Vector2f> intersections;
     for (const auto& tile : collisionTiles) {
-        if (const auto intersection = findIntersection(tile.getGlobalBounds(), line[0].position, line[1].position)) {
-            intersections.emplace_back(intersection.value());
+        const auto intersection = findIntersection(tile.getGlobalBounds(), line[0].position, line[1].position);
+        if (intersection) {
+            line[1].position = intersection.value();
+            break;
         }
-    }
-    if (!intersections.empty()) {
-        line[1].position = *std::min_element(intersections.begin(), intersections.end(),
-            [](const sf::Vector2f& a, const sf::Vector2f& b) {
-                    return a.x < b.x && a.y < b.y;
-        });
     }
 }
 
