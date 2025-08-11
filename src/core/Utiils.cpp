@@ -26,9 +26,9 @@ std::optional<sf::Vector2f> findIntersection(
     const sf::Vector2f rectTopRight(rect.position.x + rect.size.x, rect.position.y);
     const sf::Vector2f rectBottomRight(rect.position.x + rect.size.x, rect.position.y + rect.size.y);
     const sf::Vector2f rectBottomLeft(rect.position.x, rect.position.y + rect.size.y);
-    std::vector<sf::Vector2f> points{rectTopLeft, rectTopRight, rectBottomRight, rectBottomLeft};
 
-    sf::Vector2f firstPoint, secondPoint;
+    std::vector points{rectTopLeft, rectTopRight, rectBottomRight, rectBottomLeft};
+
     std::sort(points.begin(), points.end(), [&](const auto& a, const auto& b) {
         return squaredDistance(lineStart, a) < squaredDistance(lineStart, b);
     });
@@ -41,7 +41,7 @@ std::optional<sf::Vector2f> lineIntersection(
     const sf::Vector2f& B1, const sf::Vector2f& B2
 ) {
     const float denom = (A1.x - A2.x) * (B1.y - B2.y) - (A1.y - A2.y) * (B1.x - B2.x);
-    if (std::abs(denom) < 1e-6f) return std::nullopt;  // Учтена погрешность float
+    if (std::abs(denom) < 1e-6f) return std::nullopt;
 
     const float t = ((A1.x - B1.x) * (B1.y - B2.y) - (A1.y - B1.y) * (B1.x - B2.x)) / denom;
     const float u = -((A1.x - A2.x) * (A1.y - B1.y) - (A1.y - A2.y) * (A1.x - B1.x)) / denom;
