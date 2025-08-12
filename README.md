@@ -2,9 +2,9 @@
 
 ## Content
 
-* [About game](https://github.com/axywego/game-spellbound/README.md?plain=1#L9)
-* [Used technologies](https://github.com/axywego/game-spellbound/README.md?plain=1#L12)
-* [How to compile and run](https://github.com/axywego/game-spellbound/README.md?plain=1#L17)
+* [About game](https://github.com/axywego/game-spellbound?tab=readme-ov-file#about-game)
+* [Used technologies](https://github.com/axywego/game-spellbound?tab=readme-ov-file#used-technologies)
+* [How to compile and run](https://github.com/axywego/game-spellbound?tab=readme-ov-file#how-to-compile)
 
 ## About game
 This is a 2D top-down game that combines the Rougelike and Action-Adventure genres. The player will have to descend deep into the dungeon, meeting various enemies along the way, the last of which holds the key to the hatch to the next floor of the dungeon. Before the "sortie", the player chooses the class of his hero - Knight, Mage or Archer. During the game, he will encounter various buffs that can increase his characteristics: health, mana, speed, damage, etc. Each dungeon floor and enemy placement are pseudo-randomly generated.
