@@ -19,7 +19,6 @@ std::optional<sf::Vector2f> findIntersection(
     const sf::Vector2f& lineStart,
     const sf::Vector2f& lineEnd
 ) {
-    // Проверка точек внутри прямоугольника
     if (rect.contains(lineStart)) return lineStart;
     if (rect.contains(lineEnd)) return lineEnd;
 
@@ -54,11 +53,12 @@ std::optional<sf::Vector2f> lineIntersection(
     const sf::Vector2f& B1, const sf::Vector2f& B2
 ) {
     const float denom = (A1.x - A2.x) * (B1.y - B2.y) - (A1.y - A2.y) * (B1.x - B2.x);
-    if (std::abs(denom) < 1e-6f) return std::nullopt;  // Учтена погрешность float
+    if (std::abs(denom) < 1e-6f) return std::nullopt;
 
     const float t = ((A1.x - B1.x) * (B1.y - B2.y) - (A1.y - B1.y) * (B1.x - B2.x)) / denom;
     const float u = -((A1.x - A2.x) * (A1.y - B1.y) - (A1.y - A2.y) * (A1.x - B1.x)) / denom;
 
+    //why its working?
     if (t >= 0 && t <= 1 && u >= 0 && u <= 1) {
         return sf::Vector2f(
             A1.x + t * (A2.x - A1.x),
