@@ -163,10 +163,75 @@ sf::Text HUD::textDamage(font);
 sf::Text HUD::textSpeed(font);
 
 
-Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_): texture(texture_), sprite(texture), window(window_) { }
+// namespace Animation {
+//     // Реализация класса Move
+//     Move::Move(const sf::Vector2f& from, const sf::Vector2f& to)
+//         : from(from), to(to) {}
+//
+//     void Move::apply(sf::Sprite& sprite, float progress) {
+//         sf::Vector2f newPos = from + (to - from) * progress;
+//         sprite.setPosition(newPos);
+//     }
+//
+//     Type Move::getType() const {
+//         return Type::Move;
+//     }
+//
+//     // Реализация класса Rotate
+//     Rotate::Rotate(float angle)
+//         : angle(angle) {}
+//
+//     void Rotate::apply(sf::Sprite& sprite, float progress) {
+//         sprite.rotate(sf::degrees(angle * progress));
+//     }
+//
+//     Type Rotate::getType() const {
+//         return Type::Rotate;
+//     }
+//
+//     // Реализация класса Scale
+//     Scale::Scale(float scale)
+//         : scale(scale) {}
+//
+//     void Scale::apply(sf::Sprite& sprite, float progress) {
+//         float currentScale = 1.0f + (scale - 1.0f) * progress;
+//         sprite.setScale({currentScale, currentScale});
+//     }
+//
+//     Type Scale::getType() const {
+//         return Type::Scale;
+//     }
+//
+//     // Реализация класса ColorFilter
+//     ColorFilter::ColorFilter(sf::Color color)
+//         : color(color) {}
+//
+//     void ColorFilter::apply(sf::Sprite& sprite, float progress) {
+//         sf::Color original = sprite.getColor();
+//         sf::Color newColor(
+//             static_cast<uint8_t>(original.r + (color.r - original.r) * progress),
+//             static_cast<uint8_t>(original.g + (color.g - original.g) * progress),
+//             static_cast<uint8_t>(original.b + (color.b - original.b) * progress),
+//             static_cast<uint8_t>(original.a + (color.a - original.a) * progress)
+//         );
+//         sprite.setColor(newColor);
+//     }
+//
+//     Type ColorFilter::getType() const {
+//         return Type::ColorFilter;
+//     }
+// }
 
-void Button::setPosition(sf::Vector2f&& pos){
+
+Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_):
+texture(texture_), sprite(texture), window(window_) { }
+
+void Button::setPosition(const sf::Vector2f& pos){
     sprite.setPosition(pos);
+}
+
+sf::Vector2f Button::getPosition() const {
+    return sprite.getGlobalBounds().position;
 }
 
 bool Button::isHovered() const {
@@ -174,12 +239,11 @@ bool Button::isHovered() const {
     return sprite.getGlobalBounds().contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});
 }
 
-bool Button::isClicked(const std::optional<sf::Event>& event){
+bool Button::isClicked(const std::optional<sf::Event>& event) const {
     if (!event.has_value()) {
         return false;
     }
 
-    // Безопасная проверка типа события
     if (const auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>()) {
         return mouseEvent->button == sf::Mouse::Button::Left && isHovered();
     }
@@ -187,6 +251,33 @@ bool Button::isClicked(const std::optional<sf::Event>& event){
     return false;
 }
 
-void Button::render(sf::RenderTarget& renderTarget) {
+Transform Button::getCurrentTransform() const {
+    return {
+        sprite.getPosition(),
+        sprite.getRotation().asDegrees(),
+        sprite.getScale(),
+    };
+}
+
+void Button::update(const float& dt) {
+    const bool isPlus = isHovered();
+    for (auto& currentAnim = animations[State::Hovered];
+      auto& [anim, data] : currentAnim) {
+        if (isPlus) {
+            if(data.progress >= 1.f)
+                continue;
+        }
+        else {
+            if(data.progress <= 0.f)
+                continue;
+        }
+        data.progress = animationProgressInSec[currentState] / anim->duration;
+        isPlus ? animationProgressInSec[currentState] += dt : animationProgressInSec[currentState] -= dt;
+
+        anim->apply(sprite, data.progress);
+    }
+}
+
+void Button::render(sf::RenderTarget& renderTarget) const {
     renderTarget.draw(sprite);
 }

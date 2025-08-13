@@ -41,6 +41,10 @@ void SceneManager::addScene(const std::string& name, Args&&... args){
 void SceneManager::switchTo(const std::string& sceneName) {
     auto it = scenes.find(sceneName);
     if(it != scenes.end()){
+        if (sceneName == "main") {
+            isPaused = false;
+            pausedScene = nullptr;
+        }
         nextScene = it->second;
         startTransition();
     }
@@ -58,7 +62,8 @@ void SceneManager::startTransition() {
 }
 
 void SceneManager::pause() {
-    if(currentScene && !isPaused){
+    // Пауза только из игровой сцены
+    if(currentScene && !isPaused && currentScene == scenes["main"]) {
         pausedScene = currentScene;
         switchTo("pause");
         isPaused = true;
@@ -67,14 +72,14 @@ void SceneManager::pause() {
 
 void SceneManager::resume() {
     if(isPaused){
-        currentScene = pausedScene;
-        //pausedScene = nullptr;
         isPaused = false;
+        pausedScene = nullptr;
+        switchTo("main");
     }
 }
 
 void SceneManager::update(const float& dt) {
-    if(currentScene && !isPaused){
+    if(currentScene){
         currentScene->update(dt);
     }
     if(isTransition){
@@ -100,13 +105,13 @@ void SceneManager::update(const float& dt) {
     }
 }
 
-void SceneManager::render(sf::RenderTarget& renderTarget){
+void SceneManager::render(sf::RenderTarget& renderTarget) const {
     if(currentScene) currentScene->render(renderTarget);
     if(isTransition) renderTarget.draw(transitionShape);
 }
 
-void SceneManager::handleEvent(const std::optional<sf::Event>& event) {
-    if(!isTransition) {
-        if(currentScene && event.has_value()) currentScene->handleEvent(event);
+void SceneManager::handleEvent(const std::optional<sf::Event>& event) const {
+    if(currentScene && !isTransition) {
+        currentScene->handleEvent(event);
     }
 }

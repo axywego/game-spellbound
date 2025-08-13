@@ -46,6 +46,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/Raycast.hpp
         src/core/Utiils.cpp
         src/core/Utils.hpp
+        src/core/TransformAnimation.cpp
+        src/core/TransformAnimation.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

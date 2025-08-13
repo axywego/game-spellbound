@@ -46,7 +46,7 @@ public:
 
     void update(const float& dt);
 
-    void render(sf::RenderTarget& renderTarget);
+    void render(sf::RenderTarget& renderTarget) const;
 
-    void handleEvent(const std::optional<sf::Event>& event);
+    void handleEvent(const std::optional<sf::Event>& event) const;
 };

@@ -18,9 +18,24 @@ onExitClick(exitCallback) {
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
 
+    auto anim1 = Animation::createScaleAnimation(
+        1.1f, std::function<float(float)>{Animation::Easing::easeInOutQuad}, 0.2f
+    );
+    auto anim2 = Animation::createScaleAnimation(
+        1.1f, std::function<float(float)>{Animation::Easing::easeInOutQuad}, 0.2f
+    );
+    auto anim3 = Animation::createScaleAnimation(
+        1.1f, std::function<float(float)>{Animation::Easing::easeInOutQuad}, 0.2f
+    );
+
     startButton.setPosition({50.f, 500.f});
+    startButton.addAnimation(Button::State::Hovered, std::move(anim1));
+
     settingsButton.setPosition({50.f, 600.f});
+    settingsButton.addAnimation(Button::State::Hovered, std::move(anim2));
+
     exitButton.setPosition({50.f, 700.f});
+    exitButton.addAnimation(Button::State::Hovered, std::move(anim3));
 }
 
 void MenuScene::load()  {
@@ -36,9 +51,12 @@ void MenuScene::update(const float& dt)  {
             isTransition = false;
         }
         circle.setScale( {circleScale, circleScale} );
-
     }
-
+    else {
+        startButton.update(dt);
+        settingsButton.update(dt);
+        exitButton.update(dt);
+    }
 }
 
 void MenuScene::render(sf::RenderTarget& renderTarget)  {
