@@ -1,7 +1,8 @@
 #pragma once 
 
 #include "Scene.hpp"
-#include "../core/UI.hpp"
+#include "../core/UI/Button.hpp"
+#include "../core/ResourceManager.hpp"
 
 #include <functional>
 
@@ -19,9 +20,9 @@ private:
     sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
-    Button startButton;
-    Button settingsButton;
-    Button exitButton;
+    UI::Button startButton;
+    UI::Button settingsButton;
+    UI::Button exitButton;
 
     std::function<void()> onStartClick;
     std::function<void()> onExitClick;

@@ -1,7 +1,8 @@
 #pragma once
 
 #include "Scene.hpp"
-#include "../core/UI.hpp"
+#include "../core/UI/Button.hpp"
+#include "../core/ResourceManager.hpp"
 
 #include <functional>
 
@@ -12,8 +13,8 @@ private:
     //sf::Sprite backgroundImage;
 
     sf::RectangleShape overlay;
-    Button resumeButton;
-    Button menuButton;
+    UI::Button resumeButton;
+    UI::Button menuButton;
 
     std::function<void()> onResumeClick;
     std::function<void()> onMenuClick;

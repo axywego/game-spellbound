@@ -101,7 +101,7 @@ void GameLevelScene::update(const float& dt) {
     }
     lastPlayerPos = playerPtr->getSprite().getPosition();
 
-    HUD::update(*playerPtr, camera.getCenter());
+    UI::HUD::update(*playerPtr, camera.getCenter());
 }
 
 void GameLevelScene::render(sf::RenderTarget& renderTarget) {
@@ -116,7 +116,7 @@ void GameLevelScene::render(sf::RenderTarget& renderTarget) {
         enemy->render(renderTarget);
     }
 
-    HUD::render(renderTarget);
+    UI::HUD::render(renderTarget);
 }
 
 void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {

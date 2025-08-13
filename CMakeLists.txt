@@ -19,7 +19,6 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/AnimationController.cpp
         src/core/Camera.cpp
         src/core/ResourceManager.cpp
-        src/core/UI.cpp
         src/entities/enemy/Enemy.cpp
         src/entities/enemy/EnemyFactory.cpp
         src/entities/enemy/Rat.cpp
@@ -48,6 +47,12 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/Utils.hpp
         src/core/TransformAnimation.cpp
         src/core/TransformAnimation.hpp
+        src/core/UI/UIObject.cpp
+        src/core/UI/UIObject.hpp
+        src/core/UI/Button.cpp
+        src/core/UI/Button.hpp
+        src/core/UI/HUD.cpp
+        src/core/UI/HUD.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

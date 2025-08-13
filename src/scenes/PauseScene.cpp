@@ -33,8 +33,8 @@ void PauseScene::render(sf::RenderTarget& renderTarget)  {
 
     renderTarget.draw(overlay);
 
-    resumeButton.render(renderTarget);
-    menuButton.render(renderTarget);
+    resumeButton.render();
+    menuButton.render();
 }
 
 void PauseScene::handleEvent(const std::optional<sf::Event>& event)  {

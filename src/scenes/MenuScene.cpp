@@ -29,13 +29,13 @@ onExitClick(exitCallback) {
     );
 
     startButton.setPosition({50.f, 500.f});
-    startButton.addAnimation(Button::State::Hovered, std::move(anim1));
+    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim1));
 
     settingsButton.setPosition({50.f, 600.f});
-    settingsButton.addAnimation(Button::State::Hovered, std::move(anim2));
+    settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim2));
 
     exitButton.setPosition({50.f, 700.f});
-    exitButton.addAnimation(Button::State::Hovered, std::move(anim3));
+    exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim3));
 }
 
 void MenuScene::load()  {
@@ -64,9 +64,9 @@ void MenuScene::render(sf::RenderTarget& renderTarget)  {
 
     renderTarget.draw(backgroundImage);
 
-    startButton.render(renderTarget);
-    settingsButton.render(renderTarget);
-    exitButton.render(renderTarget);
+    startButton.render();
+    settingsButton.render();
+    exitButton.render();
 
     if(isTransition) renderTarget.draw(circle);
 }

@@ -6,7 +6,7 @@
 #include "../world/GameWorld.hpp"
 #include "../entities/enemy/Enemy.hpp"
 #include "../generators/EnemyGenerator.hpp"
-#include "../core/UI.hpp"
+#include "../core/UI/HUD.hpp"
 
 #include <algorithm>
 #include <functional>
