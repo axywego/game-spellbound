@@ -15,8 +15,6 @@ namespace UI {
     protected:
 
         sf::RenderWindow& window;
-        sf::Texture texture;
-        sf::Sprite sprite;
 
         TypeAnimation currentAnimType = TypeAnimation::None;
 
@@ -25,7 +23,7 @@ namespace UI {
 
     public:
 
-        UIObject(const sf::Texture& texture_, sf::RenderWindow& window_);
+        UIObject(sf::RenderWindow& window_);
 
         virtual ~UIObject() = default;
 
@@ -44,15 +42,15 @@ namespace UI {
                 )), ...);
         }
 
-        Transform getCurrentTransform() const;
+        virtual Transform getCurrentTransform() const = 0;
 
-        void setPosition(const sf::Vector2f& pos);
+        virtual void setPosition(const sf::Vector2f& pos) = 0;
 
-        sf::Vector2f getPosition() const;
+        virtual sf::Vector2f getPosition() const = 0;
 
         virtual void update(const float& dt) = 0;
 
-        void render() const;
+        virtual void render() const = 0;
     };
 
 }

@@ -1,5 +1,7 @@
 #include "SceneManager.hpp"
 
+#include "SettingsScene.hpp"
+
 SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     // initializing;
     worlds.insert({"test", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
@@ -15,12 +17,16 @@ void SceneManager::initScenes() {
 
     addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
 
+    addScene<SettingsScene>("settings", window, [this]() { switchTo("menu"); });
+
     addScene<MenuScene>("menu", window,
                         [this]() { switchTo("main"); },
+                        [this]() { switchTo("settings"); },
                         [this]() { window.close(); }
     );
 
     addScene<PauseScene>("pause", window, [this]() { resume(); }, [this]() { switchTo("menu"); });
+
 
     switchTo("menu");
 }

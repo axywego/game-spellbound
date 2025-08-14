@@ -2,7 +2,26 @@
 
 namespace UI {
 
-    Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_): UIObject(texture_, window_) { }
+    Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_):
+    UIObject(window_), texture(texture_), sprite(texture_) {
+        sprite.setOrigin(sprite.getGlobalBounds().size / 2.f);
+    }
+
+    Transform Button::getCurrentTransform() const {
+        return {
+            sprite.getPosition(),
+            sprite.getRotation().asDegrees(),
+            sprite.getScale()
+        };
+    }
+
+    void Button::setPosition(const sf::Vector2f& pos) {
+        sprite.setPosition(pos + sprite.getGlobalBounds().size / 2.f);
+    }
+
+    sf::Vector2f Button::getPosition() const {
+        return sprite.getPosition() - sprite.getGlobalBounds().size / 2.f;
+    }
 
     bool Button::isHovered() const {
         const auto mousePos = sf::Mouse::getPosition(window);
@@ -39,4 +58,7 @@ namespace UI {
         }
     }
 
+    void Button::render() const {
+        window.draw(sprite);
+    }
 }

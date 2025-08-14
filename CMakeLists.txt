@@ -53,6 +53,10 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/UI/Button.hpp
         src/core/UI/HUD.cpp
         src/core/UI/HUD.hpp
+        src/scenes/SettingsScene.cpp
+        src/scenes/SettingsScene.hpp
+        src/core/UI/Slider.cpp
+        src/core/UI/Slider.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
@@ -87,4 +91,13 @@ if(WIN32)
             endif()
         endforeach()
     endif()
+
+
+    if (CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set_target_properties(SPELLBOUND_GAME PROPERTIES LINK_FLAGS "-Wl,--subsystem,console")
+    else()
+        set_target_properties(SPELLBOUND_GAME PROPERTIES LINK_FLAGS "-Wl,--subsystem,windows")
+    endif()
+
+
 endif()
