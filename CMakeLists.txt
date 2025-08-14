@@ -43,7 +43,7 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/Generator.cpp
         src/core/Raycast.cpp
         src/core/Raycast.hpp
-        src/core/Utiils.cpp
+        src/core/Utils.cpp
         src/core/Utils.hpp
         src/core/TransformAnimation.cpp
         src/core/TransformAnimation.hpp
