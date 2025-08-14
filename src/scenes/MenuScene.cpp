@@ -20,23 +20,31 @@ onExitClick(exitCallback) {
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
 
+
+    const auto scaleStartButton = startButton.getCurrentTransform().scale;
+    const auto scaleSettingsButton = settingsButton.getCurrentTransform().scale;
+    const auto scaleExitButton = exitButton.getCurrentTransform().scale;
+
     auto anim1 = Animation::createScaleAnimation(
-        1.1f, std::function{Animation::Easing::easeInOutQuad}, 0.2f
+        scaleStartButton, {scaleStartButton.x + 0.1f, scaleStartButton.y + 0.1f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
     auto anim2 = Animation::createScaleAnimation(
-        1.1f, std::function{Animation::Easing::easeInOutQuad}, 0.2f
+        scaleSettingsButton, {scaleSettingsButton.x + 0.1f, scaleSettingsButton.y + 0.1f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
     auto anim3 = Animation::createScaleAnimation(
-        1.1f, std::function{Animation::Easing::easeInOutQuad}, 0.2f
+        scaleExitButton, {scaleExitButton.x + 0.1f, scaleExitButton.y + 0.1f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
 
-    startButton.setPosition({50.f, 500.f});
+    startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
     startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim1));
 
-    settingsButton.setPosition({50.f, 600.f});
+    settingsButton.setTransform(Transform{{50.f, 600.f}, 0.f, {startButton.getCurrentTransform().scale}});
     settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim2));
 
-    exitButton.setPosition({50.f, 700.f});
+    exitButton.setTransform(Transform{sf::Vector2f{50.f, 700.f}, 0.f, startButton.getCurrentTransform().scale});
     exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::move(anim3));
 }
 

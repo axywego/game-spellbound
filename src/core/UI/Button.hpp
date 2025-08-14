@@ -11,11 +11,13 @@ namespace UI {
     public:
         Button(const sf::Texture& texture_, sf::RenderWindow& window_);
 
+        void setTransform(const Transform& t) override;
+
         Transform getCurrentTransform() const override;
 
         void setPosition(const sf::Vector2f& pos) override;
 
-        sf::Vector2f getPosition() const override;
+        void setScale(const sf::Vector2f &scale) override;
 
         bool isHovered() const;
 

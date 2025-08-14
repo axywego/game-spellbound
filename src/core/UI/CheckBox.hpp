@@ -16,13 +16,15 @@ namespace UI {
         bool checked {false};
 
     public:
-        CheckBox(sf::RenderWindow& window, const sf::Vector2f& pos, const bool& checked);
+        CheckBox(sf::RenderWindow& window, const bool& checked);
+
+        void setTransform(const Transform& t) override;
 
         Transform getCurrentTransform() const override;
 
         void setPosition(const sf::Vector2f& pos) override;
 
-        sf::Vector2f getPosition() const override;
+        void setScale(const sf::Vector2f &scale) override;
 
         bool isHovered() const;
 

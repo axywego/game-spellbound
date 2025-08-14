@@ -4,48 +4,72 @@
 
 #include "CheckBox.hpp"
 
-namespace UI {
-    CheckBox::CheckBox(sf::RenderWindow &window, const sf::Vector2f& pos, const bool& checked): UIObject(window), checked(checked) {
-        frame[0].setSize({50.f, 5.f});
-        frame[1].setSize({5.f, 50.f});
-        frame[2].setSize({50.f, 5.f});
-        frame[3].setSize({5.f, 50.f});
+#include <iostream>
 
-        frame[0].setFillColor(sf::Color::Black);
-        frame[1].setFillColor(sf::Color::Black);
+namespace UI {
+    CheckBox::CheckBox(sf::RenderWindow &window, const bool& checked): UIObject(window), checked(checked) {
+        frame[0].setSize({10.f, 1.f});
+        frame[1].setSize({1.f, 10.f});
+        frame[2].setSize({10.f, 1.f});
+        frame[3].setSize({1.f, 10.f});
+
+        frame[0].setFillColor(sf::Color::Green);
+        frame[1].setFillColor(sf::Color::Red);
         frame[2].setFillColor(sf::Color::Black);
-        frame[3].setFillColor(sf::Color::Black);
+        frame[3].setFillColor(sf::Color::Blue);
 
         checkMark.setTextureRect({{20, 20},{10, 10}});
         checkMark.setOrigin(checkMark.getGlobalBounds().size / 2.f);
-        checkMark.setScale({5.f, 5.f});
         checkMark.setColor(sf::Color::Black);
+    }
 
-        CheckBox::setPosition(pos);
+    void CheckBox::setTransform(const Transform &t) {
+        transform = t;
+        setScale(transform.scale);
+        setPosition(transform.position);
+        checkMarkRect.position = frame[0].getPosition();
+        checkMarkRect.size = {10.f * transform.scale.x, 10.f * transform.scale.y};
     }
 
     Transform CheckBox::getCurrentTransform() const {
-        return {};
+        return transform;
     }
 
     void CheckBox::setPosition(const sf::Vector2f &pos) {
-        //top
         frame[0].setPosition(pos);
-        //right
-        frame[1].setPosition({pos.x + 45.f, pos.y});
-        //bottom
-        frame[2].setPosition({pos.x, pos.y + 45.f});
-        //left
+
+        const float offsetX = (frame[0].getSize().x - frame[0].getSize().y) * transform.scale.x;
+
+        frame[1].setPosition({pos.x + offsetX, pos.y});
+
+        const float offsetY = (frame[1].getSize().y - frame[1].getSize().x) * transform.scale.y;
+
+        frame[2].setPosition({pos.x, pos.y + offsetY});
         frame[3].setPosition(pos);
 
-        checkMark.setPosition(pos + sf::Vector2f{25.f, 25.f});
-
-        checkMarkRect.position = frame[0].getPosition();
-        checkMarkRect.size = {50.f, 50.f};
+        const sf::Vector2f centerOffset = {
+            frame[0].getSize().x / 2.f * transform.scale.x,
+            frame[1].getSize().y / 2.f * transform.scale.y
+        };
+        checkMark.setPosition(pos + centerOffset);
     }
 
-    sf::Vector2f CheckBox::getPosition() const {
-        return frame[0].getPosition();
+    void CheckBox::setScale(const sf::Vector2f& scale) {
+        frame[0].setScale(scale);
+        frame[1].setScale(scale);
+        frame[2].setScale(scale);
+        frame[3].setScale(scale);
+
+        const float offsetX = (frame[0].getSize().x - frame[0].getSize().y) * transform.scale.x;
+
+        frame[1].setPosition({frame[0].getPosition().x + offsetX, frame[0].getPosition().y});
+
+        const float offsetY = (frame[1].getSize().y - frame[1].getSize().x) * transform.scale.y;
+
+        frame[2].setPosition({frame[0].getPosition().x, frame[0].getPosition().y + offsetY});
+
+        checkMark.setScale(scale);
+        checkMark.setPosition({frame[0].getSize().x * scale.x / 2.f, frame[1].getSize().y * scale.y / 2.f});
     }
 
     bool CheckBox::isHovered() const {
@@ -90,9 +114,14 @@ namespace UI {
     }
 
     void CheckBox::render() const {
-        for (const auto& el : frame) {
-            window.draw(el);
-        }
+        // for (const auto& el : frame) {
+        //     window.draw(el);
+        // }
+
+        window.draw(frame[0]);
+        window.draw(frame[1]);
+        window.draw(frame[2]);
+        window.draw(frame[3]);
         if (checked) {
             window.draw(checkMark);
         }

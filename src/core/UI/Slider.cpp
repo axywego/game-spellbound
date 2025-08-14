@@ -2,7 +2,7 @@
 
 namespace UI {
 
-    Slider::Slider(sf::RenderWindow& window_, const sf::Vector2f& pos, const float& length_, float value_):
+    Slider::Slider(sf::RenderWindow& window_, const float& length_, const float& value_):
     UIObject(window_), value(value_), length(length_) {
         leftRectangle.setFillColor(sf::Color::Red);
         rightRectangle.setFillColor(sf::Color::Green);
@@ -10,27 +10,29 @@ namespace UI {
         leftRectangle.setSize({length * value, 20.f});
         rightRectangle.setSize({length * (1.f - value), 20.f});
 
-        leftRectangle.setPosition(pos);
-        rightRectangle.setPosition(leftRectangle.getPosition() + sf::Vector2f(length * value, 0.f));
-
         circle.setRadius(20.f);
         circle.setOrigin(circle.getGlobalBounds().size / 2.f);
-        circle.setPosition(rightRectangle.getPosition() + sf::Vector2f(0.f, 10.f));
         circle.setFillColor(sf::Color::Black);
     }
 
+    void Slider::setTransform(const Transform& t) {
+        transform = t;
+        setPosition(transform.position);
+        setScale(transform.scale);
+    }
+
     Transform Slider::getCurrentTransform() const {
-        return {};
+        return transform;
     }
 
     void Slider::setPosition(const sf::Vector2f& pos) {
-        leftRectangle.move(pos - leftRectangle.getPosition());
-        rightRectangle.move(pos - rightRectangle.getPosition());
-        circle.move(pos - circle.getPosition());
+        leftRectangle.setPosition(pos);
+        rightRectangle.setPosition(leftRectangle.getPosition() + sf::Vector2f(length * value, 0.f));
+        circle.setPosition(rightRectangle.getPosition() + sf::Vector2f(0.f, 10.f));
     }
 
-    sf::Vector2f Slider::getPosition() const {
-        return leftRectangle.getPosition();
+    void Slider::setScale(const sf::Vector2f &scale) {
+
     }
 
     void Slider::handleInput(const std::optional<sf::Event> &event) {

@@ -14,6 +14,8 @@ namespace UI {
 
     protected:
 
+        Transform transform;
+
         sf::RenderWindow& window;
 
         TypeAnimation currentAnimType = TypeAnimation::None;
@@ -42,11 +44,13 @@ namespace UI {
                 )), ...);
         }
 
+        virtual void setTransform(const Transform& t) = 0;
+
         virtual Transform getCurrentTransform() const = 0;
 
         virtual void setPosition(const sf::Vector2f& pos) = 0;
 
-        virtual sf::Vector2f getPosition() const = 0;
+        virtual void setScale(const sf::Vector2f& scale) = 0;
 
         virtual void update(const float& dt) = 0;
 

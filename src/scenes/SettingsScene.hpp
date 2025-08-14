@@ -22,12 +22,8 @@ private:
     sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
-
-
     UI::Slider slider;
     UI::CheckBox checkbox;
-
-
 
     UI::Button buttonBack;
 

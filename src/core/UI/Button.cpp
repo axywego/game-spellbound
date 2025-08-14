@@ -7,20 +7,22 @@ namespace UI {
         sprite.setOrigin(sprite.getGlobalBounds().size / 2.f);
     }
 
+    void Button::setTransform(const Transform &t) {
+        transform = t;
+        setPosition(t.position);
+        setScale(t.scale);
+    }
+
     Transform Button::getCurrentTransform() const {
-        return {
-            sprite.getPosition(),
-            sprite.getRotation().asDegrees(),
-            sprite.getScale()
-        };
+        return transform;
     }
 
     void Button::setPosition(const sf::Vector2f& pos) {
         sprite.setPosition(pos + sprite.getGlobalBounds().size / 2.f);
     }
 
-    sf::Vector2f Button::getPosition() const {
-        return sprite.getPosition() - sprite.getGlobalBounds().size / 2.f;
+    void Button::setScale(const sf::Vector2f &scale) {
+        sprite.setScale(scale);
     }
 
     bool Button::isHovered() const {

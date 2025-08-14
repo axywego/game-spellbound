@@ -46,12 +46,12 @@ namespace Animation {
 
     Type Rotate::getType() const { return Type::Rotate; }
 
-    Scale::Scale(const float& scale, const std::function<float(float)>& easingFunction, const float& dur)
-        : Base(easingFunction, dur), scale(scale) {}
+    Scale::Scale(const sf::Vector2f& fromScale, const sf::Vector2f& toScale, const std::function<float(float)>& easingFunction, const float& dur)
+        : Base(easingFunction, dur), fromScale(fromScale), toScale(toScale) {}
 
     void Scale::apply(sf::Sprite& sprite, const float& progress) {
-        float newScale = 1.f + (scale - 1.f) * easingFunction(progress);
-        sprite.setScale({newScale, newScale});
+        const auto newScale = fromScale + (toScale - fromScale) * easingFunction(progress);
+        sprite.setScale(newScale);
     }
 
     Type Scale::getType() const { return Type::Scale; }
@@ -66,9 +66,9 @@ namespace Animation {
         return std::make_unique<Rotate>(angle, easing, duration);
     }
 
-    std::unique_ptr<Base> createScaleAnimation(float scale,
+    std::unique_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
                                             const std::function<float(float)>& easing, float duration) {
-        return std::make_unique<Scale>(scale, easing, duration);
+        return std::make_unique<Scale>(fromScale, toScale, easing, duration);
     }
 
 }

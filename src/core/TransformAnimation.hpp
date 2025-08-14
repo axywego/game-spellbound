@@ -67,9 +67,10 @@ namespace Animation {
 
     class Scale : public Base {
     public:
-        float scale;
+        sf::Vector2f fromScale;
+        sf::Vector2f toScale;
 
-        Scale(const float& scale, const std::function<float(float)>& easingFunction, const float& dur);
+        Scale(const sf::Vector2f& fromScale, const sf::Vector2f& toScale, const std::function<float(float)>& easingFunction, const float& dur);
         void apply(sf::Sprite& sprite, const float& progress) override;
         Type getType() const override;
     };
@@ -94,7 +95,7 @@ namespace Animation {
     std::unique_ptr<Base> createRotateAnimation(float angle,
                                              const std::function<float(float)>& easing, float duration);
 
-    std::unique_ptr<Base> createScaleAnimation(float scale,
+    std::unique_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
                                             const std::function<float(float)>& easing, float duration);
 
     struct AnimationData {

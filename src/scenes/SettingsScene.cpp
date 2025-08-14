@@ -2,8 +2,8 @@
 
 SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::function<void()>& backCallback):
 Scene(window_), backgroundImage(textureBackground),
-slider(window, {500.f, 500.f}, 300.f, 0.2f),
-checkbox(window, {600.f, 900.f}, false),
+slider(window, 300.f, 0.2f),
+checkbox(window, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
 onBackClick(backCallback) {
 
@@ -16,10 +16,24 @@ onBackClick(backCallback) {
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
 
+    slider.setTransform(Transform{
+        {100.f, 400.f},
+        0.f,
+        slider.getCurrentTransform().scale
+    });
+
+    checkbox.setTransform(Transform{
+        {100.f, 600.f},
+        0.f,
+        {5.f, 5.f}
+    });
+
     buttonBack.setPosition({50.f, 50.f});
 
+    const auto scaleCheckBox = checkbox.getCurrentTransform().scale;
+
     auto animCheckBox = Animation::createScaleAnimation(
-        6.f, std::function(Animation::Easing::easeOutCubic), 0.1f
+       scaleCheckBox, {scaleCheckBox.x + 1.f, scaleCheckBox.y + 1.f}, std::function(Animation::Easing::easeOutCubic), 0.1f
     );
     checkbox.addAnimation(UI::UIObject::TypeAnimation::Hovered, std::move(animCheckBox));
 

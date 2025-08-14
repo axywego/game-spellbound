@@ -13,13 +13,15 @@ namespace UI {
         bool inChange = false;
 
     public:
-        Slider(sf::RenderWindow& window_, const sf::Vector2f& pos, const float& length, float value_);
+        Slider(sf::RenderWindow& window_, const float& length_, const float& value_);
+
+        void setTransform(const Transform& t) override;
 
         Transform getCurrentTransform() const override;
 
         void setPosition(const sf::Vector2f& pos) override;
 
-        sf::Vector2f getPosition() const override;
+        void setScale(const sf::Vector2f &scale) override;
 
         void handleInput(const std::optional<sf::Event>& event);
 
