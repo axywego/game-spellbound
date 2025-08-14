@@ -1,9 +1,11 @@
 #include "SettingsScene.hpp"
 
-SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::function<void()> &exitCallback):
+SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::function<void()>& backCallback):
 Scene(window_), backgroundImage(textureBackground),
+slider(window, {500.f, 500.f}, 300.f, 0.2f),
+checkbox(window, {600.f, 900.f}, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
-onBackClick(exitCallback), slider(window, {500.f, 500.f}, 300.f, 0.2f) {
+onBackClick(backCallback) {
 
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
@@ -15,6 +17,11 @@ onBackClick(exitCallback), slider(window, {500.f, 500.f}, 300.f, 0.2f) {
     circle.setPosition(target);
 
     buttonBack.setPosition({50.f, 50.f});
+
+    auto animCheckBox = Animation::createScaleAnimation(
+        6.f, std::function(Animation::Easing::easeOutCubic), 0.1f
+    );
+    checkbox.addAnimation(UI::UIObject::TypeAnimation::Hovered, std::move(animCheckBox));
 
 }
 
@@ -33,6 +40,7 @@ void SettingsScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
+        checkbox.update(dt);
         buttonBack.update(dt);
     }
 }
@@ -44,6 +52,7 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
 
     buttonBack.render();
     slider.render();
+    checkbox.render();
 
     if(isTransition) renderTarget.draw(circle);
 }
@@ -52,6 +61,8 @@ void SettingsScene::handleEvent(const std::optional<sf::Event>& event)  {
     if(buttonBack.isClicked(event)) {
         onBackClick();
     }
+
+    checkbox.handleInput(event);
 
     slider.handleInput(event);
 

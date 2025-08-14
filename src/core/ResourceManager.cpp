@@ -45,6 +45,8 @@ void ResourceManager::loadTextures() {
         loadTexture("player_arrow", basePath + "real img/1 Characters/Other/Arrow.png");
         loadTexture("player_fireball", basePath + "real img/1 Characters/Other/Fireball.png");
 
+        loadTexture("check_mark", basePath + "real img/4 GUI/3 Icons/Iconset5.png");
+
     } catch (const std::exception& e) {
         textures.clear();
         throw e;

@@ -57,6 +57,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/scenes/SettingsScene.hpp
         src/core/UI/Slider.cpp
         src/core/UI/Slider.hpp
+        src/core/UI/CheckBox.cpp
+        src/core/UI/CheckBox.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

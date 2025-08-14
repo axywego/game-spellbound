@@ -2,7 +2,6 @@
 #include "UIObject.hpp"
 
 namespace UI {
-
     class Slider : public UIObject {
     private:
         float value; //from 0 to 1

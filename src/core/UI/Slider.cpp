@@ -36,8 +36,9 @@ namespace UI {
     void Slider::handleInput(const std::optional<sf::Event> &event) {
         if (event.has_value()) {
             if (const auto* mousePress = event->getIf<sf::Event::MouseButtonPressed>()) {
-                auto mousePos = mousePress->position;
-                if (circle.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+                if (const auto mousePos = mousePress->position;
+                    circle.getGlobalBounds().contains(static_cast<sf::Vector2f>(mousePos))) {
+
                     inChange = true;
                 }
             }

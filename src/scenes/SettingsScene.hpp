@@ -6,6 +6,8 @@
 #include "../core/ResourceManager.hpp"
 #include <functional>
 
+#include "../core/UI/CheckBox.hpp"
+
 class SettingsScene: public Scene {
 private:
 
@@ -20,7 +22,12 @@ private:
     sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
+
+
     UI::Slider slider;
+    UI::CheckBox checkbox;
+
+
 
     UI::Button buttonBack;
 
