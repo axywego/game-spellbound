@@ -1,7 +1,7 @@
 #include "UIObject.hpp"
 
 namespace UI {
-    UIObject::UIObject(): transform(), window(nullptr) {
+    UIObject::UIObject(): window(nullptr) {
     }
 
     UIObject::UIObject(sf::RenderWindow& window_):

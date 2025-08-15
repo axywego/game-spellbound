@@ -68,8 +68,21 @@ namespace UI {
         circle.setPosition(rightRectangle.getPosition() + sf::Vector2f(0.f, 10.f));
     }
 
-    float Slider::getValue() const {
-        return value;
+    bool Slider::isHovered() const {
+        const auto mousePos = sf::Mouse::getPosition(*window);
+        return circle.getGlobalBounds().contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});
+    }
+
+    bool Slider::isClicked(const std::optional<sf::Event>& event) const {
+        if (!event.has_value()) {
+            return false;
+        }
+
+        if (const auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>()) {
+            return mouseEvent->button == sf::Mouse::Button::Left && isHovered();
+        }
+
+        return false;
     }
 
     void Slider::update(const float& dt) {

@@ -21,13 +21,13 @@ namespace UI {
         TypeAnimation currentAnimType = TypeAnimation::None;
 
         std::unordered_map<TypeAnimation, Animation::AnimationList> animations;
-        std::unordered_map<TypeAnimation, float> animationProgressInSec;
+        std::unordered_map<TypeAnimation, std::vector<float>> animationProgressInSec;
 
     public:
 
         UIObject();
 
-        UIObject(sf::RenderWindow& window_);
+        explicit UIObject(sf::RenderWindow& window_);
 
         virtual ~UIObject() = default;
 
@@ -37,13 +37,22 @@ namespace UI {
 
             if (!animations.contains(state)) {
                 animations[state] = Animation::AnimationList{};
-                animationProgressInSec[state] = 0.0f;
+                animationProgressInSec[state] = {};
             }
 
-            (animations[state].emplace_back(std::make_pair(
-                std::forward<Animations>(newAnimations),
-                Animation::AnimationData{0.f, getCurrentTransform(), false}
-                )), ...);
+            (animations[state].emplace_back(
+                std::forward<Animations>(newAnimations).first,
+                Animation::AnimationData{
+                    0.f,
+                    std::forward<Animations>(newAnimations).second
+                }
+            ), ...);
+
+            animationProgressInSec[state].insert(
+                animationProgressInSec[state].end(),
+                sizeof...(newAnimations),
+                0.0f
+            );
         }
 
         virtual void setTransform(const Transform& t) = 0;
@@ -53,6 +62,10 @@ namespace UI {
         virtual void setPosition(const sf::Vector2f& pos) = 0;
 
         virtual void setScale(const sf::Vector2f& scale) = 0;
+
+        virtual bool isHovered() const = 0;
+
+        virtual bool isClicked(const std::optional<sf::Event>& event) const = 0;
 
         virtual void update(const float& dt) = 0;
 

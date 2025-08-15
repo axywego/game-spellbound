@@ -65,6 +65,22 @@ namespace UI {
         text.setScale(scale);
     }
 
+    bool Text::isHovered() const {
+        const auto mousePos = sf::Mouse::getPosition(*window);
+        return text.getGlobalBounds().contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});
+    }
+
+    bool Text::isClicked(const std::optional<sf::Event>& event) const {
+        if (!event.has_value()) {
+            return false;
+        }
+
+        if (const auto* mouseEvent = event->getIf<sf::Event::MouseButtonPressed>()) {
+            return mouseEvent->button == sf::Mouse::Button::Left && isHovered();
+        }
+
+        return false;
+    }
     void Text::update(const float &dt) {
 
     }

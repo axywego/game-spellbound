@@ -100,7 +100,6 @@ namespace Animation {
 
     struct AnimationData {
         float progress = 0.0f;
-        Transform initialTransform;
         bool isInfinity = false;
     };
 

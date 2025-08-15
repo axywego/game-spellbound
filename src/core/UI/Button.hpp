@@ -3,7 +3,7 @@
 #include "UIObject.hpp"
 
 namespace UI {
-    class Button : public UIObject {
+    class Button final : public UIObject {
     private:
         sf::Texture texture;
         sf::Sprite sprite;
@@ -19,9 +19,9 @@ namespace UI {
 
         void setScale(const sf::Vector2f &scale) override;
 
-        bool isHovered() const;
+        bool isHovered() const override;
 
-        bool isClicked(const std::optional<sf::Event>& event) const;
+        bool isClicked(const std::optional<sf::Event>& event) const override;
 
         void update(const float& dt) override;
 

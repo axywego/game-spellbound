@@ -36,7 +36,7 @@ onBackClick(backCallback) {
 
     auto animCheckBox = Animation::createScaleAnimation(
         scaleCheckBox, {scaleCheckBox.x + 1.f, scaleCheckBox.y + 1.f}, std::function(Animation::Easing::easeOutCubic), 0.1f);
-    checkbox.addAnimation(UI::UIObject::TypeAnimation::Hovered, animCheckBox);
+    checkbox.addAnimation(UI::UIObject::TypeAnimation::Hovered, std::make_pair(animCheckBox, false));
 
     checkbox.setFunc([this](const bool& checked) {
         window.setVerticalSyncEnabled(checked);

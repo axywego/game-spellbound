@@ -1,5 +1,7 @@
 #include "Button.hpp"
 
+#include <ranges>
+
 namespace UI {
 
     Button::Button(const sf::Texture& texture_, sf::RenderWindow& window_):
@@ -44,17 +46,22 @@ namespace UI {
 
     void Button::update(const float& dt) {
         const bool isPlus = isHovered();
-        for (auto& currentAnim = animations[currentAnimType]; auto& [anim, data] : currentAnim) {
+
+        for (auto&& [el_anim, el_timer] :
+          std::views::zip(animations[currentAnimType], animationProgressInSec[currentAnimType])){
+            auto& [anim, data] = el_anim;
             if (isPlus) {
                 if(data.progress >= 1.f)
-                    continue;
+                    if (data.isInfinity) data.progress = 0.f;
+                    else continue;
             }
             else {
                 if(data.progress <= 0.f)
-                    continue;
+                    if (data.isInfinity) data.progress = 1.f;
+                    else continue;
             }
-            data.progress = animationProgressInSec[currentAnimType] / anim->duration;
-            isPlus ? animationProgressInSec[currentAnimType] += dt : animationProgressInSec[currentAnimType] -= dt;
+            data.progress = el_timer / anim->duration;
+            isPlus ? el_timer += dt : el_timer -= dt;
 
             anim->apply(sprite, data.progress);
         }

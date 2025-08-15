@@ -39,13 +39,13 @@ onExitClick(exitCallback) {
     );
 
     startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
-    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, anim1);
+    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim1, false));
 
     settingsButton.setTransform(Transform{{50.f, 600.f}, 0.f, {startButton.getCurrentTransform().scale}});
-    settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, anim2);
+    settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim2, false));
 
     exitButton.setTransform(Transform{sf::Vector2f{50.f, 700.f}, 0.f, startButton.getCurrentTransform().scale});
-    exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, anim3);
+    exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim3, false));
 }
 
 void MenuScene::load()  {

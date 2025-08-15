@@ -4,7 +4,7 @@
 
 #include "CheckBox.hpp"
 
-#include <iostream>
+#include <ranges>
 
 namespace UI {
     CheckBox::CheckBox(sf::RenderWindow &window, const bool& checked): UIObject(window), checked(checked) {
@@ -100,22 +100,27 @@ namespace UI {
         }
     }
 
-    void CheckBox::update(const float &dt) {
+    void CheckBox::update(const float& dt) {
         const bool isPlus = isHovered();
-        for (auto& currentAnim = animations[currentAnimType]; auto& [anim, data] : currentAnim) {
+
+        for (auto&& [el_anim, el_timer] :
+          std::views::zip(animations[currentAnimType], animationProgressInSec[currentAnimType])){
+            auto& [anim, data] = el_anim;
             if (isPlus) {
                 if(data.progress >= 1.f)
-                    continue;
+                    if (data.isInfinity) data.progress = 0.f;
+                    else continue;
             }
             else {
                 if(data.progress <= 0.f)
-                    continue;
+                    if (data.isInfinity) data.progress = 1.f;
+                    else continue;
             }
-            data.progress = animationProgressInSec[currentAnimType] / anim->duration;
-            isPlus ? animationProgressInSec[currentAnimType] += dt : animationProgressInSec[currentAnimType] -= dt;
+            data.progress = el_timer / anim->duration;
+            isPlus ? el_timer += dt : el_timer -= dt;
 
             anim->apply(checkMark, data.progress);
-        }
+          }
     }
 
     void CheckBox::render() const {
