@@ -56,19 +56,19 @@ namespace Animation {
 
     Type Scale::getType() const { return Type::Scale; }
 
-    std::unique_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
+    std::shared_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
                                             const std::function<float(float)>& easing, float duration) {
-        return std::make_unique<Move>(start, delta, easing, duration);
+        return std::make_shared<Move>(start, delta, easing, duration);
     }
 
-    std::unique_ptr<Base> createRotateAnimation(float angle,
+    std::shared_ptr<Base> createRotateAnimation(float angle,
                                              const std::function<float(float)>& easing, float duration) {
-        return std::make_unique<Rotate>(angle, easing, duration);
+        return std::make_shared<Rotate>(angle, easing, duration);
     }
 
-    std::unique_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
+    std::shared_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
                                             const std::function<float(float)>& easing, float duration) {
-        return std::make_unique<Scale>(fromScale, toScale, easing, duration);
+        return std::make_shared<Scale>(fromScale, toScale, easing, duration);
     }
 
 }

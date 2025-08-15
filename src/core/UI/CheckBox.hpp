@@ -13,6 +13,8 @@ namespace UI {
 
         sf::FloatRect checkMarkRect;
 
+        std::function<void(const bool&)> onClick;
+
         bool checked {false};
 
     public:
@@ -25,6 +27,8 @@ namespace UI {
         void setPosition(const sf::Vector2f& pos) override;
 
         void setScale(const sf::Vector2f &scale) override;
+
+        void setFunc(const std::function<void(const bool&)>& func);
 
         bool isHovered() const;
 

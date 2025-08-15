@@ -89,13 +89,13 @@ namespace Animation {
     //     return nullptr;
     // }
 
-    std::unique_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
+    std::shared_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
                                             const std::function<float(float)>& easing, float duration);
 
-    std::unique_ptr<Base> createRotateAnimation(float angle,
+    std::shared_ptr<Base> createRotateAnimation(float angle,
                                              const std::function<float(float)>& easing, float duration);
 
-    std::unique_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
+    std::shared_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
                                             const std::function<float(float)>& easing, float duration);
 
     struct AnimationData {
@@ -104,5 +104,5 @@ namespace Animation {
         bool isInfinity = false;
     };
 
-    using AnimationList = std::vector<std::pair<std::unique_ptr<Base>, AnimationData>>;
+    using AnimationList = std::vector<std::pair<std::shared_ptr<Base>, AnimationData>>;
 }

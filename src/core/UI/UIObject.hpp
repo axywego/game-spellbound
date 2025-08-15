@@ -16,7 +16,7 @@ namespace UI {
 
         Transform transform;
 
-        sf::RenderWindow& window;
+        sf::RenderWindow* window;
 
         TypeAnimation currentAnimType = TypeAnimation::None;
 
@@ -24,6 +24,8 @@ namespace UI {
         std::unordered_map<TypeAnimation, float> animationProgressInSec;
 
     public:
+
+        UIObject();
 
         UIObject(sf::RenderWindow& window_);
 
@@ -55,6 +57,8 @@ namespace UI {
         virtual void update(const float& dt) = 0;
 
         virtual void render() const = 0;
+
+        void setWindow(sf::RenderWindow& window_);
     };
 
 }

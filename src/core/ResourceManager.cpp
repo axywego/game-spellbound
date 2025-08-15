@@ -7,13 +7,14 @@ ResourceManager& ResourceManager::getInstance() {
     static bool initialized = false;
     if (!initialized) {
         instance.loadTextures();
+        instance.loadFonts();
         initialized = true;
     }
     return instance;
 }
 
 void ResourceManager::loadTextures() {
-    std::lock_guard<std::mutex> lock(textures_mutex);
+    std::lock_guard lock(textures_mutex);
 
     const std::string basePath = "../resources/";
 
@@ -53,8 +54,29 @@ void ResourceManager::loadTextures() {
     }
 }
 
+void ResourceManager::loadFonts() {
+    std::lock_guard lock(fonts_mutex);
+
+    const std::string basePath = "../resources/fonts/";
+
+    auto loadFont = [&](const std::string& key, const std::string& path) {
+        auto font = std::make_unique<sf::Font>();
+        if (!font->openFromFile(basePath + path)) {
+            throw std::runtime_error("Failed to load font: " + path);
+        }
+        fonts[key] = std::move(font);
+    };
+
+    try {
+        loadFont("font_game", "Cafe24PROUP.ttf");
+    } catch (const std::exception& e) {
+        fonts.clear();
+        throw e;
+    }
+}
+
 sf::Texture& ResourceManager::getTexture(const std::string& name) {
-    std::lock_guard<std::mutex> lock(textures_mutex);
+    std::lock_guard lock(textures_mutex);
 
     const auto it = textures.find(name);
     if (it == textures.end() || !it->second) {
@@ -63,7 +85,20 @@ sf::Texture& ResourceManager::getTexture(const std::string& name) {
     return *it->second;
 }
 
-const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>&
-ResourceManager::getAllTextures() const {
+sf::Font& ResourceManager::getFont(const std::string& name) {
+    std::lock_guard lock(fonts_mutex);
+
+    const auto it = fonts.find(name);
+    if (it == fonts.end() || !it->second) {
+        throw std::runtime_error("Font not found: " + name);
+    }
+    return *it->second;
+}
+
+const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& ResourceManager::getAllTextures() const {
     return textures;
+}
+
+const std::unordered_map<std::string, std::unique_ptr<sf::Font>> & ResourceManager::getAllFonts() const {
+    return fonts;
 }

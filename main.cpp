@@ -2,7 +2,7 @@
 #include <iostream>
 #include "src/core/ResourceManager.hpp"
 #include "src/scenes/SceneManager.hpp"
-
+#include "src/core/UI/HUD.hpp"
 
 class FPSCounter {
 private:
@@ -49,7 +49,8 @@ int main() {
     sf::RenderWindow window(sf::VideoMode({1920, 1080}), "ndnn", sf::State::Fullscreen);
 
     window.setMouseCursorVisible(true);
-    //window.setVerticalSyncEnabled(true);
+
+    UI::HUD::getInstance().init(window);
 
     sf::Clock clock;
 

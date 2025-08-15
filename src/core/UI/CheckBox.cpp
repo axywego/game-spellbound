@@ -72,8 +72,12 @@ namespace UI {
         checkMark.setPosition({frame[0].getSize().x * scale.x / 2.f, frame[1].getSize().y * scale.y / 2.f});
     }
 
+    void CheckBox::setFunc(const std::function<void(const bool&)> &func) {
+        onClick = func;
+    }
+
     bool CheckBox::isHovered() const {
-        const auto mousePos = sf::Mouse::getPosition(window);
+        const auto mousePos = sf::Mouse::getPosition(*window);
         return checkMarkRect.contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});
     }
 
@@ -92,6 +96,7 @@ namespace UI {
     void CheckBox::handleInput(const std::optional<sf::Event> &event) {
         if (isClicked(event)) {
             checked = !checked;
+            onClick(checked);
         }
     }
 
@@ -118,12 +123,12 @@ namespace UI {
         //     window.draw(el);
         // }
 
-        window.draw(frame[0]);
-        window.draw(frame[1]);
-        window.draw(frame[2]);
-        window.draw(frame[3]);
+        window->draw(frame[0]);
+        window->draw(frame[1]);
+        window->draw(frame[2]);
+        window->draw(frame[3]);
         if (checked) {
-            window.draw(checkMark);
+            window->draw(checkMark);
         }
     }
 }

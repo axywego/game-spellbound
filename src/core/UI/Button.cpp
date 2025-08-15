@@ -26,7 +26,7 @@ namespace UI {
     }
 
     bool Button::isHovered() const {
-        const auto mousePos = sf::Mouse::getPosition(window);
+        const auto mousePos = sf::Mouse::getPosition(*window);
         return sprite.getGlobalBounds().contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});
     }
 
@@ -61,6 +61,6 @@ namespace UI {
     }
 
     void Button::render() const {
-        window.draw(sprite);
+        window->draw(sprite);
     }
 }

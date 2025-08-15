@@ -1,6 +1,23 @@
 #include "HUD.hpp"
 
 namespace UI {
+    HUD & HUD::getInstance() {
+        static HUD instance;
+        return instance;
+    }
+
+    void HUD::init(sf::RenderWindow &win) {
+        window = &win;
+        textureHealthMana = ResourceManager::getInstance().getTexture("health");
+        posLeft = {54, 18};
+        posCenter = {62, 18};
+        posRight = {98, 18};
+        textDamage.setWindow(*window);
+        textSpeed.setWindow(*window);
+        textDamage.setFont(ResourceManager::getInstance().getFont("font_game"));
+        textSpeed.setFont(ResourceManager::getInstance().getFont("font_game"));
+    }
+
     void HUD::update(const Player& player, const sf::Vector2f& cameraCenter) {
         sf::Vector2f cameraDelta = {cameraCenter.x - 1920.f / 2, cameraCenter.y - 1080.f / 2};
 
@@ -18,7 +35,6 @@ namespace UI {
 
         while(curr < player.getMaxHealth()){
             sf::Sprite& spr = spritesHP[i];
-            bool isPositive;
             if(curr >= player.getCurrentHealth()){
                 posLeft.y = 72;
                 posCenter.y = 72;
@@ -53,7 +69,7 @@ namespace UI {
 
             offset = 30.f;
 
-            auto mana_sprites = static_cast<size_t>(player.getMaxMana() * 4);
+            const auto mana_sprites = static_cast<size_t>(player.getMaxMana() * 4);
 
             while(spritesMana.size() < mana_sprites) {
                 spritesMana.push_back(sf::Sprite(textureHealthMana));
@@ -106,7 +122,8 @@ namespace UI {
         }
         spriteDamage.setScale({7.f, 7.f});
         spriteDamage.setPosition({50.f + cameraDelta.x, offset + 170.f + cameraDelta.y});
-        textDamage.setString(makeFormatedFloat(player.getDamage()));
+
+        textDamage.setText(makeFormatedFloat(player.getDamage()));
         textDamage.setPosition({130.f + cameraDelta.x, offset + 180.f + cameraDelta.y});
         textDamage.setOutlineColor(sf::Color::Black);
         textDamage.setOutlineThickness(3.f);
@@ -115,39 +132,28 @@ namespace UI {
         spriteSpeed.setTextureRect({{50, 50},{10, 10}});
         spriteSpeed.setScale({7.f, 7.f});
         spriteSpeed.setPosition({50.f + cameraDelta.x, offset + 240.f + cameraDelta.y});
-        textSpeed.setString(makeFormatedFloat(player.getCurrentSpeed()));
+        textSpeed.setText(makeFormatedFloat(player.getCurrentSpeed()));
         textSpeed.setPosition({130.f + cameraDelta.x, offset + 250.f + cameraDelta.y});
         textSpeed.setOutlineColor(sf::Color::Black);
         textSpeed.setOutlineThickness(3.f);
 
     }
 
-    void HUD::render(sf::RenderTarget& target){
+    void HUD::render() {
+        if (!window) std::cout << "wtf\n";
+
+
         for(auto& sprite : spritesHP){
-            target.draw(sprite);
+            window->draw(sprite);
         }
 
         for(auto& sprite : spritesMana){
-            target.draw(sprite);
+            window->draw(sprite);
         }
 
-        target.draw(spriteDamage);
-        target.draw(spriteSpeed);
-        target.draw(textDamage);
-        target.draw(textSpeed);
+        window->draw(spriteDamage);
+        window->draw(spriteSpeed);
+        textDamage.render();
+        textSpeed.render();
     }
-
-
-    sf::Texture HUD::textureHealthMana {ResourceManager::getInstance().getTexture("health")};
-    std::vector<sf::Sprite> HUD::spritesHP;
-    std::vector<sf::Sprite> HUD::spritesMana;
-    sf::Vector2i HUD::posLeft {54, 18};
-    sf::Vector2i HUD::posCenter {62, 18};
-    sf::Vector2i HUD::posRight {98, 18};
-    sf::Texture HUD::textureIcons {ResourceManager::getInstance().getTexture("icons")};
-    sf::Sprite HUD::spriteDamage(textureIcons);
-    sf::Sprite HUD::spriteSpeed(textureIcons);
-    sf::Font HUD::font("../resources/fonts/Cafe24PROUP.ttf");
-    sf::Text HUD::textDamage(font);
-    sf::Text HUD::textSpeed(font);
 }

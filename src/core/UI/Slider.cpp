@@ -77,9 +77,9 @@ namespace UI {
     }
 
     void Slider::render() const {
-        window.draw(leftRectangle);
-        window.draw(rightRectangle);
-        window.draw(circle);
+        window->draw(leftRectangle);
+        window->draw(rightRectangle);
+        window->draw(circle);
     }
 
 }
