@@ -8,7 +8,7 @@
 
 struct Transform {
     sf::Vector2f position;
-    float rotation;
+    float rotation{};
     sf::Vector2f scale;
 };
 

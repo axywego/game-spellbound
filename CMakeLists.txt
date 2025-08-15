@@ -61,6 +61,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/UI/CheckBox.hpp
         src/core/UI/Text.cpp
         src/core/UI/Text.hpp
+        src/core/UI/Image.cpp
+        src/core/UI/Image.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
