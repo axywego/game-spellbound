@@ -1,16 +1,15 @@
 #include "Mage.hpp"
 
 Mage::Mage(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_mage"), map) {
-    speed = 425.f;
-    maxHealth = 3.f;
-    health = maxHealth;
-    //attackCooldownTime = 0.75f;
+    stats.setBaseAttribute(StatType::Speed, 425.f);
+    stats.setBaseAttribute(StatType::MaxHealth, 3.f);
+    stats.setBaseAttribute(StatType::Health, 3.f);
     attackCooldownTime = 0.4f;
     typeDamage = TypeDamage::Ranged;
-    damage = 2.f;
-    maxMana = 4.f;
-    mana = maxMana;
-    manaCost = 0.5f;
+    stats.setBaseAttribute(StatType::Damage, 2.f);
+    stats.setBaseAttribute(StatType::MaxMana, 4.f);
+    stats.setBaseAttribute(StatType::Mana, 4.f);
+    stats.setBaseAttribute(StatType::ManaCost, 0.5f);
 
     timeToUpMana = 0.5f;
     manaToUpPerTime = 0.25f;
@@ -27,7 +26,7 @@ void Mage::spawnProjectile() {
                     map,
                     spawnPos,
                     lastDirection,
-                    damage
+                    stats.getCurrentValue(StatType::Damage)
             )
     );
 }

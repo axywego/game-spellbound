@@ -63,6 +63,14 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/UI/Text.hpp
         src/core/UI/Image.cpp
         src/core/UI/Image.hpp
+        src/entities/mob/buffs/StatSet.cpp
+        src/entities/mob/buffs/StatSet.hpp
+        src/entities/mob/buffs/StatModifier.cpp
+        src/entities/mob/buffs/StatModifier.hpp
+        src/entities/mob/buffs/BuffSystem.cpp
+        src/entities/mob/buffs/BuffSystem.hpp
+        src/entities/mob/buffs/BuffItem.cpp
+        src/entities/mob/buffs/BuffItem.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
@@ -75,6 +83,8 @@ target_link_libraries(SPELLBOUND_GAME
 )
 
 if(WIN32)
+    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -static-libgcc -static-libstdc++ -static")
+
     if(CMAKE_BUILD_TYPE STREQUAL "Debug")
         set(SFML_DLLS
                 "${CMAKE_BINARY_DIR}/_deps/sfml-build/bin/sfml-system-d-3.dll"

@@ -176,6 +176,8 @@ void Mob::startAttacking() {
 void Mob::takeDamage(float damage) {
     if (isDying) return;
 
+    auto& health = stats.getCurrentValue(StatType::Health);
+
     health -= damage;
     if (health <= 0.f) {
         health = 0.f;
@@ -191,8 +193,6 @@ void Mob::takeDamage(float damage) {
 void Mob::startDying() {
     currentState = State::Dying;
     isDying = true;
-    // Можно добавить дополнительные действия при начале смерти
-    // Например, отключение коллизий или воспроизведение звука
 }
 
 void Mob::updateAnimation() {
@@ -247,7 +247,7 @@ void Mob::playAnimation(const std::string& name) {
 }
 
 float Mob::getDamage() const {
-    return damage;
+    return stats.getCurrentValue(StatType::Damage);
 }
 
 bool Mob::getIsAlive() const {
@@ -255,11 +255,11 @@ bool Mob::getIsAlive() const {
 }
 
 float Mob::getMaxHealth() const {
-    return maxHealth;
+    return stats.getCurrentValue(StatType::MaxHealth);
 }
 
 float Mob::getCurrentHealth() const {
-    return health;
+    return stats.getCurrentValue(StatType::Health);
 }
 
 Mob::TypeDamage Mob::getTypeDamage() const {
@@ -267,13 +267,21 @@ Mob::TypeDamage Mob::getTypeDamage() const {
 }
 
 float Mob::getCurrentSpeed() const {
-    return speed;
+    return stats.getCurrentValue(StatType::Speed);
 }
 
 float Mob::getMaxMana() const {
-    return maxMana;
+    return stats.getCurrentValue(StatType::MaxMana);
 }
 
 float Mob::getCurrentMana() const {
-    return mana;
+    return stats.getCurrentValue(StatType::Mana);
+}
+
+StatSet & Mob::getStats() {
+    return stats;
+}
+
+const StatSet & Mob::getStats() const {
+    return stats;
 }

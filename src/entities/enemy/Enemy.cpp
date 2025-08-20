@@ -52,7 +52,7 @@ void Enemy::attacking(const float& dt) {
 }
 
 void Enemy::meleeAttack() const {
-    if(getDistanceToPlayer() <= attackRange) player.lock()->takeDamage(damage);
+    if(getDistanceToPlayer() <= attackRange) player.lock()->takeDamage(stats.getCurrentValue(StatType::Damage));
 }
 
 float Enemy::getDistanceToPlayer() const {
@@ -72,7 +72,7 @@ void Enemy::move(const float& dt) {
     if (length > 0.f) {
         direction /= length;
         lastDirection = direction;
-        currentSprite.move(direction * speed * dt);
+        currentSprite.move(direction * stats.getCurrentValue(StatType::Speed) * dt);
     }
 }
 
@@ -200,7 +200,10 @@ void Enemy::updateShowingHP(const float& dt) {
     sf::FloatRect shapeRect = {hpBackgroundShape.getPosition(), hpBackgroundShape.getSize()};
     hpRedShape.setPosition({shapeRect.position.x + 2.5f, shapeRect.position.y + 1.f});
 
-    hpRedShape.setSize({health * 65.f / maxHealth, hpRedShape.getSize().y});
+    hpRedShape.setSize({
+        stats.getCurrentValue(StatType::Health) * 65.f / stats.getCurrentValue(StatType::MaxHealth),
+        hpRedShape.getSize().y
+    });
 }
 
 void Enemy::render(sf::RenderTarget& target) {

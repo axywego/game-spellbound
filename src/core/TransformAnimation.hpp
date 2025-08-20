@@ -43,7 +43,7 @@ namespace Animation {
     };
 
 
-    class Move : public Base {
+    class Move final : public Base {
     public:
         sf::Vector2f startPos;
         sf::Vector2f delta;
@@ -54,8 +54,7 @@ namespace Animation {
         Type getType() const override;
     };
 
-
-    class Rotate : public Base {
+    class Rotate final : public Base {
     public:
         float angle;
 
@@ -65,7 +64,7 @@ namespace Animation {
     };
 
 
-    class Scale : public Base {
+    class Scale final : public Base {
     public:
         sf::Vector2f fromScale;
         sf::Vector2f toScale;
@@ -74,20 +73,6 @@ namespace Animation {
         void apply(sf::Sprite& sprite, const float& progress) override;
         Type getType() const override;
     };
-
-
-    // template<typename... Args>
-    // std::unique_ptr<Base> createAnimation(const Type type, Args&&... args) {
-    //     switch (type) {
-    //         case Type::Move:
-    //             return std::make_unique<Move>(std::forward<Args>(args)...);
-    //         case Type::Rotate:
-    //             return std::make_unique<Rotate>(std::forward<Args>(args)...);
-    //         case Type::Scale:
-    //             return std::make_unique<Scale>(std::forward<Args>(args)...);
-    //     }
-    //     return nullptr;
-    // }
 
     std::shared_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
                                             const std::function<float(float)>& easing, float duration);

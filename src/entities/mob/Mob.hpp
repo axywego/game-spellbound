@@ -6,19 +6,17 @@
 #include "MobCollision.hpp"
 #include "../../core/ResourceManager.hpp"
 
+#include "buffs/BuffSystem.hpp"
+#include "buffs/StatSet.hpp"
+
 class Mob {
 protected:
     sf::Texture texture;
     sf::Sprite currentSprite;
 
-    float speed;
     sf::Vector2f lastDirection{0.f, 1.f};
-    float maxHealth;
-    float health;
-    float damage;
-    float mana{0.f};
-    float maxMana{0.f};
-    float manaCost{0.f};
+
+    mutable StatSet stats;
 
     bool isAttacking = false;
     float attackTimer = 0.0f;
@@ -113,6 +111,9 @@ public:
     float getMaxMana() const;
 
     float getCurrentMana() const;
+
+    StatSet& getStats();
+    const StatSet& getStats() const;
 
     virtual void move(const float& dt) = 0;
     virtual void update(const float& dt) = 0;

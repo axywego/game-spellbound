@@ -1,12 +1,12 @@
 #include "Knight.hpp"
 
 Knight::Knight(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_knight"), map) {
-    speed = 1500.f;//400
-    maxHealth = 5.f;
-    health = maxHealth;
+    stats.setBaseAttribute(StatType::Speed, 400.f);
+    stats.setBaseAttribute(StatType::MaxHealth, 5.f);
+    stats.setBaseAttribute(StatType::Health, 5.f);
     attackCooldownTime = 0.25f;
     typeDamage = TypeDamage::Melee;
-    damage = 2.5f;
+    stats.setBaseAttribute(StatType::Damage, 2.5f);
 }
 
 void Knight::calculateAttackArea() {
@@ -41,10 +41,8 @@ void Knight::spawnProjectile() {}
 
 void Knight::checkMelee() {
     calculateAttackArea();
-    //gameWorld.handleAttackEnemy(attackArea, *this);
 }
 
 void Knight::attack() {
-    // later...
     startAttacking();
 }

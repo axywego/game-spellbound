@@ -25,6 +25,9 @@ void Player::update(const float& dt) {
         timerDelayMana -= dt;
     }
 
+    auto& mana = stats.getCurrentValue(StatType::Mana);
+    auto& maxMana = stats.getCurrentValue(StatType::MaxMana);
+
     if(mana < maxMana && timerDelayMana <= 0.f){
         if(timerMana >= timeToUpMana){
             mana += manaToUpPerTime;
@@ -60,6 +63,8 @@ void Player::attacking(const float& dt) {
 
         else if(typeDamage == TypeDamage::Ranged && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked) {
             hasAttacked = true;
+            auto& mana = stats.getCurrentValue(StatType::Mana);
+            auto& manaCost = stats.getCurrentValue(StatType::ManaCost);
             if(mana - manaCost >= 0.f){
                 mana -= manaCost;
                 timerDelayMana = delayBeforeUpMana;
@@ -125,7 +130,7 @@ void Player::move(const float& dt) {
     }
     else {
         currentState = State::Moving;
-        currentSprite.move(dir * speed * dt);
+        currentSprite.move(dir * stats.getCurrentValue(StatType::Speed) * dt);
     }
 }
 
