@@ -31,7 +31,7 @@ void GameLevelScene::update(const float& dt) {
                 std::vector<StatModifier> modifiers;
                 modifiers.push_back({StatType::MaxHealth, ModifierType::Flat, 10.f});
                 gameWorld.addBuffItem(std::make_unique<BuffItem>(
-                    ResourceManager::getInstance().getTexture("buff_item"), "up_health", modifiers),
+                    ResourceManager::getInstance().getTexture("buff_item"), "Health Improvement", modifiers),
                     e->getSprite().getPosition());
             }
         }

@@ -23,7 +23,7 @@ namespace UI {
         text.setColor(sf::Color::White);
 
         currentTitle.first = std::make_unique<Text>(text);
-        currentTitle.second = time;
+        currentTitle.second = time + 1.f;
 
         timer = 0.f;
     }
@@ -148,6 +148,16 @@ namespace UI {
         textSpeed.setOutlineThickness(3.f);
 
         if (currentTitle.first) {
+            float percent;
+            if (timer <= 0.5f)
+                percent = std::clamp(timer / 0.5f, 0.f, 1.f);
+            else if (timer > currentTitle.second - 1.f + 0.5f) {
+                percent = std::clamp(1.f - (timer - currentTitle.second + 0.5f) / 0.5f, 0.f, 1.f);
+            }
+            else {
+                percent = 1.f;
+            }
+            currentTitle.first->setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(255 * percent)));
             currentTitle.first->setPosition({300.f + cameraDelta.x, 240.f + cameraDelta.y});
             currentTitle.first->setOutlineColor(sf::Color::Black);
             currentTitle.first->setOutlineThickness(3.f);

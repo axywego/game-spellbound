@@ -24,7 +24,7 @@ void BuffItem::onPickup(Mob* pickuper) {
         for (auto& effect : onPickupEffects) {
             pickuper->getStats().addModifier(effect);
         }
-        UI::HUD::getInstance().addTitle(name, 2.f);
+        UI::HUD::getInstance().addTitle("You picked up the book and studied: " + name, 4.f);
         isPickup = true;
     }
 }
