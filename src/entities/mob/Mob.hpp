@@ -6,7 +6,6 @@
 #include "MobCollision.hpp"
 #include "../../core/ResourceManager.hpp"
 
-#include "buffs/BuffSystem.hpp"
 #include "buffs/StatSet.hpp"
 
 class Mob {
@@ -99,6 +98,8 @@ public:
     float getDamage() const;
 
     bool getIsAlive() const;
+
+    bool getIsDying() const;
 
     float getMaxHealth() const;
 

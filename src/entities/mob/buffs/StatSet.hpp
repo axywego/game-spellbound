@@ -30,10 +30,7 @@ public:
     void setResource(StatType type, float value);
 
     void addModifier(const StatModifier& modifier);
-    void removeModifiersBySource(const std::string& sourceId);
     void clearAllModifiers();
-
-    void update(float deltaTime);
 
     void addChangeCallback(const std::function<void(StatType, float, float)>& callback);
 };

@@ -18,7 +18,17 @@ namespace UI {
         textSpeed.setFont(ResourceManager::getInstance().getFont("font_game"));
     }
 
-    void HUD::update(const Player& player, const sf::Vector2f& cameraCenter) {
+    void HUD::addTitle(const std::string &title, const float& time) {
+        Text text(*window, ResourceManager::getInstance().getFont("font_game"), title);
+        text.setColor(sf::Color::White);
+
+        currentTitle.first = std::make_unique<Text>(text);
+        currentTitle.second = time;
+
+        timer = 0.f;
+    }
+
+    void HUD::update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter) {
         sf::Vector2f cameraDelta = {cameraCenter.x - 1920.f / 2, cameraCenter.y - 1080.f / 2};
 
         // update hp sprites
@@ -137,11 +147,20 @@ namespace UI {
         textSpeed.setOutlineColor(sf::Color::Black);
         textSpeed.setOutlineThickness(3.f);
 
+        if (currentTitle.first) {
+            currentTitle.first->setPosition({300.f + cameraDelta.x, 240.f + cameraDelta.y});
+            currentTitle.first->setOutlineColor(sf::Color::Black);
+            currentTitle.first->setOutlineThickness(3.f);
+        }
+
+        if (timer < currentTitle.second) timer += dt;
     }
 
     void HUD::render() {
-        if (!window) std::cout << "wtf\n";
-
+        if (!window) {
+            std::cout << "wtf\n";
+            return;
+        }
 
         for(auto& sprite : spritesHP){
             window->draw(sprite);
@@ -155,5 +174,10 @@ namespace UI {
         window->draw(spriteSpeed);
         textDamage.render();
         textSpeed.render();
+
+        if (timer < currentTitle.second) {
+            std::cout << "allo\n";
+            currentTitle.first->render();
+        }
     }
 }

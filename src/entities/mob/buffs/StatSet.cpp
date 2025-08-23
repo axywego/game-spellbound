@@ -101,32 +101,11 @@ void StatSet::addModifier(const StatModifier& modifier) {
     isDirty = true;
 }
 
-void StatSet::removeModifiersBySource(const std::string& sourceId) {
-    for (auto it = activeModifiers.begin(); it != activeModifiers.end();) {
-        if (it->sourceId == sourceId) {
-            it = activeModifiers.erase(it);
-            isDirty = true;
-        } else {
-            ++it;
-        }
-    }
-}
 
 void StatSet::clearAllModifiers() {
     if (!activeModifiers.empty()) {
         activeModifiers.clear();
         isDirty = true;
-    }
-}
-
-void StatSet::update(float deltaTime) {
-    for (auto it = activeModifiers.begin(); it != activeModifiers.end();) {
-        if (it->update(deltaTime)) {
-            it = activeModifiers.erase(it);
-            isDirty = true;
-        } else {
-            ++it;
-        }
     }
 }
 

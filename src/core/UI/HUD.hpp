@@ -26,6 +26,10 @@ namespace UI {
         sf::Sprite spriteDamage {textureIcons};
         sf::Sprite spriteSpeed {textureIcons};
 
+        std::pair<std::unique_ptr<Text>, float> currentTitle;
+
+        float timer{0.f};
+
         HUD() = default;
         ~HUD() = default;
     public:
@@ -36,7 +40,9 @@ namespace UI {
 
         void init(sf::RenderWindow& window);
 
-        void update(const Player& player, const sf::Vector2f& cameraCenter);
+        void addTitle(const std::string& title, const float& time);
+
+        void update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter);
 
         void render();
     };

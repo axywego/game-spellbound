@@ -2,6 +2,7 @@
 
 #include <map>
 #include <utility>
+#include "../entities/mob/buffs/BuffItem.hpp"
 
 GameLevelScene::GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_,
     sf::RenderWindow& window_, std::function<void()> pauseCallback):
@@ -20,53 +21,33 @@ void GameLevelScene::load() {
 
 }
 
-// void GameLevelScene::update(const float& dt) {
-//
-//     std::erase_if(enemies,
-//               [](const std::unique_ptr<Enemy>& e) {
-//                   return !e->getIsAlive();
-//               });
-//
-//     player.lock()->update(dt);
-//
-//     camera.update(dt);
-//
-//     player.lock()->updateProjectiles(dt);
-//
-//     const auto& playerMeleeAreaAttack = player.lock()->getAttackArea();
-//
-//     for (size_t i = 0; i < enemies.size(); i++) {
-//         const auto& enemy = enemies[i];
-//
-//         //Player has distance damage
-//         for (auto& projectile : player.lock()->getProjectiles()) {
-//             if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
-//                 projectile->onHit(enemy.get());
-//             }
-//         }
-//
-//         //Player has melee damage
-//         if(playerMeleeAreaAttack && playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())){
-//             enemy->takeDamage(player.lock()->getDamage());
-//         }
-//
-//         enemy->update(dt);
-//
-//     }
-//
-//     lastPlayerPos = player.lock()->getSprite().getPosition();
-//
-//     HUD::update(*player.lock(), camera.getCenter());
-// }
-
 void GameLevelScene::update(const float& dt) {
 
     const auto playerPtr = player.lock();
 
+    std::ranges::for_each(enemies,
+        [&](const std::unique_ptr<Enemy>& e) {
+            if (!e->getIsAlive()) {
+                std::vector<StatModifier> modifiers;
+                modifiers.push_back({StatType::MaxHealth, ModifierType::Flat, 10.f});
+                gameWorld.addBuffItem(std::make_unique<BuffItem>(
+                    ResourceManager::getInstance().getTexture("buff_item"), "up_health", modifiers),
+                    e->getSprite().getPosition());
+            }
+        }
+    );
+
     std::erase_if(enemies,
-              [](const std::unique_ptr<Enemy>& e) {
-                  return !e->getIsAlive();
-              });
+      [](const std::unique_ptr<Enemy>& e) {
+          return !e->getIsAlive();
+        }
+    );
+
+    std::erase_if(gameWorld.getBuffItems(),
+        [&](const std::unique_ptr<BuffItem>& b) {
+            return b->getIsPickup();
+        }
+    );
 
     playerPtr->update(dt);
 
@@ -99,9 +80,18 @@ void GameLevelScene::update(const float& dt) {
 
         enemy->update(dt);
     }
+
+    std::ranges::for_each(gameWorld.getBuffItems(),
+        [&](const std::unique_ptr<BuffItem>& b) {
+            if (b->getSprite().getGlobalBounds().findIntersection(playerPtr->getCollisionRect())) {
+                b->onPickup(playerPtr.get());
+            }
+        }
+    );
+
     lastPlayerPos = playerPtr->getSprite().getPosition();
 
-    UI::HUD::getInstance().update(*playerPtr, camera.getCenter());
+    UI::HUD::getInstance().update(dt, *playerPtr, camera.getCenter());
 }
 
 void GameLevelScene::render(sf::RenderTarget& renderTarget) {

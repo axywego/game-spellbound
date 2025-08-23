@@ -48,6 +48,8 @@ void ResourceManager::loadTextures() {
 
         loadTexture("check_mark", basePath + "real img/4 GUI/3 Icons/Iconset5.png");
 
+        loadTexture("buff_item", basePath + "real img/2 Dungeon Tileset/2 Objects/Bookshelf decor/24.png");
+
     } catch (const std::exception& e) {
         textures.clear();
         throw e;

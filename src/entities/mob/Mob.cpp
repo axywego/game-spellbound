@@ -254,6 +254,10 @@ bool Mob::getIsAlive() const {
     return isAlive;
 }
 
+bool Mob::getIsDying() const {
+    return isDying;
+}
+
 float Mob::getMaxHealth() const {
     return stats.getCurrentValue(StatType::MaxHealth);
 }

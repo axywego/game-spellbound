@@ -67,8 +67,6 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/entities/mob/buffs/StatSet.hpp
         src/entities/mob/buffs/StatModifier.cpp
         src/entities/mob/buffs/StatModifier.hpp
-        src/entities/mob/buffs/BuffSystem.cpp
-        src/entities/mob/buffs/BuffSystem.hpp
         src/entities/mob/buffs/BuffItem.cpp
         src/entities/mob/buffs/BuffItem.hpp
 )

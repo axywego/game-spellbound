@@ -20,11 +20,6 @@ struct StatModifier {
     StatType targetStat;
     ModifierType modType;
     float value;
-    std::string sourceId;
-    float duration;
-    float timeRemaining;
 
-    StatModifier(StatType stat, ModifierType type, float val,
-                 const std::string& src, float dur);
-    bool update(float deltaTime);
+    StatModifier(StatType stat, ModifierType type, float val);
 };
