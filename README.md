@@ -4,6 +4,7 @@
 
 * [About game](https://github.com/axywego/game-spellbound?tab=readme-ov-file#about-game)
 * [Used technologies](https://github.com/axywego/game-spellbound?tab=readme-ov-file#used-technologies)
+* [Dependencies](https://github.com/axywego/game-spellbound?tab=readme-ov-file#dependencies)
 * [How to compile and run](https://github.com/axywego/game-spellbound?tab=readme-ov-file#how-to-compile)
 
 ## About game
@@ -14,19 +15,25 @@ This is a 2D top-down game that combines the Rougelike and Action-Adventure genr
 * Language: C++
 * Library: SFML
 
+## Dependencies
+
+* C++23 and higher
+* GCC 15 and higher
+* CMake 3.30 and higher
+
 ## How to compile
 
-Write and enter in console
+Write and enter in console:
 ```
 git clone https://github.com/axywego/game-spellbound
 cd game-spellbound
 ```
-Make directory `build` and go to it
+Make directory `build` and go to it:
 ```
 mkdir build
 cd build
 ```
-Then run the configuration and compile the project using the following commands
+Then run the configuration and compile the project using the following commands:
 ```
 cmake ..
 make
