@@ -2,7 +2,7 @@
 
 #include <map>
 #include <utility>
-#include "../entities/mob/buffs/BuffItem.hpp"
+#include "../generators/BuffsGenerator.hpp"
 
 GameLevelScene::GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_,
     sf::RenderWindow& window_, std::function<void()> pauseCallback):
@@ -28,11 +28,9 @@ void GameLevelScene::update(const float& dt) {
     std::ranges::for_each(enemies,
         [&](const std::unique_ptr<Enemy>& e) {
             if (!e->getIsAlive()) {
-                std::vector<StatModifier> modifiers;
-                modifiers.push_back({StatType::MaxHealth, ModifierType::Flat, 10.f});
-                gameWorld.addBuffItem(std::make_unique<BuffItem>(
-                    ResourceManager::getInstance().getTexture("buff_item"), "Health Improvement", modifiers),
-                    e->getSprite().getPosition());
+                if (auto opt = BuffsGenerator::create(*playerPtr)) {
+                    gameWorld.addBuffItem(std::move(opt.value()), e->getSprite().getPosition());
+                }
             }
         }
     );

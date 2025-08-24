@@ -11,6 +11,8 @@ Mage::Mage(const Tilemap& map): Player(ResourceManager::getInstance().getTexture
     stats.setBaseAttribute(StatType::Mana, 4.f);
     stats.setBaseAttribute(StatType::ManaCost, 0.5f);
 
+    hasMana = true;
+
     timeToUpMana = 0.5f;
     manaToUpPerTime = 0.25f;
 }
@@ -26,7 +28,7 @@ void Mage::spawnProjectile() {
                     map,
                     spawnPos,
                     lastDirection,
-                    stats.getCurrentValue(StatType::Damage)
+                    *stats.getCurrentValue(StatType::Damage).value()
             )
     );
 }

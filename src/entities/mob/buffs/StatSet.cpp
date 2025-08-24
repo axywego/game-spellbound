@@ -15,33 +15,33 @@ float StatSet::getBaseAttribute(StatType type) const {
     return 0.0f;
 }
 
-float& StatSet::getCurrentValue(StatType type) {
+std::optional<float*> StatSet::getCurrentValue(StatType type) {
     if (isDirty) {
         recalculateStats();
     }
 
-    auto it = currentValues.find(type);
+    const auto it = currentValues.find(type);
     if (it != currentValues.end()) {
-        return it->second;
+        return &it->second;
     }
 
-    auto baseIt = baseAttributes.find(type);
+    const auto baseIt = baseAttributes.find(type);
     if (baseIt != baseAttributes.end()) {
-        return baseIt->second;
+        return &baseIt->second;
     }
 
-    return baseIt->second;
+    return std::nullopt;
 }
 
 void StatSet::modifyResource(StatType type, float amount) {
-    float oldValue = getCurrentValue(type);
+    float oldValue = *getCurrentValue(type).value();
     float newValue = oldValue + amount;
 
     if (type == StatType::Health) {
-        float maxHealth = getCurrentValue(StatType::MaxHealth);
+        const float maxHealth = *getCurrentValue(StatType::MaxHealth).value();
         newValue = std::clamp(newValue, 0.0f, maxHealth);
     } else if (type == StatType::Mana) {
-        float maxMana = getCurrentValue(StatType::MaxMana);
+        const float maxMana = *getCurrentValue(StatType::MaxMana).value();
         newValue = std::clamp(newValue, 0.0f, maxMana);
     }
 
@@ -59,7 +59,7 @@ void StatSet::recalculateStats() {
 
     const float oldHealth = currentValues[StatType::Health];
     const float oldMana = currentValues[StatType::Mana];
-    const float oldSpeed = currentValues[StatType::Speed];
+    //const float oldSpeed = currentValues[StatType::Speed];
 
     currentValues = baseAttributes;
 
@@ -73,7 +73,7 @@ void StatSet::recalculateStats() {
 
     if (oldHealth > 0) currentValues[StatType::Health] = oldHealth;
     if (oldMana > 0) currentValues[StatType::Mana] = oldMana;
-    if (oldSpeed > 0) currentValues[StatType::Speed] = oldSpeed;
+    //if (oldSpeed > 0) currentValues[StatType::Speed] = oldSpeed;
 
     if (const float maxHealth = currentValues[StatType::MaxHealth]; currentValues[StatType::Health] > maxHealth) {
         currentValues[StatType::Health] = maxHealth;

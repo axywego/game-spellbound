@@ -4,6 +4,7 @@
 #include <vector>
 #include <functional>
 #include "StatModifier.hpp"
+#include <optional>
 
 class StatSet {
 private:
@@ -24,7 +25,7 @@ public:
     void setBaseAttribute(StatType type, float value);
     float getBaseAttribute(StatType type) const;
 
-    float& getCurrentValue(StatType type);
+    std::optional<float*> getCurrentValue(StatType type);
 
     void modifyResource(StatType type, float amount);
     void setResource(StatType type, float value);

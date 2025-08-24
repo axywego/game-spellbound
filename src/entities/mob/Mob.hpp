@@ -38,6 +38,8 @@ protected:
 
     const Tilemap& map;
 
+    bool hasMana{false};
+
     bool isAlive = true;
     bool isTakingDamage = false;
     float damageTimer = 0.0f;

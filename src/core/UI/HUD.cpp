@@ -158,9 +158,9 @@ namespace UI {
                 percent = 1.f;
             }
             currentTitle.first->setColor(sf::Color(255, 255, 255, static_cast<uint8_t>(255 * percent)));
+            currentTitle.first->setOutlineColor(sf::Color(0, 0, 0, static_cast<uint8_t>(255 * percent)));
             currentTitle.first->setPosition({300.f + cameraDelta.x, 240.f + cameraDelta.y});
-            currentTitle.first->setOutlineColor(sf::Color::Black);
-            currentTitle.first->setOutlineThickness(3.f);
+            currentTitle.first->setOutlineThickness(3.0f);
         }
 
         if (timer < currentTitle.second) timer += dt;
@@ -186,7 +186,6 @@ namespace UI {
         textSpeed.render();
 
         if (timer < currentTitle.second) {
-            std::cout << "allo\n";
             currentTitle.first->render();
         }
     }

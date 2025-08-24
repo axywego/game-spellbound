@@ -21,7 +21,7 @@ void Archer::spawnProjectile()  {
                     map,
                     spawnPos,
                     lastDirection,
-                    stats.getCurrentValue(StatType::Damage)
+                    *stats.getCurrentValue(StatType::Damage).value()
             )
     );
 }

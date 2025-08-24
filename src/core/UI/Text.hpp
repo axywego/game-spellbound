@@ -4,7 +4,7 @@
 #include "../ResourceManager.hpp"
 
 namespace UI {
-    class Text final : public UIObject{
+    class Text final : public UIObject {
     private:
         sf::Font font{ResourceManager::getInstance().getFont("font_game")};
         sf::Text text{font};

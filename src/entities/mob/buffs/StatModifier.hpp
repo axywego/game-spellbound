@@ -6,10 +6,11 @@ enum class StatType {
     Health,
     MaxHealth,
     Damage,
+    Speed,
     Mana,
     MaxMana,
     ManaCost,
-    Speed,
+    Count
 };
 
 enum class ModifierType {

@@ -176,7 +176,7 @@ void Mob::startAttacking() {
 void Mob::takeDamage(float damage) {
     if (isDying) return;
 
-    auto& health = stats.getCurrentValue(StatType::Health);
+    auto& health = *stats.getCurrentValue(StatType::Health).value();
 
     health -= damage;
     if (health <= 0.f) {
@@ -247,7 +247,7 @@ void Mob::playAnimation(const std::string& name) {
 }
 
 float Mob::getDamage() const {
-    return stats.getCurrentValue(StatType::Damage);
+    return *stats.getCurrentValue(StatType::Damage).value();
 }
 
 bool Mob::getIsAlive() const {
@@ -259,11 +259,11 @@ bool Mob::getIsDying() const {
 }
 
 float Mob::getMaxHealth() const {
-    return stats.getCurrentValue(StatType::MaxHealth);
+    return *stats.getCurrentValue(StatType::MaxHealth).value();
 }
 
 float Mob::getCurrentHealth() const {
-    return stats.getCurrentValue(StatType::Health);
+    return *stats.getCurrentValue(StatType::Health).value();
 }
 
 Mob::TypeDamage Mob::getTypeDamage() const {
@@ -271,15 +271,17 @@ Mob::TypeDamage Mob::getTypeDamage() const {
 }
 
 float Mob::getCurrentSpeed() const {
-    return stats.getCurrentValue(StatType::Speed);
+    return *stats.getCurrentValue(StatType::Speed).value();
 }
 
 float Mob::getMaxMana() const {
-    return stats.getCurrentValue(StatType::MaxMana);
+    if (hasMana) return *stats.getCurrentValue(StatType::MaxMana).value();
+    return -1.f;
 }
 
 float Mob::getCurrentMana() const {
-    return stats.getCurrentValue(StatType::Mana);
+    if (hasMana) return *stats.getCurrentValue(StatType::Mana).value();
+    return -1.f;
 }
 
 StatSet & Mob::getStats() {
