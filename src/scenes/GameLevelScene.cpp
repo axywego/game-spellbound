@@ -7,18 +7,17 @@
 GameLevelScene::GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_,
     sf::RenderWindow& window_, std::function<void()> pauseCallback):
 Scene(window_), player(player_), gameWorld(world_), camera(&(player.lock()->getSprite()),
-    world_.getTilemap()), requestPause(std::move(pauseCallback)), enemies(world_.getEnemies()) {}
-
-void GameLevelScene::load() {
-
+    world_.getTilemap()), requestPause(std::move(pauseCallback)), enemies(world_.getEnemies()) {
     auto generatedEnemies = EnemyGenerator::generateEnemies(gameWorld, player);
 
     for(auto& [enemy, pos] : generatedEnemies){
         gameWorld.addEnemy(std::move(enemy), pos);
     }
+}
 
-    player.lock()->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
-
+void GameLevelScene::load() {
+    if (lastPlayerPos.x != 0.f && lastPlayerPos.y != 0.f)
+        player.lock()->setPosition(lastPlayerPos);
 }
 
 void GameLevelScene::update(const float& dt) {
@@ -110,8 +109,10 @@ void GameLevelScene::render(sf::RenderTarget& renderTarget) {
 void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
     if(event){
         if(const auto* key = event->getIf<sf::Event::KeyPressed>()){
-            if(key->code == sf::Keyboard::Key::Escape)
+            if(key->code == sf::Keyboard::Key::Escape) {
+                lastPlayerPos = player.lock()->getSprite().getPosition();
                 requestPause();
+            }
 
             if(key->code == sf::Keyboard::Key::Space)
                 player.lock()->attack();

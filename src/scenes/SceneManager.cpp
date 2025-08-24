@@ -9,7 +9,7 @@ SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     //worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
 
     player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
-
+    player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
     initScenes();
 }
 

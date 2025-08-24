@@ -6,7 +6,7 @@ class Scene {
 protected:
     sf::RenderWindow& window;
 
-    sf::Vector2f lastPlayerPos;
+    sf::Vector2f lastPlayerPos {0.f,0.f};
 
 public:
     Scene(sf::RenderWindow& window_): window(window_) {}
