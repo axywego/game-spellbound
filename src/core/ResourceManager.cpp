@@ -1,5 +1,6 @@
 #include "ResourceManager.hpp"
 
+#include <iostream>
 #include <stdexcept>
 
 ResourceManager& ResourceManager::getInstance() {
@@ -27,6 +28,8 @@ void ResourceManager::loadTextures() {
     };
 
     try {
+        std::cout << "Loading textures..." << std::endl;
+
         loadTexture("dungeon", basePath + "real img/2 Dungeon Tileset/1 Tiles/Tileset.png");
         loadTexture("health", basePath + "real img/4 GUI/4 Bars/BarsMap.png");
         loadTexture("icons", basePath + "real img/4 GUI/3 Icons/Iconset1.png");
@@ -35,6 +38,11 @@ void ResourceManager::loadTextures() {
         loadTexture("start_button", basePath + "img/startBtn.png");
         loadTexture("settings_button", basePath + "img/settingsBtn.png");
         loadTexture("exit_button", basePath + "img/exitBtn.png");
+
+        loadTexture("back_button", basePath + "img/backBtn.png");
+        loadTexture("select_button", basePath + "img/selectBtn.png");
+        loadTexture("prev_button", basePath + "img/prevBtn.png");
+        loadTexture("next_button", basePath + "img/nextBtn.png");
 
         loadTexture("enemy_rat", basePath + "real img/3 Dungeon Enemies/1/1.png");
         loadTexture("enemy_shaman", basePath + "real img/3 Dungeon Enemies/4/4.png");
@@ -49,6 +57,8 @@ void ResourceManager::loadTextures() {
         loadTexture("check_mark", basePath + "real img/4 GUI/3 Icons/Iconset5.png");
 
         loadTexture("buff_item", basePath + "real img/2 Dungeon Tileset/2 Objects/Bookshelf decor/24.png");
+
+        std::cout << "all textures was loaded!\n";
 
     } catch (const std::exception& e) {
         textures.clear();
@@ -79,6 +89,8 @@ void ResourceManager::loadFonts() {
 
 sf::Texture& ResourceManager::getTexture(const std::string& name) {
     std::lock_guard lock(textures_mutex);
+
+    std::cout << name << std::endl;
 
     const auto it = textures.find(name);
     if (it == textures.end() || !it->second) {

@@ -1,32 +1,45 @@
 #include "SceneManager.hpp"
 
+#include "CharacterSelectScene.hpp"
 #include "SettingsScene.hpp"
 
 SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     // initializing;
     worlds.insert({"test", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
-
-    //worlds.insert({"mapa_main", {std::make_shared<GameWorld>("map.json")}});
-
-    player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
-    player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
+    //player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
+    //player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
     initScenes();
 }
 
 void SceneManager::initScenes() {
 
-    addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
-
-    addScene<SettingsScene>("settings", window, [this]() { switchTo("menu"); });
-
     addScene<MenuScene>("menu", window,
-                        [this]() { switchTo("main"); },
+                        [this]() { switchTo("select_character"); },
                         [this]() { switchTo("settings"); },
                         [this]() { window.close(); }
     );
 
-    addScene<PauseScene>("pause", window, [this]() { resume(); }, [this]() { switchTo("menu"); });
+    addScene<CharacterSelectScene>("select_character", window,
+        [this](){ switchTo("menu"); },
+        [&](PlayerClass playerClass) {
+            player = PlayerFactory::create(playerClass, worlds["test"]->getTilemap());
+            player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
+            // scenes["main"] = std::make_shared<GameLevelScene>(
+            //     *worlds["test"],
+            //     getPlayer(),
+            //     window,
+            //     [this]() { pause(); }
+            // );
+            addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
+            switchTo("main");
+        }
+    );
 
+    //addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
+
+    addScene<SettingsScene>("settings", window, [this]() { switchTo("menu"); });
+
+    addScene<PauseScene>("pause", window, [this]() { resume(); }, [this]() { switchTo("menu"); });
 
     switchTo("menu");
 }

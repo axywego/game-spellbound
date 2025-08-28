@@ -63,13 +63,19 @@ void Player::attacking(const float& dt) {
 
         else if(typeDamage == TypeDamage::Ranged && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked) {
             hasAttacked = true;
-            auto& mana = *stats.getCurrentValue(StatType::Mana).value();
-            auto& manaCost = *stats.getCurrentValue(StatType::ManaCost).value();
-            if(mana - manaCost >= 0.f){
-                mana -= manaCost;
-                timerDelayMana = delayBeforeUpMana;
-                spawnProjectile();
+            bool toSpawn = true;
+            if (hasMana) {
+                auto& mana = *stats.getCurrentValue(StatType::Mana).value();
+                auto& manaCost = *stats.getCurrentValue(StatType::ManaCost).value();
+                if(mana - manaCost >= 0.f){
+                    mana -= manaCost;
+                    timerDelayMana = delayBeforeUpMana;
+                }
+                else {
+                    toSpawn = false;
+                }
             }
+            if (toSpawn) spawnProjectile();
         }
 
         if (attackTimer <= 0.0f) {

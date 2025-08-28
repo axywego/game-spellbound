@@ -71,6 +71,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/entities/mob/buffs/BuffItem.hpp
         src/generators/BuffsGenerator.cpp
         src/generators/BuffsGenerator.hpp
+        src/scenes/CharacterSelectScene.cpp
+        src/scenes/CharacterSelectScene.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
