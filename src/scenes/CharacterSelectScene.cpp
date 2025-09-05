@@ -1,7 +1,3 @@
-//
-// Created by goasd on 26.08.2025.
-//
-
 #include "CharacterSelectScene.hpp"
 
 #include "SceneManager.hpp"

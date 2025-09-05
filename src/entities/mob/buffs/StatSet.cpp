@@ -57,10 +57,6 @@ void StatSet::setResource(StatType type, float value) {
 void StatSet::recalculateStats() {
     if (!isDirty) return;
 
-    const float oldHealth = currentValues[StatType::Health];
-    const float oldMana = currentValues[StatType::Mana];
-    //const float oldSpeed = currentValues[StatType::Speed];
-
     currentValues = baseAttributes;
 
     for (const auto& mod : activeModifiers) {
@@ -71,15 +67,17 @@ void StatSet::recalculateStats() {
         }
     }
 
+    const float oldHealth = currentValues[StatType::Health];
+    const float oldMana = currentValues[StatType::Mana];
+
     if (oldHealth > 0) currentValues[StatType::Health] = oldHealth;
     if (oldMana > 0) currentValues[StatType::Mana] = oldMana;
-    //if (oldSpeed > 0) currentValues[StatType::Speed] = oldSpeed;
 
     if (const float maxHealth = currentValues[StatType::MaxHealth]; currentValues[StatType::Health] > maxHealth) {
         currentValues[StatType::Health] = maxHealth;
     }
 
-    if (float maxMana = currentValues[StatType::MaxMana]; currentValues[StatType::Mana] > maxMana) {
+    if (const float maxMana = currentValues[StatType::MaxMana]; currentValues[StatType::Mana] > maxMana) {
         currentValues[StatType::Mana] = maxMana;
     }
 

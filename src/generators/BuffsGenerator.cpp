@@ -27,7 +27,8 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
                 break;
             }
             case 1: {
-                const auto val = generate8Bytes(1, 2);
+                const auto generated = generate8Bytes(1, 2);
+                const auto val = static_cast<float>(generated) / 2.f;
                 buffs.emplace_back(StatType::MaxHealth, ModifierType::Flat, val);
                 nameBuff += std::format("max health +{};", val);
                 break;
@@ -51,7 +52,8 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
                 break;
             }
             case 5: {
-                const auto val = generate8Bytes(1, 2);
+                const auto generated = generate8Bytes(1, 2);
+                const float val = static_cast<float>(generated) / 4.f;
                 buffs.emplace_back(StatType::MaxMana, ModifierType::Flat, val);
                 nameBuff += std::format("max mana +{};", val);
                 break;
@@ -59,7 +61,7 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
             case 6: {
                 const auto val = -0.05f;
                 buffs.emplace_back(StatType::ManaCost, ModifierType::Flat, val);
-                nameBuff += std::format("mana cost -{};", val);
+                nameBuff += std::format("mana cost {};", val);
                 break;
             }
             default: break;
