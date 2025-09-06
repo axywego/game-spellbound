@@ -26,7 +26,11 @@ namespace UI {
         sf::Sprite spriteDamage {textureIcons};
         sf::Sprite spriteSpeed {textureIcons};
 
+        Text textCompletedDungeon;
+
         std::pair<std::unique_ptr<Text>, float> currentTitle;
+
+        size_t numOfEnemies{0};
 
         float timer{0.f};
 
@@ -42,7 +46,7 @@ namespace UI {
 
         void addTitle(const std::string& title, const float& time);
 
-        void update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter);
+        void update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter, const size_t& numOfEnemies_);
 
         void render();
     };

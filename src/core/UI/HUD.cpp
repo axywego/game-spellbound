@@ -12,10 +12,19 @@ namespace UI {
         posLeft = {54, 18};
         posCenter = {62, 18};
         posRight = {98, 18};
+
         textDamage.setWindow(*window);
         textSpeed.setWindow(*window);
+        textCompletedDungeon.setWindow(*window);
+
         textDamage.setFont(ResourceManager::getInstance().getFont("font_game"));
         textSpeed.setFont(ResourceManager::getInstance().getFont("font_game"));
+        textCompletedDungeon.setFont(ResourceManager::getInstance().getFont("font_game"));
+
+        textCompletedDungeon.setText("The dungeon is cleared! Press Enter to go to the next!");
+        textCompletedDungeon.setScale({8.f, 8.f});
+        textCompletedDungeon.setOutlineColor(sf::Color::Black);
+        textCompletedDungeon.setOutlineThickness(3.f);
     }
 
     void HUD::addTitle(const std::string &title, const float& time) {
@@ -28,7 +37,9 @@ namespace UI {
         timer = 0.f;
     }
 
-    void HUD::update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter) {
+    void HUD::update(const float& dt, const Player& player, const sf::Vector2f& cameraCenter, const size_t& numOfEnemies_) {
+        numOfEnemies = numOfEnemies_;
+
         sf::Vector2f cameraDelta = {cameraCenter.x - 1920.f / 2, cameraCenter.y - 1080.f / 2};
 
         // update hp sprites
@@ -147,6 +158,10 @@ namespace UI {
         textSpeed.setOutlineColor(sf::Color::Black);
         textSpeed.setOutlineThickness(3.f);
 
+        //update show isThereEnemies
+        if (numOfEnemies == 0)
+            textCompletedDungeon.setPosition({300.f + cameraDelta.x, offset + 400.f + cameraDelta.y});
+
         if (currentTitle.first) {
             float percent;
             if (timer <= 0.5f)
@@ -188,5 +203,8 @@ namespace UI {
         if (timer < currentTitle.second) {
             currentTitle.first->render();
         }
+
+        if (numOfEnemies == 0)
+            textCompletedDungeon.render();
     }
 }

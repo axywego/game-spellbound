@@ -30,7 +30,7 @@ private:
     std::function<void()> onBackClick;
 
 public:
-    SettingsScene(sf::RenderWindow& window_, const std::function<void()> &backCallback);
+    SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &backCallback);
 
     void load() override ;
 

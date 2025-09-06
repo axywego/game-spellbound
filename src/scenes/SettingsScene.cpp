@@ -1,7 +1,7 @@
 #include "SettingsScene.hpp"
 
-SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::function<void()>& backCallback):
-Scene(window_), backgroundImage(textureBackground),
+SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback):
+Scene(window_, name), backgroundImage(textureBackground),
 slider(window, 300.f, 0.2f),
 checkbox(window, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),

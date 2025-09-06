@@ -2,7 +2,8 @@
 
 #include "SceneManager.hpp"
 
-CharacterSelectScene::CharacterSelectScene(sf::RenderWindow& window, const std::function<void()>& backToMenu, const std::function<void(PlayerClass)>& startGame): Scene(window),
+CharacterSelectScene::CharacterSelectScene(sf::RenderWindow& window, const std::string& name, const std::function<void()>& backToMenu, const std::function<void(PlayerClass)>& startGame):
+Scene(window, name),
 selectButton(ResourceManager::getInstance().getTexture("select_button"), window),
 backButton(ResourceManager::getInstance().getTexture("back_button"), window),
 prevButton(ResourceManager::getInstance().getTexture("prev_button"), window),

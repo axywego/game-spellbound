@@ -5,6 +5,10 @@ Mob::Mob(const sf::Texture& texture_, const Tilemap& map_, const sf::FloatRect c
     playIdleAnimation();
 }
 
+void Mob::setTilemap(const Tilemap &map_) {
+    map = map_;
+}
+
 void Mob::setPosition(const sf::Vector2f& pos){
     currentSprite.setPosition(pos);
 }

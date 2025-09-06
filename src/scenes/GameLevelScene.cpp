@@ -4,10 +4,16 @@
 #include <utility>
 #include "../generators/BuffsGenerator.hpp"
 
-GameLevelScene::GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_,
-    sf::RenderWindow& window_, std::function<void()> pauseCallback):
-Scene(window_), player(player_), gameWorld(world_), camera(&(player.lock()->getSprite()),
-    world_.getTilemap()), requestPause(std::move(pauseCallback)), enemies(world_.getEnemies()) {
+GameLevelScene::GameLevelScene( sf::RenderWindow& window_, const std::string& name, GameWorld& world_, std::weak_ptr<Player> player_, std::function<void()> pauseCallback, std::function<void()> nextDungeonCallback):
+Scene(window_, name),
+player(player_),
+gameWorld(world_),
+camera(&(player.lock()->getSprite()),
+world_.getTilemap()),
+requestPause(std::move(pauseCallback)),
+enemies(world_.getEnemies()),
+requestNextScene(std::move(nextDungeonCallback))
+{
     auto generatedEnemies = EnemyGenerator::generateEnemies(gameWorld, player);
 
     for(auto& [enemy, pos] : generatedEnemies){
@@ -88,7 +94,7 @@ void GameLevelScene::update(const float& dt) {
 
     lastPlayerPos = playerPtr->getSprite().getPosition();
 
-    UI::HUD::getInstance().update(dt, *playerPtr, camera.getCenter());
+    UI::HUD::getInstance().update(dt, *playerPtr, camera.getCenter(), enemies.size());
 }
 
 void GameLevelScene::render(sf::RenderTarget& renderTarget) {
@@ -116,6 +122,15 @@ void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
 
             if(key->code == sf::Keyboard::Key::Space)
                 player.lock()->attack();
+
+            if (key->code == sf::Keyboard::Key::Enter && enemies.empty()) {
+                requestNextScene();
+            }
+
+            // Удалить, это чисто для проверки
+            if (key->code == sf::Keyboard::Key::P) {
+                requestNextScene();
+            }
         }
     }
 }

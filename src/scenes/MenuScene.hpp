@@ -29,7 +29,7 @@ private:
     std::function<void()> onExitClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback, const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback);
+    MenuScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &startCallback, const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback);
 
     void load() override ;
 

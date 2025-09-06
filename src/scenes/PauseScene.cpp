@@ -1,9 +1,9 @@
 #include "PauseScene.hpp"
 
-PauseScene::PauseScene(sf::RenderWindow& window_, const std::function<void()> &resumeCallback,
+PauseScene::PauseScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &resumeCallback,
     const std::function<void()> &menuCallback):
 
-Scene(window_),
+Scene(window_, name),
 resumeButton(ResourceManager::getInstance().getTexture("start_button"), window),
 menuButton(ResourceManager::getInstance().getTexture("exit_button"), window),
 onResumeClick(resumeCallback),

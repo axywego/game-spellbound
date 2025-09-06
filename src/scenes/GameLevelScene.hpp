@@ -17,13 +17,14 @@ private:
     Camera camera;
 
     std::function<void()> requestPause;
+    std::function<void()> requestNextScene;
 
     GameWorld& gameWorld;
 
     std::vector<std::unique_ptr<Enemy>>& enemies;
 
 public:
-    GameLevelScene(GameWorld& world_, std::weak_ptr<Player> player_, sf::RenderWindow& window_, std::function<void()> pauseCallback);
+    GameLevelScene(sf::RenderWindow& window_, const std::string& name, GameWorld& world_, std::weak_ptr<Player> player_, std::function<void()> pauseCallback, std::function<void()> nextDungeonCallback);
     void load() override;
 
     void update(const float& dt) override;

@@ -1,9 +1,9 @@
 #include "MenuScene.hpp"
 
-MenuScene::MenuScene(sf::RenderWindow& window_, const std::function<void()> &startCallback,
+MenuScene::MenuScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &startCallback,
     const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback):
 
-Scene(window_), backgroundImage(textureBackground),
+Scene(window_, name), backgroundImage(textureBackground),
 startButton(ResourceManager::getInstance().getTexture("start_button"), window),
 settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
 exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),

@@ -36,7 +36,7 @@ protected:
     MobCollision collision;
     AnimationController animController;
 
-    const Tilemap& map;
+    Tilemap map;
 
     bool hasMana{false};
 
@@ -64,6 +64,8 @@ public:
 
     Mob(const sf::Texture& texture_, const Tilemap& map_, const sf::FloatRect collisionRect);
 
+    void setTilemap(const Tilemap& map_);
+
     void setPosition(const sf::Vector2f& pos);
 
     sf::Sprite& getSprite();
@@ -83,11 +85,11 @@ public:
 
     void startDying();
 
-    void updateAnimation() ;
+    void updateAnimation();
 
     void playDeathAnimation();
 
-    void playHurtAnimation() ;
+    void playHurtAnimation();
 
     void playAttackAnimation();
 

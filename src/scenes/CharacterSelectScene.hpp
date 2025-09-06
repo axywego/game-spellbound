@@ -30,7 +30,7 @@ private:
     int currentPlayer = 0;
 
 public:
-    CharacterSelectScene(sf::RenderWindow& window, const std::function<void()>& backToMenu, const std::function<void(PlayerClass)>& startGame);
+    CharacterSelectScene(sf::RenderWindow& window, const std::string& name, const std::function<void()>& backToMenu, const std::function<void(PlayerClass)>& startGame);
     void load() override;
     void update(const float& dt) override;
     void render(sf::RenderTarget& renderTarget) override;

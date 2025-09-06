@@ -22,7 +22,9 @@ private:
     const float maxTransitionTime = 0.5f;
 
     bool isPaused = false;
-    std::shared_ptr<Scene> pausedScene;
+    std::pair<std::string, std::shared_ptr<Scene>> pausedScene;
+
+    size_t currentDungeon{0};
 
 public:
     SceneManager(sf::RenderWindow& window_);
@@ -34,7 +36,7 @@ public:
     Scene& getScene(const std::string& name);
 
     template<typename T, typename... Args>
-    void addScene(const std::string& name, Args&&... args);
+    void addScene(Args&&... args);
 
     void switchTo(const std::string& sceneName);
 
@@ -43,6 +45,8 @@ public:
     void pause();
 
     void resume();
+
+    void updateGameLevels();
 
     void update(const float& dt);
 
