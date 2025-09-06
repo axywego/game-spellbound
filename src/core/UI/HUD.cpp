@@ -22,7 +22,7 @@ namespace UI {
         textCompletedDungeon.setFont(ResourceManager::getInstance().getFont("font_game"));
 
         textCompletedDungeon.setText("The dungeon is cleared! Press Enter to go to the next!");
-        textCompletedDungeon.setScale({8.f, 8.f});
+        textCompletedDungeon.setScale({1.f, 1.f});
         textCompletedDungeon.setOutlineColor(sf::Color::Black);
         textCompletedDungeon.setOutlineThickness(3.f);
     }

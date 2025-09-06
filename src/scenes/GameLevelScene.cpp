@@ -127,10 +127,6 @@ void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
                 requestNextScene();
             }
 
-            // Удалить, это чисто для проверки
-            if (key->code == sf::Keyboard::Key::P) {
-                requestNextScene();
-            }
         }
     }
 }
