@@ -39,8 +39,6 @@ public:
     // move player
     void move(const float& dt) override;
 
-    void updateProjectiles(float dt);
-
     std::optional<sf::FloatRect> getAttackArea();
 
     void render(sf::RenderTarget& target) override;

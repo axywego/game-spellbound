@@ -140,19 +140,6 @@ void Player::move(const float& dt) {
     }
 }
 
-void Player::updateProjectiles(float dt) {
-    for(auto it = projectiles.begin(); it != projectiles.end(); ){
-        (*it)->update(dt);
-
-        if(!(*it)->isActive()){
-            it = projectiles.erase(it);
-        }
-        else {
-            ++it;
-        }
-    }
-}
-
 std::optional<sf::FloatRect> Player::getAttackArea() {
     if(!meleeAttacked && typeDamage == TypeDamage::Melee) {
         meleeAttacked = true;

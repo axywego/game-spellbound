@@ -8,7 +8,6 @@
 #include "../generators/EnemyGenerator.hpp"
 #include "../core/UI/HUD.hpp"
 
-#include <algorithm>
 #include <functional>
 
 class GameLevelScene : public Scene {
@@ -26,6 +25,12 @@ private:
 public:
     GameLevelScene(sf::RenderWindow& window_, const std::string& name, GameWorld& world_, std::weak_ptr<Player> player_, std::function<void()> pauseCallback, std::function<void()> nextDungeonCallback);
     void load() override;
+
+    void updateEnemies(const std::shared_ptr<Player>& playerPtr, const float& dt) const;
+
+    void updateBuffs(const std::shared_ptr<Player>& playerPtr, const float& dt) const;
+
+    void updateProjectiles(const std::shared_ptr<Player>& playerPtr, const float& dt) const;
 
     void update(const float& dt) override;
 

@@ -1,6 +1,5 @@
 #include "GameLevelScene.hpp"
 
-#include <map>
 #include <utility>
 #include "../generators/BuffsGenerator.hpp"
 
@@ -26,75 +25,98 @@ void GameLevelScene::load() {
         player.lock()->setPosition(lastPlayerPos);
 }
 
-void GameLevelScene::update(const float& dt) {
-
-    const auto playerPtr = player.lock();
-
-    std::ranges::for_each(enemies,
-        [&](const std::unique_ptr<Enemy>& e) {
-            if (!e->getIsAlive()) {
-                if (auto opt = BuffsGenerator::create(*playerPtr)) {
-                    gameWorld.addBuffItem(std::move(opt.value()), e->getSprite().getPosition());
-                }
-            }
-        }
-    );
-
-    std::erase_if(enemies,
-      [](const std::unique_ptr<Enemy>& e) {
-          return !e->getIsAlive();
-        }
-    );
-
-    std::erase_if(gameWorld.getBuffItems(),
-        [&](const std::unique_ptr<BuffItem>& b) {
-            return b->getIsPickup();
-        }
-    );
-
-    playerPtr->update(dt);
-
-    camera.update(dt);
-
-    playerPtr->updateProjectiles(dt);
-
-    auto& playerProjectiles = playerPtr->getProjectiles();
+void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, const float &dt) const {
 
     const auto& playerMeleeAreaAttack = playerPtr->getAttackArea();
+    auto& playerProjectiles = playerPtr->getProjectiles();
 
-    std::erase_if(playerProjectiles, [&](const auto& p) {
-        return !isOnScreen(p->getCollisionRect(), window);
-    });
+    for (auto it = enemies.begin(); it != enemies.end(); ) {
+        auto& enemy = *it;
 
-    for (auto& enemy : enemies) {
-        if (!isOnScreen(enemy->getSprite(), window)) continue;
+        if (!enemy->getIsAlive()) {
+            if (auto opt = BuffsGenerator::create(*playerPtr)) {
+                gameWorld.addBuffItem(std::move(opt.value()), enemy->getSprite().getPosition());
+            }
+            it = enemies.erase(it);
+            continue;
+        }
+
+        if (!isOnScreen(enemy->getSprite(), window)) {
+            ++it;
+            continue;
+        }
 
         //Player has distance damage
         for (auto& projectile : playerProjectiles) {
-            if (projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())) {
+            if (projectile->isActive() &&
+                projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())
+                ) {
                 projectile->onHit(enemy.get());
             }
         }
 
         //Player has melee damage
-        if(playerMeleeAreaAttack && playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())){
+        if(playerMeleeAreaAttack &&
+            playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())
+            ){
             enemy->takeDamage(playerPtr->getDamage());
         }
 
         enemy->update(dt);
+        ++it;
+    }
+}
+
+void GameLevelScene::updateBuffs(const std::shared_ptr<Player>& playerPtr, const float &dt) const {
+
+    auto& buffs = gameWorld.getBuffItems();
+    for (auto it = buffs.begin(); it != buffs.end(); ) {
+        if ((*it)->getSprite().getGlobalBounds().findIntersection(playerPtr->getCollisionRect())) {
+            (*it)->onPickup(playerPtr.get());
+        }
+
+        if ((*it)->getIsPickup()) {
+            it = buffs.erase(it);
+        }
+        else {
+            ++it;
+        }
     }
 
-    std::ranges::for_each(gameWorld.getBuffItems(),
-        [&](const std::unique_ptr<BuffItem>& b) {
-            if (b->getSprite().getGlobalBounds().findIntersection(playerPtr->getCollisionRect())) {
-                b->onPickup(playerPtr.get());
-            }
+}
+
+void GameLevelScene::updateProjectiles(const std::shared_ptr<Player>& playerPtr, const float &dt) const {
+
+    auto& playerProjectiles = playerPtr->getProjectiles();
+    for(auto it = playerProjectiles.begin(); it != playerProjectiles.end(); ){
+        (*it)->update(dt);
+
+        if(!(*it)->isActive() || !isOnScreen((*it)->getCollisionRect(), window)){
+            it = playerProjectiles.erase(it);
         }
-    );
+        else {
+            ++it;
+        }
+    }
 
-    lastPlayerPos = playerPtr->getSprite().getPosition();
+}
 
-    UI::HUD::getInstance().update(dt, *playerPtr, camera.getCenter(), enemies.size());
+void GameLevelScene::update(const float& dt) {
+
+    if (const auto playerPtr = player.lock()) {
+        playerPtr->update(dt);
+
+        camera.update(dt);
+
+        updateProjectiles(playerPtr, dt);
+        updateEnemies(playerPtr, dt);
+        updateBuffs(playerPtr, dt);
+
+        lastPlayerPos = playerPtr->getSprite().getPosition();
+
+        UI::HUD::getInstance().update(dt, *playerPtr, camera.getCenter(), enemies.size());
+    }
+
 }
 
 void GameLevelScene::render(sf::RenderTarget& renderTarget) {
@@ -115,18 +137,25 @@ void GameLevelScene::render(sf::RenderTarget& renderTarget) {
 void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
     if(event){
         if(const auto* key = event->getIf<sf::Event::KeyPressed>()){
-            if(key->code == sf::Keyboard::Key::Escape) {
-                lastPlayerPos = player.lock()->getSprite().getPosition();
-                requestPause();
+            switch (key->code) {
+                using Key = sf::Keyboard::Key;
+                case Key::Escape: {
+                    lastPlayerPos = player.lock()->getSprite().getPosition();
+                    requestPause();
+                    break;
+                }
+                case Key::Space: {
+                    player.lock()->attack();
+                    break;
+                }
+                case Key::Enter: {
+                    if (enemies.empty()) {
+                        requestNextScene();
+                    }
+                    break;
+                }
+                default: break;
             }
-
-            if(key->code == sf::Keyboard::Key::Space)
-                player.lock()->attack();
-
-            if (key->code == sf::Keyboard::Key::Enter && enemies.empty()) {
-                requestNextScene();
-            }
-
         }
     }
 }
