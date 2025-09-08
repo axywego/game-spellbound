@@ -30,41 +30,36 @@ void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, con
     const auto& playerMeleeAreaAttack = playerPtr->getAttackArea();
     auto& playerProjectiles = playerPtr->getProjectiles();
 
-    for (auto it = enemies.begin(); it != enemies.end(); ) {
-        auto& enemy = *it;
+    for (size_t i = 0; i < enemies.size(); i++) {
+        auto& enemy = enemies[i];
+        if (enemy->getIsAlive() && isOnScreen(enemy->getSprite(), window)) {
+            //Player has distance damage
+            for (auto& projectile : playerProjectiles) {
+                if (projectile->isActive() &&
+                    projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())
+                    ) {
+                    projectile->onHit(enemy.get());
+                }
+            }
 
+            if(playerMeleeAreaAttack &&
+                playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())
+                ){
+                enemy->takeDamage(playerPtr->getDamage());
+            }
+
+            enemy->update(dt);
+        }
+    }
+    std::erase_if(enemies, [&](const auto& enemy) {
         if (!enemy->getIsAlive()) {
             if (auto opt = BuffsGenerator::create(*playerPtr)) {
                 gameWorld.addBuffItem(std::move(opt.value()), enemy->getSprite().getPosition());
             }
-            it = enemies.erase(it);
-            continue;
+            return true;
         }
-
-        if (!isOnScreen(enemy->getSprite(), window)) {
-            ++it;
-            continue;
-        }
-
-        //Player has distance damage
-        for (auto& projectile : playerProjectiles) {
-            if (projectile->isActive() &&
-                projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())
-                ) {
-                projectile->onHit(enemy.get());
-            }
-        }
-
-        //Player has melee damage
-        if(playerMeleeAreaAttack &&
-            playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())
-            ){
-            enemy->takeDamage(playerPtr->getDamage());
-        }
-
-        enemy->update(dt);
-        ++it;
-    }
+        return false;
+    });
 }
 
 void GameLevelScene::updateBuffs(const std::shared_ptr<Player>& playerPtr, const float &dt) const {
