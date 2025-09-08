@@ -45,6 +45,8 @@ void ResourceManager::loadTextures() {
         loadTexture("next_button", basePath + "img/nextBtn.png");
 
         loadTexture("enemy_rat", basePath + "real img/3 Dungeon Enemies/1/1.png");
+        loadTexture("enemy_goblin", basePath + "real img/3 Dungeon Enemies/2/2.png");
+        loadTexture("enemy_ogre", basePath + "real img/3 Dungeon Enemies/3/3.png");
         loadTexture("enemy_shaman", basePath + "real img/3 Dungeon Enemies/4/4.png");
 
         loadTexture("player_archer", basePath + "real img/1 Characters/1/1.png");

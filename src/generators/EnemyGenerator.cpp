@@ -29,24 +29,40 @@ std::vector<std::pair<std::unique_ptr<Enemy>, sf::Vector2f>> EnemyGenerator::gen
         }
     }
 
-    for(short i = 0; i < numRat; i++){
+    // for(short i = 0; i < numRat; i++){
+    //     auto index = generate8Bytes(0, positionsFloor.size()-1);
+    //     auto e = EnemyFactory::create(EnemyClass::Rat, map.getTilemap(), player);
+
+    //     res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
+    //     positionsFloor.erase(positionsFloor.begin() + index);
+    // }
+
+    for(short i = 0; i < numGoblin; i++){
         auto index = generate8Bytes(0, positionsFloor.size()-1);
-        auto e = EnemyFactory::create(EnemyClass::Rat, map.getTilemap(), player);
+        auto e = EnemyFactory::create(EnemyClass::Goblin, map.getTilemap(), player);
 
         res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
         positionsFloor.erase(positionsFloor.begin() + index);
     }
 
-    // for(short i = 0; i < numShaman; i++){
-    //     auto index = generate8Bytes(0, positionsFloor.size()-1);
-    //     auto e = EnemyFactory::create(EnemyClass::Shaman, map.getTilemap(), player);
-    //     e->setSpawnCallback([&](auto&& mob, auto&& pos) {
-    //         map.addEnemy(std::move(mob), std::move(pos));
-    //     });
-    //
-    //     res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
-    //     positionsFloor.erase(positionsFloor.begin() + index);
-    // }
+    for(short i = 0; i < numOgre; i++){
+        auto index = generate8Bytes(0, positionsFloor.size()-1);
+        auto e = EnemyFactory::create(EnemyClass::Ogre, map.getTilemap(), player);
+
+        res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
+        positionsFloor.erase(positionsFloor.begin() + index);
+    }
+
+    for(short i = 0; i < numShaman; i++){
+        auto index = generate8Bytes(0, positionsFloor.size()-1);
+        auto e = EnemyFactory::create(EnemyClass::Shaman, map.getTilemap(), player);
+        e->setSpawnCallback([&](auto&& mob, auto&& pos) {
+            map.addEnemy(std::move(mob), std::move(pos));
+        });
+    
+        res.push_back(std::make_pair(std::move(e), positionsFloor[index]));
+        positionsFloor.erase(positionsFloor.begin() + index);
+    }
 
 
     return res;

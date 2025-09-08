@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Rat.hpp"
+#include "Goblin.hpp"
+#include "Ogre.hpp"
 #include "Shaman.hpp"
 
 class EnemyFactory {

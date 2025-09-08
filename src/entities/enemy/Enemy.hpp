@@ -8,9 +8,8 @@
 #include "../../core/Raycast.hpp"
 #include <functional>
 
-
 enum class EnemyClass {
-    Rat, Goblin, Demon, Shaman
+    Rat, Goblin, Ogre, Shaman
 };
 
 class Enemy: public Mob {

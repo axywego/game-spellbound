@@ -22,6 +22,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/entities/enemy/Enemy.cpp
         src/entities/enemy/EnemyFactory.cpp
         src/entities/enemy/Rat.cpp
+        src/entities/enemy/Goblin.cpp
+        src/entities/enemy/Ogre.cpp
         src/entities/enemy/Shaman.cpp
         src/entities/mob/Mob.cpp
         src/entities/mob/MobCollision.cpp
