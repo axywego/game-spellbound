@@ -40,3 +40,8 @@ uint64_t generate8Bytes(const uint64_t& from, const uint64_t& to) {
     const auto rand = g.generate();
     return from + (rand % (to - from + 1));
 }
+
+bool generateByChance(const uint64_t& chance){
+    auto num = generate8Bytes(0, 100);
+    return num < chance ? true : false;
+}

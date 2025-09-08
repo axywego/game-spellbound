@@ -19,3 +19,6 @@ public:
 };
 
 uint64_t generate8Bytes(const uint64_t& from, const uint64_t& to);
+
+// chance must be from 1 to 99
+bool generateByChance(const uint64_t& chance);

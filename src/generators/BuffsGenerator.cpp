@@ -5,6 +5,10 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
     if (const auto num = generate8Bytes(0, 3); num == 0) {
         return std::nullopt;
     }
+
+    if(generateByChance(30) == false){
+        return std::nullopt;
+    }
     auto allCountBuffs = static_cast<unsigned>(StatType::Count);
 
     if (player.getCurrentMana() == -1.f) {
