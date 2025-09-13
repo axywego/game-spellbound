@@ -23,6 +23,7 @@ setSoundVolumeCallback(setSoundVolumeCallback) {
         slider.getCurrentTransform().scale
     });
 
+    slider.setValue(1.f);
 
 
     buttonBack.setPosition({50.f, 50.f});
