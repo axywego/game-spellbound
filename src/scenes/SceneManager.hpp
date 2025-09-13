@@ -3,6 +3,7 @@
 #include "PauseScene.hpp"
 #include "MenuScene.hpp"
 #include "GameLevelScene.hpp"
+#include "../core/Music.hpp"
 #include "../entities/player/PlayerFactory.hpp"
 
 class SceneManager {
@@ -25,6 +26,8 @@ private:
     std::pair<std::string, std::shared_ptr<Scene>> pausedScene;
 
     size_t currentDungeon{0};
+
+    Music music {"1.wav"};
 
 public:
     SceneManager(sf::RenderWindow& window_);

@@ -29,6 +29,8 @@ namespace UI {
 
         float getValue() const;
 
+        bool isInChange() const;
+
         bool isHovered() const override;
 
         bool isClicked(const std::optional<sf::Event>& event) const override;

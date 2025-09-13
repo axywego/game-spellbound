@@ -10,6 +10,7 @@ SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     //player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
     //player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
     initScenes();
+
 }
 
 void SceneManager::initScenes() {
@@ -51,13 +52,20 @@ void SceneManager::initScenes() {
         }
     );
 
-    //addScene<GameLevelScene>("main", *worlds["test"], getPlayer(), window, [this]() { pause(); });
-
-    addScene<SettingsScene>(window, "settings", [this]() { switchTo("menu"); });
+    addScene<SettingsScene>(window, "settings",
+        [this]() {
+            switchTo("menu");
+        },
+        [this](float vol) {
+            music.setVolume(vol);
+        }
+        );
 
     addScene<PauseScene>(window, "pause", [this]() { resume(); }, [this]() { switchTo("menu"); });
 
     switchTo("menu");
+
+    music.play();
 }
 
 std::weak_ptr<Player> SceneManager::getPlayer() {

@@ -1,11 +1,12 @@
 #include "SettingsScene.hpp"
 
-SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback):
+SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback, const std::function<void(float)> &setSoundVolumeCallback):
 Scene(window_, name), backgroundImage(textureBackground),
 slider(window, 300.f, 0.2f),
 checkbox(window, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
-onBackClick(backCallback) {
+onBackClick(backCallback),
+setSoundVolumeCallback(setSoundVolumeCallback) {
 
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
@@ -58,6 +59,9 @@ void SettingsScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
+        if (slider.isInChange()) {
+            setSoundVolumeCallback(slider.getValue() * 100.f);
+        }
         checkbox.update(dt);
         buttonBack.update(dt);
     }

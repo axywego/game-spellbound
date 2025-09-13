@@ -75,6 +75,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/generators/BuffsGenerator.hpp
         src/scenes/CharacterSelectScene.cpp
         src/scenes/CharacterSelectScene.hpp
+        src/core/Music.cpp
+        src/core/Music.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

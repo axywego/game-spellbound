@@ -68,6 +68,14 @@ namespace UI {
         circle.setPosition(rightRectangle.getPosition() + sf::Vector2f(0.f, 10.f));
     }
 
+    float Slider::getValue() const {
+        return value;
+    }
+
+    bool Slider::isInChange() const {
+        return inChange;
+    }
+
     bool Slider::isHovered() const {
         const auto mousePos = sf::Mouse::getPosition(*window);
         return circle.getGlobalBounds().contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});

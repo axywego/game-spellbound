@@ -9,6 +9,7 @@ ResourceManager& ResourceManager::getInstance() {
     if (!initialized) {
         instance.loadTextures();
         instance.loadFonts();
+        instance.loadSounds();
         initialized = true;
     }
     return instance;
@@ -89,6 +90,27 @@ void ResourceManager::loadFonts() {
     }
 }
 
+void ResourceManager::loadSounds() {
+    std::lock_guard lock(sounds_mutex);
+
+    const std::string basePath = "../resources/sounds/";
+
+    auto loadSound = [&](const std::string& key, const std::string& path) {
+        auto sound = std::make_unique<sf::SoundBuffer>();
+        if (!sound->loadFromFile(basePath + path)) {
+            throw std::runtime_error("Failed to load sound: " + path);
+        }
+        sounds[key] = std::move(sound);
+    };
+
+    try {
+        //loadSound("steps", "steps.wav");
+    } catch (const std::exception& e) {
+        sounds.clear();
+        throw e;
+    }
+}
+
 sf::Texture& ResourceManager::getTexture(const std::string& name) {
     std::lock_guard lock(textures_mutex);
 
@@ -111,6 +133,16 @@ sf::Font& ResourceManager::getFont(const std::string& name) {
     return *it->second;
 }
 
+sf::SoundBuffer & ResourceManager::getSound(const std::string &name) {
+    std::lock_guard lock(sounds_mutex);
+
+    const auto it = sounds.find(name);
+    if (it == sounds.end() || !it->second) {
+        throw std::runtime_error("Sound not found: " + name);
+    }
+    return *it->second;
+}
+
 const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& ResourceManager::getAllTextures() const {
     return textures;
 }
@@ -118,3 +150,8 @@ const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& ResourceMan
 const std::unordered_map<std::string, std::unique_ptr<sf::Font>> & ResourceManager::getAllFonts() const {
     return fonts;
 }
+
+const std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> & ResourceManager::getAllSounds() const {
+    return sounds;
+}
+

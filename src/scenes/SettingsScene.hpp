@@ -28,9 +28,10 @@ private:
     UI::Button buttonBack;
 
     std::function<void()> onBackClick;
+    std::function<void(float)> setSoundVolumeCallback;
 
 public:
-    SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &backCallback);
+    SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &backCallback, const std::function<void(float)> &setSoundVolumeCallback);
 
     void load() override ;
 
