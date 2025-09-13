@@ -43,5 +43,5 @@ uint64_t generate8Bytes(const uint64_t& from, const uint64_t& to) {
 
 bool generateByChance(const uint64_t& chance){
     auto num = generate8Bytes(0, 100);
-    return num < chance ? true : false;
+    return num < chance;
 }
