@@ -77,6 +77,8 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/scenes/CharacterSelectScene.hpp
         src/core/Music.cpp
         src/core/Music.hpp
+        src/core/Sound.cpp
+        src/core/Sound.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
