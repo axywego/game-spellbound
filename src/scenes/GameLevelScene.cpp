@@ -39,6 +39,8 @@ void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, con
                     projectile->getCollisionRect().findIntersection(enemy->getCollisionRect())
                     ) {
                     projectile->onHit(enemy.get());
+
+                    SoundManager::getInstance().getSound("enemy_hit").play();
                 }
             }
 
@@ -46,6 +48,9 @@ void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, con
                 playerMeleeAreaAttack->findIntersection(enemy->getCollisionRect())
                 ){
                 enemy->takeDamage(playerPtr->getDamage());
+
+                SoundManager::getInstance().getSound("knight_attack").play();
+                SoundManager::getInstance().getSound("enemy_hit").play();
             }
 
             enemy->update(dt);
@@ -68,6 +73,8 @@ void GameLevelScene::updateBuffs(const std::shared_ptr<Player>& playerPtr, const
     for (auto it = buffs.begin(); it != buffs.end(); ) {
         if ((*it)->getSprite().getGlobalBounds().findIntersection(playerPtr->getCollisionRect())) {
             (*it)->onPickup(playerPtr.get());
+
+            SoundManager::getInstance().getSound("pickup_buff").play();
         }
 
         if ((*it)->getIsPickup()) {

@@ -57,7 +57,7 @@ void SceneManager::initScenes() {
             switchTo("menu");
         },
         [this](float vol) {
-            music.setVolume(vol);
+            music->setVolume(vol);
         }
         );
 
@@ -65,7 +65,7 @@ void SceneManager::initScenes() {
 
     switchTo("menu");
 
-    music.play();
+    music->play();
 }
 
 std::weak_ptr<Player> SceneManager::getPlayer() {
@@ -87,6 +87,9 @@ void SceneManager::switchTo(const std::string& sceneName) {
         if (it->first.contains("dungeon")) {
             isPaused = false;
             pausedScene = {"", nullptr};
+
+            music->pause();
+
             updateGameLevels();
         }
         nextScene = it->second;

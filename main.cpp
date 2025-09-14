@@ -50,6 +50,9 @@ int main() {
 
     window.setMouseCursorVisible(true);
 
+    MusicManager::setBasePath("../resources/music/");
+    MusicManager::registerMusic("main", "1.wav");
+
     UI::HUD::getInstance().init(window);
 
     sf::Clock clock;

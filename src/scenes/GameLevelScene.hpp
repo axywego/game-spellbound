@@ -7,6 +7,7 @@
 #include "../entities/enemy/Enemy.hpp"
 #include "../generators/EnemyGenerator.hpp"
 #include "../core/UI/HUD.hpp"
+#include "../core/Audio/SoundManager.hpp"
 
 #include <functional>
 

@@ -5,18 +5,13 @@
 #include <memory>
 #include <string>
 
-#include <SFML/Audio.hpp>
-
 class ResourceManager {
 private:
     std::unordered_map<std::string, std::unique_ptr<sf::Texture>> textures;
     std::unordered_map<std::string, std::unique_ptr<sf::Font>> fonts;
-    std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>> sounds;
-    std::unordered_map<std::string, std::unique_ptr<sf::Music>> songs;
+
     std::mutex textures_mutex;
     std::mutex fonts_mutex;
-    std::mutex sounds_mutex;
-    std::mutex songs_mutex;
 
     ResourceManager() = default;
     ~ResourceManager() = default;
@@ -28,13 +23,10 @@ public:
 
     void loadTextures();
     void loadFonts();
-    void loadSounds();
 
     sf::Texture& getTexture(const std::string& name);
     sf::Font& getFont(const std::string& name);
-    sf::SoundBuffer& getSound(const std::string& name);
 
     const std::unordered_map<std::string, std::unique_ptr<sf::Texture>>& getAllTextures() const;
     const std::unordered_map<std::string, std::unique_ptr<sf::Font>>& getAllFonts() const;
-    const std::unordered_map<std::string, std::unique_ptr<sf::SoundBuffer>>& getAllSounds() const;
 };
