@@ -25,7 +25,7 @@ void SoundManager::loadSounds() {
 
 	try {
 		loadSound("enemy_hit", "enemy_hit.wav");
-		loadSound("death", "death.mp3");
+		//loadSound("death", "death.mp3");
 		loadSound("knight_attack", "knight_attack.wav");
 		loadSound("pickup_buff", "pickup_buff.wav");
 		loadSound("player_hit", "player_hit.mp3");

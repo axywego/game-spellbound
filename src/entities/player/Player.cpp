@@ -1,5 +1,7 @@
 #include "Player.hpp"
 
+#include "../../core/Audio/SoundManager.hpp"
+
 Player::Player(const sf::Texture& texture_, const Tilemap& map_):
 Mob(texture_, map_, sf::FloatRect {{40.f, 44.f},
 {64.f, 52.f}}) { }
@@ -59,6 +61,8 @@ void Player::attacking(const float& dt) {
         if(typeDamage == TypeDamage::Melee && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked){
             checkMelee();
             hasAttacked = true;
+
+            SoundManager::getInstance().getSound("knight_attack").play();
         }
 
         else if(typeDamage == TypeDamage::Ranged && animController.isSameAnimation("attack") && animController.hasPenultFrame() && !hasAttacked) {

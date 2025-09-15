@@ -49,7 +49,6 @@ void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, con
                 ){
                 enemy->takeDamage(playerPtr->getDamage());
 
-                SoundManager::getInstance().getSound("knight_attack").play();
                 SoundManager::getInstance().getSound("enemy_hit").play();
             }
 

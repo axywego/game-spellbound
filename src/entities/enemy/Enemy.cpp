@@ -1,4 +1,5 @@
 #include "Enemy.hpp"
+#include "../../core/Audio/SoundManager.hpp"
 
 Enemy::Enemy(const sf::Texture& texture, const Tilemap& map_, const sf::FloatRect& collisionRect_,
     const std::weak_ptr<Player> &player_)
@@ -52,7 +53,10 @@ void Enemy::attacking(const float& dt) {
 }
 
 void Enemy::meleeAttack() const {
-    if(getDistanceToPlayer() <= attackRange) player.lock()->takeDamage(*stats.getCurrentValue(StatType::Damage).value());
+    if(getDistanceToPlayer() <= attackRange) {
+        player.lock()->takeDamage(*stats.getCurrentValue(StatType::Damage).value());
+        SoundManager::getInstance().getSound("player_hit").play();
+    }
 }
 
 float Enemy::getDistanceToPlayer() const {
