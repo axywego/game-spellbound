@@ -5,13 +5,38 @@
 #include "../core/SettingsManager.hpp"
 
 SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
-    // initializing;
     worlds.insert({"1_dungeon_world", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
-    worlds.insert({"2_dungeon_world", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
-    //player = PlayerFactory::create(PlayerClass::Mage, worlds["test"]->getTilemap());
-    //player->setPosition({50 * 16 * 5 + 16 / 2, 50 * 16 * 5 + 16 / 2});
     initScenes();
+}
 
+void SceneManager::createDungeonScene(int levelNumber) {
+    std::string worldKey = std::format("{}_dungeon_world", levelNumber);
+    std::string sceneKey = std::format("{}_dungeon_scene", levelNumber);
+
+    auto newWorld = std::make_shared<GameWorld>(WorldGenerator::generateDungeon());
+    worlds[worldKey] = std::move(newWorld);
+
+    auto onExitForScene = [this, levelNumber]() {
+        createDungeonScene(levelNumber + 1);
+
+        std::string newWorldKey = std::format("{}_dungeon_world", levelNumber + 1);
+        std::string newSceneKey = std::format("{}_dungeon_scene", levelNumber + 1);
+
+        player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
+        player->setTilemap(worlds[newWorldKey]->getTilemap());
+
+        switchTo(newSceneKey);
+
+        std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
+    };
+
+    auto onPauseForScene = [this]() {
+        this->pause();
+    };
+
+    addScene<GameLevelScene>(
+        window, sceneKey, *worlds[worldKey], getPlayer(), onPauseForScene, std::move(onExitForScene)
+    );
 }
 
 void SceneManager::initScenes() {
@@ -25,37 +50,20 @@ void SceneManager::initScenes() {
     addScene<CharacterSelectScene>(window, "select_character",
         [this](){ switchTo("menu"); },
         [&](const PlayerClass playerClass) {
+
             player = PlayerFactory::create(playerClass, worlds["1_dungeon_world"]->getTilemap());
             player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
 
-            addScene<GameLevelScene>(window,
-                "1_dungeon_scene",
-                *worlds["1_dungeon_world"],
-                getPlayer(),
-                [this]() { pause(); },
-                [this]() {
-                    switchTo("2_dungeon_scene");
-                    player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
-                    player->setTilemap(worlds["2_dungeon_world"]->getTilemap());
-                });
-            addScene<GameLevelScene>(window,
-                "2_dungeon_scene",
-                *worlds["2_dungeon_world"],
-                getPlayer(),
-                [this]() { pause(); },
-                [this]() {
-                    switchTo("3_dungeon_scene");
-                    player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
-                    player->setTilemap(worlds["3_dungeon_world"]->getTilemap());
-                });
+            createDungeonScene(1);
 
+            player->setTilemap(worlds["1_dungeon_world"]->getTilemap());
             switchTo("1_dungeon_scene");
         }
     );
 
     addScene<SettingsScene>(window, "settings",
         [this]() {
-            switchTo("menu");
+            switchTo("menu ");
         },
         [this](float vol) {
             music->setVolume(vol);
@@ -89,9 +97,7 @@ void SceneManager::switchTo(const std::string& sceneName) {
         if (it->first.contains("dungeon")) {
             isPaused = false;
             pausedScene = {"", nullptr};
-
             music->pause();
-
             updateGameLevels();
         }
         nextScene = it->second;
@@ -131,34 +137,17 @@ void SceneManager::resume() {
 }
 
 void SceneManager::updateGameLevels() {
-    if (const auto sceneName = currentScene->getName(); sceneName.contains("dungeon")) {
 
-        const size_t underscore_pos = sceneName.find('_');
-        try {
-            const int current_number = std::stoi(sceneName.substr(0, underscore_pos));
-            const int next_number = current_number + 2;
+    if (currentScene && currentScene->getName().find("dungeon") != std::string::npos) {
+        std::string currentSceneName = currentScene->getName();
 
-            const std::string next_world_key = std::format("{}_dungeon_world", next_number);
-            const std::string next_scene_key = std::format("{}_dungeon_scene", next_number);
+        if (const auto underscorePos = currentSceneName.find('_'); underscorePos != std::string::npos) {
+            const int currentLevelNumber = std::stoi(currentSceneName.substr(0, underscorePos));
+            int nextLevelNumber = currentLevelNumber + 1;
 
-            worlds[next_world_key] = std::make_shared<GameWorld>(WorldGenerator::generateDungeon());
-            addScene<GameLevelScene>(window,
-                next_scene_key,
-                *worlds[next_world_key],
-                getPlayer(),
-                [this]() { pause(); },
-                [this, next_number]() {
-                    const std::string next_scene = std::to_string(next_number + 1) + "_dungeon_scene";
-                    const std::string next_world = std::to_string(next_number + 1) + "_dungeon_world";
-
-                    switchTo(next_scene);
-                    player->setTilemap(worlds[next_world]->getTilemap());
-                    player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
-                }
-            );
-        }
-        catch (const std::exception& e) {
-            std::cerr << "Failed to update game levels: " << e.what() << std::endl;
+            if (const std::string nextSceneKey = std::format("{}_dungeon_scene", nextLevelNumber); !scenes.contains(nextSceneKey)) {
+                createDungeonScene(nextLevelNumber);
+            }
         }
     }
 }

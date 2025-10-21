@@ -32,6 +32,8 @@ private:
 public:
     SceneManager(sf::RenderWindow& window_);
 
+    void createDungeonScene(int levelNumber);
+
     void initScenes();
 
     std::weak_ptr<Player> getPlayer();
