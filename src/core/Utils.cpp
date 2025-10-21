@@ -1,5 +1,9 @@
 #include "Utils.hpp"
 
+#include <cmath>
+#include <fstream>
+#include <iostream>
+
 float distance(const sf::Vector2f& a, const sf::Vector2f& b) {
     return sqrtf(powf(a.x - b.x, 2) + powf(a.y - b.y, 2));
 }
@@ -92,4 +96,13 @@ bool isOnScreen(const sf::FloatRect& objRect, const sf::RenderTarget& window) {
         {viewSize.x, viewSize.y}});
 
     return objRect.findIntersection(viewport).has_value();
+}
+
+nlohmann::json getVariablesFromFile(const std::string &fileName) {
+    std::fstream file(fileName);
+
+    nlohmann::json json = nlohmann::json::parse(file);
+
+    file.close();
+    return json;
 }

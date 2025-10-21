@@ -76,6 +76,14 @@ namespace UI {
         onClick = func;
     }
 
+    void CheckBox::setValue(bool value) {
+        checked = value;
+    }
+
+    bool CheckBox::getValue() const {
+        return checked;
+    }
+
     bool CheckBox::isHovered() const {
         const auto mousePos = sf::Mouse::getPosition(*window);
         return checkMarkRect.contains({static_cast<float>(mousePos.x),static_cast<float>(mousePos.y)});

@@ -1,27 +1,21 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include "src/core/ResourceManager.hpp"
+#include "src/core/SaveSystem.hpp"
+#include "src/core/SettingsManager.hpp"
 #include "src/scenes/SceneManager.hpp"
 #include "src/core/UI/HUD.hpp"
 
 class FPSCounter {
 private:
-    sf::Text text;
-    sf::Font font;
     sf::Clock clock;
     unsigned int frameCount = 0;
-    float updateTime = 0.5f; // Обновлять FPS каждые 0.5 секунды
+    float updateTime = 0.5f;
     float timeSinceLastUpdate = 0.f;
     float currentFPS = 0.f;
 
 public:
-    FPSCounter(): font("../resources/fonts/Cafe24PROUP.ttf"), text(font) {
-        text.setFont(font);
-        text.setCharacterSize(20);
-        text.setFillColor(sf::Color::White);
-        text.setPosition({10,10});
-        text.setStyle(sf::Text::Bold);
-    }
+    FPSCounter() = default;
 
     void update(float dt) {
         frameCount++;
@@ -35,20 +29,18 @@ public:
             std::ostringstream ss;
             ss << "FPS: " << static_cast<int>(currentFPS);
             std::cout << ss.str() << std::endl;
-            text.setString(ss.str());
         }
-    }
-
-    void draw(sf::RenderWindow& window) {
-        window.draw(text);
     }
 };
 
 
 int main() {
-    sf::RenderWindow window(sf::VideoMode({1920, 1080}), "ndnn", sf::State::Fullscreen);
+    sf::RenderWindow window(sf::VideoMode({1920, 1080}), "aga", sf::State::Fullscreen);
 
     window.setMouseCursorVisible(true);
+
+    SaveSystem::getInstance().init();
+    window.setVerticalSyncEnabled(SettingsManager::getInstance().getIsVerticalSync());
 
     MusicManager::setBasePath("../resources/music/");
     MusicManager::registerMusic("main", "1.wav");
@@ -68,8 +60,6 @@ int main() {
 
         fpsCounter.update(dt);
 
-        //manager.getPlayer().lock()->getSprite().getPosition();
-
         while (const std::optional event = window.pollEvent()) {
             manager.handleEvent(event);
         }
@@ -79,8 +69,6 @@ int main() {
         window.clear();
 
         manager.render(window);
-
-        fpsCounter.draw(window);
 
         window.display();
 

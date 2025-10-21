@@ -30,6 +30,10 @@ namespace UI {
 
         void setFunc(const std::function<void(const bool&)>& func);
 
+        void setValue(bool value);
+
+        bool getValue() const;
+
         bool isHovered() const;
 
         bool isClicked(const std::optional<sf::Event> &event) const;

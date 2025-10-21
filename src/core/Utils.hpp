@@ -1,7 +1,7 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <cmath>
+#include <nlohmann/json.hpp>
 
 float distance(const sf::Vector2f& a, const sf::Vector2f& b);
 
@@ -23,3 +23,5 @@ std::optional<sf::Vector2f> lineIntersection(
 bool isOnScreen(const sf::Sprite& obj, const sf::RenderTarget& window);
 
 bool isOnScreen(const sf::FloatRect& objRect, const sf::RenderTarget& window);
+
+nlohmann::json getVariablesFromFile(const std::string &fileName);

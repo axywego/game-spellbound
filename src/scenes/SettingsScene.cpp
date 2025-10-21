@@ -1,12 +1,15 @@
 #include "SettingsScene.hpp"
 
-SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback, const std::function<void(float)> &setSoundVolumeCallback):
+#include "../core/SaveSystem.hpp"
+#include "../core/SettingsManager.hpp"
+
+SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback, const std::function<void(float)> &setMusicVolumeCallback):
 Scene(window_, name), backgroundImage(textureBackground),
-slider(window, 300.f, 0.2f),
+sliderMusic(window, 300.f, 0.2f),
 checkbox(window, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
 onBackClick(backCallback),
-setSoundVolumeCallback(setSoundVolumeCallback) {
+setMusicVolumeCallback(setMusicVolumeCallback) {
 
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
@@ -17,13 +20,13 @@ setSoundVolumeCallback(setSoundVolumeCallback) {
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
 
-    slider.setTransform(Transform{
+    sliderMusic.setTransform(Transform{
         {100.f, 400.f},
         0.f,
-        slider.getCurrentTransform().scale
+        sliderMusic.getCurrentTransform().scale
     });
 
-    slider.setValue(1.f);
+    sliderMusic.setValue(1.f);
 
 
     buttonBack.setPosition({50.f, 50.f});
@@ -43,6 +46,9 @@ setSoundVolumeCallback(setSoundVolumeCallback) {
     checkbox.setFunc([this](const bool& checked) {
         window.setVerticalSyncEnabled(checked);
     });
+
+    sliderMusic.setValue(SettingsManager::getInstance().getMusicValue());
+    checkbox.setValue(SettingsManager::getInstance().getIsVerticalSync());
 }
 
 void SettingsScene::load()  {
@@ -60,8 +66,8 @@ void SettingsScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
-        if (slider.isInChange()) {
-            setSoundVolumeCallback(slider.getValue() * 100.f);
+        if (sliderMusic.isInChange()) {
+            setMusicVolumeCallback(sliderMusic.getValue() * 100.f);
         }
         checkbox.update(dt);
         buttonBack.update(dt);
@@ -74,7 +80,7 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
     renderTarget.draw(backgroundImage);
 
     buttonBack.render();
-    slider.render();
+    sliderMusic.render();
     checkbox.render();
 
     if(isTransition) renderTarget.draw(circle);
@@ -82,22 +88,15 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
 
 void SettingsScene::handleEvent(const std::optional<sf::Event>& event)  {
     if(buttonBack.isClicked(event)) {
+        SaveSystem::getInstance().saveSettings();
         onBackClick();
     }
 
     checkbox.handleInput(event);
+    SettingsManager::getInstance().setIsVerticalSync(checkbox.getValue());
 
-    slider.handleInput(event);
-
-    // if(event){
-    //     if(const auto* key = event->getIf<sf::Event::KeyPressed>()){
-    //         if(key->code == sf::Keyboard::Key::Escape)
-    //             onExitClick();
-    //         if(key->code == sf::Keyboard::Key::Enter){
-    //             onStartClick();
-    //         }
-    //     }
-    // }
+    sliderMusic.handleInput(event);
+    SettingsManager::getInstance().setMusicValue(sliderMusic.getValue());
 }
 
 sf::Vector2f SettingsScene::getCameraCenter() const {

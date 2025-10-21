@@ -9,15 +9,15 @@ TileType determineTileType(const TiledShape& map, int x, int y) {
         return TileType::Void;
     }
 
-    bool top = x > 0 && map[x-1][y].getFillColor() == sf::Color::Black;
-    bool bottom = x < map.size() && map[x+1][y].getFillColor() == sf::Color::Black;
-    bool left = y > 0 && map[x][y-1].getFillColor() == sf::Color::Black;
-    bool right = y < map[0].size() && map[x][y+1].getFillColor() == sf::Color::Black;
+    const bool top = x > 0 && map[x-1][y].getFillColor() == sf::Color::Black;
+    const bool bottom = x < map.size() && map[x+1][y].getFillColor() == sf::Color::Black;
+    const bool left = y > 0 && map[x][y-1].getFillColor() == sf::Color::Black;
+    const bool right = y < map[0].size() && map[x][y+1].getFillColor() == sf::Color::Black;
 
-    bool emptyTopLeft = x > 0 && y > 0 && map[x-1][y-1].getFillColor() == sf::Color::Black;
-    bool emptyTopRight = x > 0 && y < map[0].size() && map[x-1][y+1].getFillColor() == sf::Color::Black;
-    bool emptyBottomLeft = x < map.size() && y > 0 && map[x+1][y-1].getFillColor() == sf::Color::Black;
-    bool emptyBottomRight = x < map.size() && y < map[0].size() && map[x+1][y+1].getFillColor() == sf::Color::Black;
+    const bool emptyTopLeft = x > 0 && y > 0 && map[x-1][y-1].getFillColor() == sf::Color::Black;
+    const bool emptyTopRight = x > 0 && y < map[0].size() && map[x-1][y+1].getFillColor() == sf::Color::Black;
+    const bool emptyBottomLeft = x < map.size() && y > 0 && map[x+1][y-1].getFillColor() == sf::Color::Black;
+    const bool emptyBottomRight = x < map.size() && y < map[0].size() && map[x+1][y+1].getFillColor() == sf::Color::Black;
 
     if (top && !bottom && left && !right) return TileType::CornerTopLeft;
     if (!top && bottom && left && !right) return TileType::CornerBottomLeft;
@@ -29,10 +29,10 @@ TileType determineTileType(const TiledShape& map, int x, int y) {
     if (!top && bottom && !left && !right) return TileType::WallBottom;
     if (!top && !bottom && !left && !right) {
         if(emptyBottomLeft) return TileType::JointBottomLeft;
-        else if(emptyBottomRight) return TileType::JointBottomRight;
-        else if(emptyTopLeft) return TileType::JointTopLeft;
-        else if(emptyTopRight) return TileType::JointTopRight;
-        else return TileType::Floor;
+        if(emptyBottomRight) return TileType::JointBottomRight;
+        if(emptyTopLeft) return TileType::JointTopLeft;
+        if(emptyTopRight) return TileType::JointTopRight;
+        return TileType::Floor;
     }
 
     return TileType::Void;
@@ -59,6 +59,17 @@ Tile::Tile(const sf::Texture &texture, const sf::IntRect &rect, bool collision, 
     sprite.setScale({scale, scale});
 }
 
+Tilemap & Tilemap::operator=(const Tilemap &other) {
+    if (this != &other) {
+        tileset = other.tileset;
+        tiles = other.tiles;
+        collisionTiles = other.collisionTiles;
+        worldSize = other.worldSize;
+        spatialGrid = other.spatialGrid;
+        spatialCollisionGrid = other.spatialCollisionGrid;
+    }
+    return *this;
+}
 std::vector<Tile> Tilemap::getCollisionTiles() const {
     return collisionTiles;
 }
@@ -167,11 +178,11 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
 }
 
 void Tilemap::buildSpatialGrid() {
-    int worldWidthPixels = worldSize.x * cellSize;
-    int worldHeightPixels = worldSize.y * cellSize;
+    const int worldWidthPixels = worldSize.x * cellSize;
+    const int worldHeightPixels = worldSize.y * cellSize;
 
-    int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
-    int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
+    const int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
+    const int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
 
     spatialGrid.clear();
     spatialGrid.resize(gridWidth);
@@ -180,8 +191,8 @@ void Tilemap::buildSpatialGrid() {
     }
 
     for (const auto& tile : tiles) {
-        int gridX = tile.getGlobalBounds().position.x / cellSize;
-        int gridY = tile.getGlobalBounds().position.y / cellSize;
+        const int gridX = tile.getGlobalBounds().position.x / cellSize;
+        const int gridY = tile.getGlobalBounds().position.y / cellSize;
 
         if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
             spatialGrid[gridX][gridY].emplace_back(&tile);
@@ -190,11 +201,11 @@ void Tilemap::buildSpatialGrid() {
 }
 
 void Tilemap::buildSpatialCollisionGrid() {
-    int worldWidthPixels = worldSize.x * cellSize;
-    int worldHeightPixels = worldSize.y * cellSize;
+    const int worldWidthPixels = worldSize.x * cellSize;
+    const int worldHeightPixels = worldSize.y * cellSize;
 
-    int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
-    int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
+    const int gridWidth = (worldWidthPixels + cellSize - 1) / cellSize;
+    const int gridHeight = (worldHeightPixels + cellSize - 1) / cellSize;
 
     spatialCollisionGrid.clear();
     spatialCollisionGrid.resize(gridWidth);
@@ -203,8 +214,8 @@ void Tilemap::buildSpatialCollisionGrid() {
     }
 
     for (const auto& tile : collisionTiles) {
-        int gridX = tile.getGlobalBounds().position.x / cellSize;
-        int gridY = tile.getGlobalBounds().position.y / cellSize;
+        const int gridX = tile.getGlobalBounds().position.x / cellSize;
+        const int gridY = tile.getGlobalBounds().position.y / cellSize;
 
         if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
             spatialCollisionGrid[gridX][gridY].emplace_back(&tile);
@@ -227,7 +238,9 @@ std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, con
     //     }
     // }
 
-    sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
+    const sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
+
+    std::cout << cellSize << '\n';
 
     const int minGridX = std::max(0, static_cast<int>(bounds.position.x / cellSize));
     const int maxGridX = std::min(static_cast<int>(spatialCollisionGrid.size() - 1),

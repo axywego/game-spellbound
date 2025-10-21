@@ -22,16 +22,16 @@ private:
     sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
     sf::Sprite backgroundImage;
 
-    UI::Slider slider;
+    UI::Slider sliderMusic;
     UI::CheckBox checkbox;
 
     UI::Button buttonBack;
 
     std::function<void()> onBackClick;
-    std::function<void(float)> setSoundVolumeCallback;
+    std::function<void(float)> setMusicVolumeCallback;
 
 public:
-    SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &backCallback, const std::function<void(float)> &setSoundVolumeCallback);
+    SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &backCallback, const std::function<void(float)> &setMusicVolumeCallback);
 
     void load() override ;
 

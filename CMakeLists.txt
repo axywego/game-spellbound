@@ -10,10 +10,13 @@ FetchContent_Declare(
         GIT_TAG 3.0.1
 )
 
-FetchContent_MakeAvailable(SFML)
+FetchContent_Declare(
+        json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+)
 
-message(STATUS "SFML include dir: ${SFML_INCLUDE_DIR}")
-message(STATUS "SFML libraries: ${SFML_LIBRARIES}")
+FetchContent_MakeAvailable(SFML)
+FetchContent_MakeAvailable(json)
 
 add_executable(SPELLBOUND_GAME main.cpp
         src/core/AnimationController.cpp
@@ -79,6 +82,10 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/Audio/MusicManager.hpp
         src/core/Audio/SoundManager.cpp
         src/core/Audio/SoundManager.hpp
+        src/core/SaveSystem.cpp
+        src/core/SaveSystem.hpp
+        src/core/SettingsManager.cpp
+        src/core/SettingsManager.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME
@@ -88,6 +95,8 @@ target_link_libraries(SPELLBOUND_GAME
         sfml-system
         sfml-audio
         sfml-network
+
+        nlohmann_json::nlohmann_json
 )
 
 if(WIN32)

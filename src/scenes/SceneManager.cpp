@@ -2,6 +2,7 @@
 
 #include "CharacterSelectScene.hpp"
 #include "SettingsScene.hpp"
+#include "../core/SettingsManager.hpp"
 
 SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     // initializing;
@@ -59,12 +60,13 @@ void SceneManager::initScenes() {
         [this](float vol) {
             music->setVolume(vol);
         }
-        );
+    );
 
     addScene<PauseScene>(window, "pause", [this]() { resume(); }, [this]() { switchTo("menu"); });
 
     switchTo("menu");
 
+    music->setVolume(SettingsManager::getInstance().getMusicValue() * 100.f);
     music->play();
 }
 

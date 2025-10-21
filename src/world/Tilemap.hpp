@@ -45,15 +45,17 @@ private:
     std::vector<Tile> tiles;
     std::vector<Tile> collisionTiles;
     sf::Vector2u worldSize;
-    float tileSize = 16.f;
-    float worldScale = 5.0f;
+    const float tileSize = 16.f;
+    const float worldScale = 5.0f;
+    const float cellSize = 80.f;
 
     std::vector<std::vector<std::vector<const Tile*>>> spatialGrid;
     std::vector<std::vector<std::vector<const Tile*>>> spatialCollisionGrid;
-    float cellSize = tileSize * worldScale;
 
 public:
     Tilemap() = default;
+
+    Tilemap& operator=(const Tilemap& other);
 
     std::vector<Tile> getCollisionTiles() const;
 
