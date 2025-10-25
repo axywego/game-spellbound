@@ -63,7 +63,7 @@ void SceneManager::initScenes() {
 
     addScene<SettingsScene>(window, "settings",
         [this]() {
-            switchTo("menu ");
+            switchTo("menu");
         },
         [this](float vol) {
             music->setVolume(vol);
