@@ -1,4 +1,5 @@
 #include "Generator.hpp"
+#include <iostream>
 
 std::atomic<uint64_t> rndm_generator::counter{0};
 
@@ -38,6 +39,7 @@ uint64_t rndm_generator::generate() {
 uint64_t generate8Bytes(const uint64_t& from, const uint64_t& to) {
     thread_local rndm_generator g;
     const auto rand = g.generate();
+    std::cout << "rand: " << rand << '\n';
     return from + (rand % (to - from + 1));
 }
 

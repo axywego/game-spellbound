@@ -1,10 +1,6 @@
 #include "BuffsGenerator.hpp"
 
 std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& player) {
-    // pseudo random generation means 3/4 chance that the buff won't appear
-    if (const auto num = generate8Bytes(0, 3); num == 0) {
-        return std::nullopt;
-    }
 
     if(generateByChance(30) == false){
         return std::nullopt;
@@ -22,7 +18,7 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
     std::vector<StatModifier> buffs;
     buffs.reserve(countBuffs);
     for (auto i = 0; i < countBuffs; ++i) {
-        switch (const auto indexBuff = generate8Bytes(0, allCountBuffs - 1)) {
+        switch (generate8Bytes(0, allCountBuffs - 1)) {
             case 0: {
                 const auto maxHealth = player.getMaxHealth();
                 const auto val = generate8Bytes(1, static_cast<uint64_t>(maxHealth));
@@ -50,8 +46,8 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
                 break;
             }
             case 4: {
-                const auto val = generate8Bytes(1, static_cast<uint64_t>(player.getCurrentMana()));
-                buffs.emplace_back(StatType::Mana, ModifierType::Flat, static_cast<float>(val));
+                const float val = generate8Bytes(1, static_cast<uint64_t>(player.getCurrentMana() + 1)) / 4.f;
+                buffs.emplace_back(StatType::Mana, ModifierType::Flat, val);
                 nameBuff += std::format("mana +{};", val);
                 break;
             }
@@ -63,7 +59,7 @@ std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& pl
                 break;
             }
             case 6: {
-                const auto val = -0.05f;
+                constexpr auto val = -0.025f;
                 buffs.emplace_back(StatType::ManaCost, ModifierType::Flat, val);
                 nameBuff += std::format("mana cost {};", val);
                 break;

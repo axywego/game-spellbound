@@ -2,7 +2,6 @@
 
 #include <unordered_map>
 #include <vector>
-#include <functional>
 #include "StatModifier.hpp"
 #include <optional>
 
@@ -14,12 +13,7 @@ private:
 
     std::vector<StatModifier> activeModifiers;
 
-    bool isDirty = true;
-
-    std::vector<std::function<void(StatType, float, float)>> onChangeCallbacks;
-
     void recalculateStats();
-    void notifyChanges();
 
 public:
     void setBaseAttribute(StatType type, float value);
@@ -27,11 +21,6 @@ public:
 
     std::optional<float*> getCurrentValue(StatType type);
 
-    void modifyResource(StatType type, float amount);
-    void setResource(StatType type, float value);
-
     void addModifier(const StatModifier& modifier);
     void clearAllModifiers();
-
-    void addChangeCallback(const std::function<void(StatType, float, float)>& callback);
 };
