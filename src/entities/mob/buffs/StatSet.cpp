@@ -36,11 +36,17 @@ void StatSet::recalculateStats() {
             currentValues[key] = baseValue;
         }
     }
-    for (const auto& mod : activeModifiers) {
-        std::cout << static_cast<unsigned>(mod.targetStat) << std::endl;
-        currentValues[mod.targetStat] += mod.value;
-    }
 
+    for (auto mod_it  = activeModifiers.begin(); mod_it != activeModifiers.end(); ) {
+        std::cout << static_cast<unsigned>(mod_it->targetStat) << std::endl;
+        currentValues[mod_it->targetStat] += mod_it->value;
+        if (mod_it->targetStat == StatType::Health || mod_it->targetStat == StatType::Mana) {
+            mod_it = activeModifiers.erase(mod_it);
+        }
+        else {
+            ++mod_it;
+        }
+    }
 }
 
 void StatSet::addModifier(const StatModifier& modifier) {

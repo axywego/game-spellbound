@@ -34,7 +34,7 @@ void Player::update(const float& dt) {
     //     maxMana = *stats.getCurrentValue(StatType::MaxMana).value();
     // }
     float* manaPtr = stats.getCurrentValue(StatType::Mana).value_or(nullptr);
-    float* maxManaPtr = stats.getCurrentValue(StatType::Mana).value_or(nullptr);
+    float* maxManaPtr = stats.getCurrentValue(StatType::MaxMana).value_or(nullptr);
 
     if (manaPtr && maxManaPtr) {
         auto& mana = *manaPtr;
