@@ -1,5 +1,7 @@
 #include "StatSet.hpp"
 #include <algorithm>
+#include <iostream>
+#include <ostream>
 
 void StatSet::setBaseAttribute(StatType type, float value) {
     baseAttributes[type] = value;
@@ -30,11 +32,15 @@ std::optional<float*> StatSet::getCurrentValue(StatType type) {
 
 void StatSet::recalculateStats() {
     for (auto& [key, baseValue] : baseAttributes) {
-        currentValues[key] = baseValue;
+        if (key != StatType::Health && key != StatType::Mana) {
+            currentValues[key] = baseValue;
+        }
     }
     for (const auto& mod : activeModifiers) {
+        std::cout << static_cast<unsigned>(mod.targetStat) << std::endl;
         currentValues[mod.targetStat] += mod.value;
     }
+
 }
 
 void StatSet::addModifier(const StatModifier& modifier) {
