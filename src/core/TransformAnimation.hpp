@@ -10,6 +10,7 @@ struct Transform {
     sf::Vector2f position;
     float rotation{};
     sf::Vector2f scale;
+    sf::Vector2f size;
 };
 
 namespace Animation {
@@ -17,6 +18,7 @@ namespace Animation {
         Move,
         Rotate,
         Scale,
+        SlideShow,
     };
 
     namespace Easing {
@@ -74,6 +76,16 @@ namespace Animation {
         Type getType() const override;
     };
 
+    class SlideShow final : public Base {
+    public:
+        std::vector<sf::Texture> textures;
+        sf::Vector2f pos;
+
+        SlideShow(const std::vector<sf::Texture>& textures, const float& duration);
+        void apply(sf::Sprite& sprite, const float& progress) override;
+        Type getType() const override;
+    };
+
     std::shared_ptr<Base> createMoveAnimation(sf::Vector2f start, sf::Vector2f delta,
                                             const std::function<float(float)>& easing, float duration);
 
@@ -82,6 +94,8 @@ namespace Animation {
 
     std::shared_ptr<Base> createScaleAnimation(const sf::Vector2f& fromScale, const sf::Vector2f& toScale,
                                             const std::function<float(float)>& easing, float duration);
+
+    std::shared_ptr<Base> createSlideShowAnimation(const std::vector<sf::Texture>& textures, const float& duration);
 
     struct AnimationData {
         float progress = 0.0f;

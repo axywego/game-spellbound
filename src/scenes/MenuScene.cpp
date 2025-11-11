@@ -4,7 +4,7 @@ MenuScene::MenuScene(sf::RenderWindow& window_, const std::string& name, const s
     const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback):
 
 Scene(window_, name), backgroundImage(textureBackground),
-startButton(ResourceManager::getInstance().getTexture("start_button"), window),
+startButton(window),
 settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
 exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),
 onStartClick(startCallback),
@@ -21,9 +21,9 @@ onExitClick(exitCallback) {
     circle.setPosition(target);
 
 
-    const auto scaleStartButton = startButton.getCurrentTransform().scale;
-    const auto scaleSettingsButton = settingsButton.getCurrentTransform().scale;
-    const auto scaleExitButton = exitButton.getCurrentTransform().scale;
+    constexpr auto scaleStartButton = sf::Vector2f{0.3f, 0.3f};
+    constexpr auto scaleSettingsButton = sf::Vector2f{1.f, 1.f};
+    constexpr auto scaleExitButton = sf::Vector2f{1.f, 1.f};
 
     auto anim1 = Animation::createScaleAnimation(
         scaleStartButton, {scaleStartButton.x + 0.1f, scaleStartButton.y + 0.1f},
@@ -38,13 +38,22 @@ onExitClick(exitCallback) {
         std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
 
-    startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
-    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim1, false));
+    sf::Texture texture1 = ResourceManager::getInstance().getTexture("anim_start_btn_1");
+    sf::Texture texture2 = ResourceManager::getInstance().getTexture("anim_start_btn_2");
+    sf::Texture texture3 = ResourceManager::getInstance().getTexture("anim_start_btn_3");
+    auto animation = Animation::createSlideShowAnimation(
+        {texture1, texture2, texture3}, 0.75f
+    );
 
-    settingsButton.setTransform(Transform{{50.f, 600.f}, 0.f, {startButton.getCurrentTransform().scale}});
+    // startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
+    // startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim1, false));
+    startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {0.3f, 0.3f}});
+    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(animation, true));
+
+    settingsButton.setTransform(Transform{{50.f, 600.f}, 0.f, {settingsButton.getCurrentTransform().scale}});
     settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim2, false));
 
-    exitButton.setTransform(Transform{sf::Vector2f{50.f, 700.f}, 0.f, startButton.getCurrentTransform().scale});
+    exitButton.setTransform(Transform{sf::Vector2f{50.f, 700.f}, 0.f, exitButton.getCurrentTransform().scale});
     exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim3, false));
 }
 

@@ -60,6 +60,12 @@ void ResourceManager::loadTextures() {
 
         loadTexture("buff_item", basePath + "real img/2 Dungeon Tileset/2 Objects/Bookshelf decor/24.png");
 
+        loadTexture("default_texture", basePath + "img/default.png");
+
+        loadTexture("anim_start_btn_1", basePath + "img/start_btn1.png");
+        loadTexture("anim_start_btn_2", basePath + "img/start_btn2.png");
+        loadTexture("anim_start_btn_3", basePath + "img/start_btn3.png");
+
         std::cout << "all textures was loaded!\n";
 
     } catch (const std::exception& e) {

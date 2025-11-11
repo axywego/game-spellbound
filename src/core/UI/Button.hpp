@@ -9,6 +9,8 @@ namespace UI {
         sf::Sprite sprite;
 
     public:
+        Button(sf::RenderWindow& window_);
+
         Button(const sf::Texture& texture_, sf::RenderWindow& window_);
 
         void setTransform(const Transform& t) override;
