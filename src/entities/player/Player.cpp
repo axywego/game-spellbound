@@ -27,13 +27,24 @@ void Player::update(const float& dt) {
         timerDelayMana -= dt;
     }
 
-    auto& mana = *stats.getCurrentValue(StatType::Mana).value();
-    auto& maxMana = *stats.getCurrentValue(StatType::MaxMana).value();
+    // float& mana, &maxMana;
+    //
+    // if (const auto manaOpt = stats.getCurrentValue(StatType::Mana)) {
+    //     mana = *manaOpt.value();
+    //     maxMana = *stats.getCurrentValue(StatType::MaxMana).value();
+    // }
+    float* manaPtr = stats.getCurrentValue(StatType::Mana).value_or(nullptr);
+    float* maxManaPtr = stats.getCurrentValue(StatType::Mana).value_or(nullptr);
 
-    if(mana < maxMana && timerDelayMana <= 0.f){
-        if(timerMana >= timeToUpMana){
-            mana += manaToUpPerTime;
-            timerMana = 0.f;
+    if (manaPtr && maxManaPtr) {
+        auto& mana = *manaPtr;
+        auto& maxMana = *maxManaPtr;
+
+        if(mana < maxMana && timerDelayMana <= 0.f){
+            if(timerMana >= timeToUpMana){
+                mana += manaToUpPerTime;
+                timerMana = 0.f;
+            }
         }
     }
 
