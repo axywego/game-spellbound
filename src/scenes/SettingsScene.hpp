@@ -23,6 +23,7 @@ private:
     sf::Sprite backgroundImage;
 
     UI::Slider sliderMusic;
+    UI::Slider sliderSound;
     UI::CheckBox checkbox;
 
     UI::Button buttonBack;

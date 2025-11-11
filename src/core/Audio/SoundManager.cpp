@@ -1,5 +1,7 @@
 #include "SoundManager.hpp"
 
+#include "../SettingsManager.hpp"
+
 SoundManager & SoundManager::getInstance() {
 	static SoundManager instance;
 	instance.loadSounds();
@@ -42,6 +44,7 @@ sf::Sound& SoundManager::getSound(const std::string &name) {
 	if (it == sounds.end() || !it->second) {
 		throw std::runtime_error("Sound not found: " + name);
 	}
+	it->second->setVolume(SettingsManager::getInstance().getSoundValue() * 100.f);
 	return *it->second;
 }
 

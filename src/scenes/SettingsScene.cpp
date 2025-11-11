@@ -6,6 +6,7 @@
 SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback, const std::function<void(float)> &setMusicVolumeCallback):
 Scene(window_, name), backgroundImage(textureBackground),
 sliderMusic(window, 300.f, 0.2f),
+sliderSound(window, 300.f, 0.2f),
 checkbox(window, false),
 buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
 onBackClick(backCallback),
@@ -26,8 +27,13 @@ setMusicVolumeCallback(setMusicVolumeCallback) {
         sliderMusic.getCurrentTransform().scale
     });
 
-    sliderMusic.setValue(1.f);
+    sliderSound.setTransform(Transform{
+        {500.f, 400.f},
+        0.f,
+        sliderMusic.getCurrentTransform().scale
+    });
 
+    //sliderMusic.setValue(1.f);
 
     buttonBack.setPosition({50.f, 50.f});
 
@@ -48,6 +54,7 @@ setMusicVolumeCallback(setMusicVolumeCallback) {
     });
 
     sliderMusic.setValue(SettingsManager::getInstance().getMusicValue());
+    sliderSound.setValue(SettingsManager::getInstance().getSoundValue());
     checkbox.setValue(SettingsManager::getInstance().getIsVerticalSync());
 }
 
@@ -81,6 +88,7 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
 
     buttonBack.render();
     sliderMusic.render();
+    sliderSound.render();
     checkbox.render();
 
     if(isTransition) renderTarget.draw(circle);
@@ -97,6 +105,9 @@ void SettingsScene::handleEvent(const std::optional<sf::Event>& event)  {
 
     sliderMusic.handleInput(event);
     SettingsManager::getInstance().setMusicValue(sliderMusic.getValue());
+
+    sliderSound.handleInput(event);
+    SettingsManager::getInstance().setSoundValue(sliderSound.getValue());
 }
 
 sf::Vector2f SettingsScene::getCameraCenter() const {
