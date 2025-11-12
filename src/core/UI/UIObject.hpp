@@ -63,6 +63,8 @@ namespace UI {
 
         virtual void setScale(const sf::Vector2f& scale) = 0;
 
+        virtual void setRotation(const float degrees) = 0;
+
         virtual bool isHovered() const = 0;
 
         virtual bool isClicked(const std::optional<sf::Event>& event) const = 0;

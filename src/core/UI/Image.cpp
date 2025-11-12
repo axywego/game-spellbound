@@ -7,13 +7,12 @@ namespace UI {
     Image::Image(sf::RenderWindow &window_, const sf::Texture &texture_):
     UIObject(window_),
     texture(texture_),
-    sprite(texture_) {
-        std::cout << "eblan" << '\n';
-    }
+    sprite(texture_) { }
 
     void Image::setTransform(const Transform &t) {
         transform = t;
         setPosition(transform.position);
+        setRotation(transform.rotation);
         setScale(transform.scale);
     }
 
@@ -27,6 +26,10 @@ namespace UI {
 
     void Image::setScale(const sf::Vector2f &scale) {
         sprite.setScale(scale);
+    }
+
+    void Image::setRotation(const float degrees) {
+        sprite.setRotation(sf::degrees(degrees));
     }
 
     bool Image::isHovered() const {
@@ -51,7 +54,7 @@ namespace UI {
             const bool isHoveredBool = isHovered();
 
             for (auto&& [el_anim, el_timer] :
-              std::views::zip(animations[currentAnimType], animationProgressInSec[currentAnimType])){
+                std::views::zip(animations[currentAnimType], animationProgressInSec[currentAnimType])){
                 auto& [anim, data] = el_anim;
 
                 if (isHoveredBool) {

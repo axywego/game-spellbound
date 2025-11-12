@@ -75,9 +75,7 @@ namespace Animation {
             index = static_cast<int>(textures.size()) - 1;
         }
 
-        const auto pos = sprite.getPosition();
         sprite.setTexture(textures[index], true);
-        sprite.setPosition(pos);
     }
 
     Type SlideShow::getType() const {

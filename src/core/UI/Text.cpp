@@ -50,6 +50,7 @@ namespace UI {
     void Text::setTransform(const Transform &t) {
         transform = t;
         setPosition(transform.position);
+        setRotation(transform.rotation);
         setScale(transform.scale);
     }
 
@@ -63,6 +64,10 @@ namespace UI {
 
     void Text::setScale(const sf::Vector2f &scale) {
         text.setScale(scale);
+    }
+
+    void Text::setRotation(const float degrees) {
+        return;
     }
 
     bool Text::isHovered() const {

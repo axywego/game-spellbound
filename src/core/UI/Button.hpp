@@ -11,10 +11,6 @@ namespace UI {
 
         Button(const sf::Texture& texture_, sf::RenderWindow& window_);
 
-        void setTransform(const Transform& t) override;
-
-        Transform getCurrentTransform() const override;
-
         void setPosition(const sf::Vector2f& pos) override;
 
         void setScale(const sf::Vector2f &scale) override;

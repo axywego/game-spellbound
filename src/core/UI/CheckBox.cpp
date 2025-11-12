@@ -26,6 +26,7 @@ namespace UI {
     void CheckBox::setTransform(const Transform &t) {
         transform = t;
         setScale(transform.scale);
+        setRotation(transform.rotation);
         setPosition(transform.position);
         checkMarkRect.position = frame[0].getPosition();
         checkMarkRect.size = {10.f * transform.scale.x, 10.f * transform.scale.y};
@@ -70,6 +71,10 @@ namespace UI {
 
         checkMark.setScale(scale);
         checkMark.setPosition({frame[0].getSize().x * scale.x / 2.f, frame[1].getSize().y * scale.y / 2.f});
+    }
+
+    void CheckBox::setRotation(const float degrees) {
+        return;
     }
 
     void CheckBox::setFunc(const std::function<void(const bool&)> &func) {

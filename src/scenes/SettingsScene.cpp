@@ -8,7 +8,7 @@ Scene(window_, name), backgroundImage(textureBackground),
 sliderMusic(window, 300.f, 0.2f),
 sliderSound(window, 300.f, 0.2f),
 checkbox(window, false),
-buttonBack(ResourceManager::getInstance().getTexture("exit_button"), window),
+backButton(ResourceManager::getInstance().getTexture("anim_exit_btn_1"), window),
 onBackClick(backCallback),
 setMusicVolumeCallback(setMusicVolumeCallback) {
 
@@ -35,7 +35,28 @@ setMusicVolumeCallback(setMusicVolumeCallback) {
 
     //sliderMusic.setValue(1.f);
 
-    buttonBack.setPosition({50.f, 50.f});
+    auto animationScaleExitButton = Animation::createScaleAnimation(
+        {0.3f, 0.3f}, {0.34f, 0.34f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
+    );
+
+    sf::Texture textureAnimExitBtn1 = ResourceManager::getInstance().getTexture("anim_exit_btn_1");
+    sf::Texture textureAnimExitBtn2 = ResourceManager::getInstance().getTexture("anim_exit_btn_2");
+    sf::Texture textureAnimExitBtn3 = ResourceManager::getInstance().getTexture("anim_exit_btn_3");
+    auto animationExitBtn = Animation::createSlideShowAnimation(
+        {textureAnimExitBtn1, textureAnimExitBtn2, textureAnimExitBtn3}, 0.75f
+    );
+
+    backButton.setTransform(Transform{
+            sf::Vector2f{50.f, 50.f},
+            0.f,
+            {0.3f, 0.3f}
+        }
+    );
+    backButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationExitBtn, true), std::make_pair(animationScaleExitButton, false)
+    );
 
     checkbox.setTransform(Transform{
         {100.f, 600.f},
@@ -77,7 +98,7 @@ void SettingsScene::update(const float& dt)  {
             setMusicVolumeCallback(sliderMusic.getValue() * 100.f);
         }
         checkbox.update(dt);
-        buttonBack.update(dt);
+        backButton.update(dt);
     }
 }
 
@@ -86,7 +107,7 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
 
     renderTarget.draw(backgroundImage);
 
-    buttonBack.render();
+    backButton.render();
     sliderMusic.render();
     sliderSound.render();
     checkbox.render();
@@ -95,7 +116,7 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
 }
 
 void SettingsScene::handleEvent(const std::optional<sf::Event>& event)  {
-    if(buttonBack.isClicked(event)) {
+    if(backButton.isClicked(event)) {
         SaveSystem::getInstance().saveSettings();
         onBackClick();
     }

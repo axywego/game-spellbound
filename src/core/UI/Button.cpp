@@ -24,17 +24,6 @@ namespace UI {
         transform.size = sprite.getGlobalBounds().size;
     }
 
-
-    void Button::setTransform(const Transform &t) {
-        transform = t;
-        setPosition(t.position);
-        setScale(t.scale);
-    }
-
-    Transform Button::getCurrentTransform() const {
-        return transform;
-    }
-
     /**
       @param pos позиция крайней левой верхней точки
      */
@@ -47,10 +36,6 @@ namespace UI {
         sprite.setScale(scale);
         this->setPosition(pos);
     }
-
-    // void Button::update(const float& dt) {
-    //
-    // }
 
     void Button::render() const {
         window->draw(sprite);

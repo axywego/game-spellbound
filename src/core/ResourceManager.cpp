@@ -15,7 +15,7 @@ ResourceManager& ResourceManager::getInstance() {
 }
 
 void ResourceManager::loadTextures() {
-    std::lock_guard lock(textures_mutex);
+    //std::lock_guard lock(textures_mutex);
 
     const std::string basePath = "../resources/";
 
@@ -34,10 +34,6 @@ void ResourceManager::loadTextures() {
         loadTexture("health", basePath + "real img/4 GUI/4 Bars/BarsMap.png");
         loadTexture("icons", basePath + "real img/4 GUI/3 Icons/Iconset1.png");
         loadTexture("menu_background", basePath + "img/backgroundMenu.png");
-
-        loadTexture("start_button", basePath + "img/startBtn.png");
-        loadTexture("settings_button", basePath + "img/settingsBtn.png");
-        loadTexture("exit_button", basePath + "img/exitBtn.png");
 
         loadTexture("back_button", basePath + "img/backBtn.png");
         loadTexture("select_button", basePath + "img/selectBtn.png");
@@ -62,14 +58,22 @@ void ResourceManager::loadTextures() {
 
         loadTexture("default_texture", basePath + "img/default.png");
 
-        loadTexture("anim_start_btn_1", basePath + "img/start_btn1.png");
-        loadTexture("anim_start_btn_2", basePath + "img/start_btn2.png");
-        loadTexture("anim_start_btn_3", basePath + "img/start_btn3.png");
+        loadTexture("anim_start_btn_1", basePath + "img/start_btn_1.png");
+        loadTexture("anim_start_btn_2", basePath + "img/start_btn_2.png");
+        loadTexture("anim_start_btn_3", basePath + "img/start_btn_3.png");
 
-        loadTexture("anim_background_menu_1", basePath + "img/background_menu1.png");
-        loadTexture("anim_background_menu_2", basePath + "img/background_menu2.png");
-        loadTexture("anim_background_menu_3", basePath + "img/background_menu3.png");
-        loadTexture("anim_background_menu_4", basePath + "img/background_menu4.png");
+        loadTexture("anim_settings_btn_1", basePath + "img/settings_btn_1.png");
+        loadTexture("anim_settings_btn_2", basePath + "img/settings_btn_2.png");
+        loadTexture("anim_settings_btn_3", basePath + "img/settings_btn_3.png");
+
+        loadTexture("anim_exit_btn_1", basePath + "img/exit_btn_1.png");
+        loadTexture("anim_exit_btn_2", basePath + "img/exit_btn_2.png");
+        loadTexture("anim_exit_btn_3", basePath + "img/exit_btn_3.png");
+
+        loadTexture("anim_background_menu_1", basePath + "img/background_menu_1.png");
+        loadTexture("anim_background_menu_2", basePath + "img/background_menu_2.png");
+        loadTexture("anim_background_menu_3", basePath + "img/background_menu_3.png");
+        //loadTexture("anim_background_menu_4", basePath + "img/background_menu_4.png");
 
         std::cout << "all textures was loaded!\n";
 

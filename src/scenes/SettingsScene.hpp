@@ -26,7 +26,7 @@ private:
     UI::Slider sliderSound;
     UI::CheckBox checkbox;
 
-    UI::Button buttonBack;
+    UI::Button backButton;
 
     std::function<void()> onBackClick;
     std::function<void(float)> setMusicVolumeCallback;

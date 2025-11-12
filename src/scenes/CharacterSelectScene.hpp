@@ -21,7 +21,11 @@ private:
     sf::Sprite archerSprite;
     sf::Sprite knightSprite;
 
-    std::function<void()> backtoMenuCallback;
+    // UI::Image mageSprite;
+    // UI::Image archerSprite;
+    // UI::Image knightSprite;
+
+    std::function<void()> backToMenuCallback;
     std::function<void(PlayerClass)> startGameCallback;
 
     PlayerClass player {PlayerClass::Mage};

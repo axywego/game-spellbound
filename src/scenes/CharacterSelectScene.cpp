@@ -8,15 +8,20 @@ selectButton(ResourceManager::getInstance().getTexture("select_button"), window)
 backButton(ResourceManager::getInstance().getTexture("back_button"), window),
 prevButton(ResourceManager::getInstance().getTexture("prev_button"), window),
 nextButton(ResourceManager::getInstance().getTexture("next_button"), window),
+// mageSprite(window, ResourceManager::getInstance().getTexture("player_mage")),
+// archerSprite(window, ResourceManager::getInstance().getTexture("player_archer")),
+// knightSprite(window, ResourceManager::getInstance().getTexture("player_knight")),
 mageSprite(ResourceManager::getInstance().getTexture("player_mage")),
 archerSprite(ResourceManager::getInstance().getTexture("player_archer")),
 knightSprite(ResourceManager::getInstance().getTexture("player_knight")),
-backtoMenuCallback(backToMenu),
+backToMenuCallback(backToMenu),
 startGameCallback(startGame)
 {
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
     view.setCenter(target);
+
+
 
     mageSprite.setTextureRect({{0,0}, {32, 32}});
     mageSprite.setScale({7.f, 7.f});
@@ -59,7 +64,7 @@ void CharacterSelectScene::render(sf::RenderTarget &renderTarget) {
 
 void CharacterSelectScene::handleEvent(const std::optional<sf::Event> &event) {
     if (backButton.isClicked(event)) {
-        backtoMenuCallback();
+        backToMenuCallback();
     }
     if (selectButton.isClicked(event)) {
         startGameCallback(playerClasses[currentPlayer].first);

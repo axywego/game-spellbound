@@ -28,6 +28,8 @@ namespace UI {
 
         void setScale(const sf::Vector2f &scale) override;
 
+        void setRotation(const float degrees) override;
+
         void setFunc(const std::function<void(const bool&)>& func);
 
         void setValue(bool value);

@@ -18,6 +18,7 @@ namespace UI {
     void Slider::setTransform(const Transform& t) {
         transform = t;
         setPosition(transform.position);
+        setRotation(transform.rotation);
         setScale(transform.scale);
     }
 
@@ -33,6 +34,10 @@ namespace UI {
 
     void Slider::setScale(const sf::Vector2f &scale) {
 
+    }
+
+    void Slider::setRotation(const float degrees) {
+        return;
     }
 
     void Slider::handleInput(const std::optional<sf::Event> &event) {

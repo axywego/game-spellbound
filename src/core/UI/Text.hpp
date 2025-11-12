@@ -32,6 +32,8 @@ namespace UI {
 
         void setScale(const sf::Vector2f& scale) override;
 
+        void setRotation(const float degrees) override;
+
         bool isHovered() const override;
 
         bool isClicked(const std::optional<sf::Event>& event) const override;

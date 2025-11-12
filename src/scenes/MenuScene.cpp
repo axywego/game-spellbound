@@ -6,8 +6,8 @@ MenuScene::MenuScene(sf::RenderWindow& window_, const std::string& name, const s
 Scene(window_, name),
 backgroundImage(window_, ResourceManager::getInstance().getTexture("anim_background_menu_1")),
 startButton(ResourceManager::getInstance().getTexture("anim_start_btn_1"), window),
-settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
-exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),
+settingsButton(ResourceManager::getInstance().getTexture("anim_settings_btn_1"), window),
+exitButton(ResourceManager::getInstance().getTexture("anim_exit_btn_1"), window),
 onStartClick(startCallback),
 onSettingsClick(settingsCallback),
 onExitClick(exitCallback) {
@@ -21,53 +21,97 @@ onExitClick(exitCallback) {
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
 
-
-    constexpr auto scaleStartButton = sf::Vector2f{0.3f, 0.3f};
-    constexpr auto scaleSettingsButton = sf::Vector2f{1.f, 1.f};
-    constexpr auto scaleExitButton = sf::Vector2f{1.f, 1.f};
-
-    auto anim1 = Animation::createScaleAnimation(
-        scaleStartButton, {scaleStartButton.x + 0.1f, scaleStartButton.y + 0.1f},
-        std::function{Animation::Easing::easeInOutQuad}, 0.2f
-    );
-    auto anim2 = Animation::createScaleAnimation(
-        scaleSettingsButton, {scaleSettingsButton.x + 0.1f, scaleSettingsButton.y + 0.1f},
-        std::function{Animation::Easing::easeInOutQuad}, 0.2f
-    );
-    auto anim3 = Animation::createScaleAnimation(
-        scaleExitButton, {scaleExitButton.x + 0.1f, scaleExitButton.y + 0.1f},
+    auto animationScaleStartButton = Animation::createScaleAnimation(
+        {0.3f, 0.3f}, {0.34f, 0.34f},
         std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
 
-    sf::Texture texture1 = ResourceManager::getInstance().getTexture("anim_start_btn_1");
-    sf::Texture texture2 = ResourceManager::getInstance().getTexture("anim_start_btn_2");
-    sf::Texture texture3 = ResourceManager::getInstance().getTexture("anim_start_btn_3");
-    auto animation = Animation::createSlideShowAnimation(
-        {texture1, texture2, texture3}, 0.75f
+    auto animationScaleSettingsButton = Animation::createScaleAnimation(
+        {0.3f, 0.3f}, {0.34f, 0.34f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
 
-    sf::Texture texture4 = ResourceManager::getInstance().getTexture("anim_background_menu_1");
-    sf::Texture texture5 = ResourceManager::getInstance().getTexture("anim_background_menu_2");
-    sf::Texture texture6 = ResourceManager::getInstance().getTexture("anim_background_menu_3");
-    sf::Texture texture7 = ResourceManager::getInstance().getTexture("anim_background_menu_4");
-
-    auto animation_background = Animation::createSlideShowAnimation(
-        {texture4, texture5, texture6, texture7}, 1.f
+    auto animationScaleExitButton = Animation::createScaleAnimation(
+        {0.3f, 0.3f}, {0.34f, 0.34f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
     );
 
-    backgroundImage.setTransform(Transform{{0.f, 0.f}, 0.f, {1.f, 1.f}});
-    backgroundImage.addAnimation(UI::Image::TypeAnimation::SlideShow, std::make_pair(animation_background, true));
+    sf::Texture textureAnimStartBtn1 = ResourceManager::getInstance().getTexture("anim_start_btn_1");
+    sf::Texture textureAnimStartBtn2 = ResourceManager::getInstance().getTexture("anim_start_btn_2");
+    sf::Texture textureAnimStartBtn3 = ResourceManager::getInstance().getTexture("anim_start_btn_3");
+    auto animationStartBtn = Animation::createSlideShowAnimation(
+        {textureAnimStartBtn1, textureAnimStartBtn2, textureAnimStartBtn3}, 0.75f
+    );
 
-    // startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
-    // startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim1, false));
-    startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {0.3f, 0.3f}});
-    startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(animation, true));
+    sf::Texture textureAnimSettingsBtn1 = ResourceManager::getInstance().getTexture("anim_settings_btn_1");
+    sf::Texture textureAnimSettingsBtn2 = ResourceManager::getInstance().getTexture("anim_settings_btn_2");
+    sf::Texture textureAnimSettingsBtn3 = ResourceManager::getInstance().getTexture("anim_settings_btn_3");
+    auto animationSettingsBtn = Animation::createSlideShowAnimation(
+        {textureAnimSettingsBtn1, textureAnimSettingsBtn2, textureAnimSettingsBtn3}, 0.75f
+    );
 
-    settingsButton.setTransform(Transform{{50.f, 600.f}, 0.f, {settingsButton.getCurrentTransform().scale}});
-    settingsButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim2, false));
+    sf::Texture textureAnimExitBtn1 = ResourceManager::getInstance().getTexture("anim_exit_btn_1");
+    sf::Texture textureAnimExitBtn2 = ResourceManager::getInstance().getTexture("anim_exit_btn_2");
+    sf::Texture textureAnimExitBtn3 = ResourceManager::getInstance().getTexture("anim_exit_btn_3");
+    auto animationExitBtn = Animation::createSlideShowAnimation(
+        {textureAnimExitBtn1, textureAnimExitBtn2, textureAnimExitBtn3}, 0.75f
+    );
 
-    exitButton.setTransform(Transform{sf::Vector2f{50.f, 700.f}, 0.f, exitButton.getCurrentTransform().scale});
-    exitButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim3, false));
+    // sf::Texture textureBackMenu1 = ResourceManager::getInstance().getTexture("anim_background_menu_1");
+    // sf::Texture textureBackMenu2 = ResourceManager::getInstance().getTexture("anim_background_menu_2");
+    // sf::Texture textureBackMenu3 = ResourceManager::getInstance().getTexture("anim_background_menu_3");
+    //
+    // auto animationBackground = Animation::createSlideShowAnimation(
+    //     {textureBackMenu1, textureBackMenu2}, 0.7f
+    // );
+    //
+    // Setting backgroundImage
+    // backgroundImage.setTransform(Transform{
+    //         {0.f, 0.f},
+    //         0.f,
+    //         {1.f, 1.f}
+    //     }
+    // );
+    // backgroundImage.addAnimation(
+    //     UI::Image::TypeAnimation::SlideShow,
+    //     std::make_pair(animationBackground, true)
+    // );
+
+    // Setting startButton
+    startButton.setTransform(Transform{
+            {700.f, 400.f},
+            -8.f,
+            {0.3f, 0.3f}
+        }
+    );
+    startButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationStartBtn, true), std::make_pair(animationScaleStartButton, false)
+    );
+
+    // Setting settingsButton
+    settingsButton.setTransform(Transform{
+            {720.f, 550.f},
+            -8.f,
+            {0.3f, 0.3f}
+        }
+    );
+    settingsButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationSettingsBtn, true), std::make_pair(animationScaleSettingsButton, false)
+    );
+
+    // Setting exitButton
+    exitButton.setTransform(Transform{
+            sf::Vector2f{740.f, 700.f},
+            -8.f,
+            {0.3f, 0.3f}
+        }
+    );
+    exitButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationExitBtn, true), std::make_pair(animationScaleExitButton, false)
+    );
 }
 
 void MenuScene::load()  {
@@ -117,16 +161,6 @@ void MenuScene::handleEvent(const std::optional<sf::Event>& event)  {
     if(exitButton.isClicked(event)) {
         onExitClick();
     }
-
-    // if(event){
-    //     if(const auto* key = event->getIf<sf::Event::KeyPressed>()){
-    //         if(key->code == sf::Keyboard::Key::Escape)
-    //             onExitClick();
-    //         if(key->code == sf::Keyboard::Key::Enter){
-    //             onStartClick();
-    //         }
-    //     }
-    // }
 }
 
 sf::Vector2f MenuScene::getCameraCenter() const {

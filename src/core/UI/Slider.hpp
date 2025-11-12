@@ -23,6 +23,8 @@ namespace UI {
 
         void setScale(const sf::Vector2f &scale) override;
 
+        void setRotation(const float degrees) override;
+
         void handleInput(const std::optional<sf::Event>& event);
 
         void setValue(const float &newValue);
