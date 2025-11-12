@@ -2,7 +2,7 @@
 
 std::optional<std::unique_ptr<BuffItem>> BuffsGenerator::create(const Player& player) {
 
-    if(generateByChance(99) == false){
+    if(generateByChance(30) == false){
         return std::nullopt;
     }
     auto allCountBuffs = static_cast<unsigned>(StatType::Count);

@@ -3,8 +3,9 @@
 MenuScene::MenuScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &startCallback,
     const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback):
 
-Scene(window_, name), backgroundImage(textureBackground),
-startButton(window),
+Scene(window_, name),
+backgroundImage(window_, ResourceManager::getInstance().getTexture("anim_background_menu_1")),
+startButton(ResourceManager::getInstance().getTexture("anim_start_btn_1"), window),
 settingsButton(ResourceManager::getInstance().getTexture("settings_button"), window),
 exitButton(ResourceManager::getInstance().getTexture("exit_button"), window),
 onStartClick(startCallback),
@@ -45,6 +46,18 @@ onExitClick(exitCallback) {
         {texture1, texture2, texture3}, 0.75f
     );
 
+    sf::Texture texture4 = ResourceManager::getInstance().getTexture("anim_background_menu_1");
+    sf::Texture texture5 = ResourceManager::getInstance().getTexture("anim_background_menu_2");
+    sf::Texture texture6 = ResourceManager::getInstance().getTexture("anim_background_menu_3");
+    sf::Texture texture7 = ResourceManager::getInstance().getTexture("anim_background_menu_4");
+
+    auto animation_background = Animation::createSlideShowAnimation(
+        {texture4, texture5, texture6, texture7}, 1.f
+    );
+
+    backgroundImage.setTransform(Transform{{0.f, 0.f}, 0.f, {1.f, 1.f}});
+    backgroundImage.addAnimation(UI::Image::TypeAnimation::SlideShow, std::make_pair(animation_background, true));
+
     // startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {startButton.getCurrentTransform().scale}});
     // startButton.addAnimation(UI::Button::TypeAnimation::Hovered, std::make_pair(anim1, false));
     startButton.setTransform(Transform{{50.f, 500.f}, 0.f, {0.3f, 0.3f}});
@@ -72,6 +85,8 @@ void MenuScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
+        backgroundImage.update(dt);
+
         startButton.update(dt);
         settingsButton.update(dt);
         exitButton.update(dt);
@@ -81,7 +96,7 @@ void MenuScene::update(const float& dt)  {
 void MenuScene::render(sf::RenderTarget& renderTarget)  {
     renderTarget.setView(view);
 
-    renderTarget.draw(backgroundImage);
+    backgroundImage.render();
 
     startButton.render();
     settingsButton.render();

@@ -1,12 +1,10 @@
 #pragma once
 
 #include "UIObject.hpp"
+#include "Image.hpp"
 
 namespace UI {
-    class Button final : public UIObject {
-    private:
-        sf::Texture texture;
-        sf::Sprite sprite;
+    class Button final : public Image {
 
     public:
         Button(sf::RenderWindow& window_);
@@ -21,11 +19,11 @@ namespace UI {
 
         void setScale(const sf::Vector2f &scale) override;
 
-        bool isHovered() const override;
+        // bool isHovered() const override;
+        //
+        // bool isClicked(const std::optional<sf::Event>& event) const override;
 
-        bool isClicked(const std::optional<sf::Event>& event) const override;
-
-        void update(const float& dt) override;
+        // void update(const float& dt) override;
 
         void render() const override;
     };

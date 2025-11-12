@@ -278,11 +278,17 @@ float Mob::getCurrentSpeed() const {
     return *stats.getCurrentValue(StatType::Speed).value();
 }
 
+/**
+    @brief возвращает -1.f, если у моба нет маны
+*/
 float Mob::getMaxMana() const {
     if (hasMana) return *stats.getCurrentValue(StatType::MaxMana).value();
     return -1.f;
 }
 
+/**
+    @brief возвращает -1.f, если у моба нет маны
+*/
 float Mob::getCurrentMana() const {
     if (hasMana) return *stats.getCurrentValue(StatType::Mana).value();
     return -1.f;

@@ -2,7 +2,9 @@
 
 #include "Scene.hpp"
 #include "../core/UI/Button.hpp"
+#include "../core/UI/Image.hpp"
 #include "../core/ResourceManager.hpp"
+
 
 #include <functional>
 
@@ -17,8 +19,10 @@ private:
     float transitionSpeed { 2.f };
     bool isTransition { true };
 
-    sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
-    sf::Sprite backgroundImage;
+    //sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
+    //sf::Sprite backgroundImage;
+
+    UI::Image backgroundImage;
 
     UI::Button startButton;
     UI::Button settingsButton;
