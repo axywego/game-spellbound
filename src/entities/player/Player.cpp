@@ -109,6 +109,10 @@ void Player::attacking(const float& dt) {
     }
 }
 
+PlayerClass Player::getPlayerClass() const {
+    return playerClass;
+}
+
 // move player
 void Player::move(const float& dt) {
     sf::Vector2f dir{0.f, 0.f};

@@ -15,8 +15,8 @@ std::vector<std::pair<std::unique_ptr<Enemy>, sf::Vector2f>> EnemyGenerator::gen
     std::vector<sf::Vector2f> positionsFloor;
 
     for(const auto& tile : map.getTilemap().getTiles()){
-        if(tile.getType() == TileType::Floor) {
-            const auto& bounds = tile.getGlobalBounds();
+        if(tile->getType() == TileType::Floor) {
+            const auto& bounds = tile->getGlobalBounds();
             const auto& center = WorldGenerator::getCenter();
             const float radius = WorldGenerator::getRadius() - (limitsTiles.x / 2) * tileSize;
 

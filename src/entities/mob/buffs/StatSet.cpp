@@ -54,6 +54,10 @@ void StatSet::addModifier(const StatModifier& modifier) {
     recalculateStats();
 }
 
+std::vector<StatModifier> StatSet::getActiveModifiers() const {
+    return activeModifiers;
+}
+
 
 void StatSet::clearAllModifiers() {
     if (!activeModifiers.empty()) {

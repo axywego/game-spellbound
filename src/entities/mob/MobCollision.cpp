@@ -43,16 +43,16 @@ sf::Vector2f MobCollision::checkCollisions(const Tilemap& map) const {
     sf::Vector2f incorrectDir {0.f, 0.f};
 
     for(const auto& spr : collisions) {
-        if (spr.getGlobalBounds().contains(lineHorizontalUp[0].position) || spr.getGlobalBounds().contains(lineHorizontalDown[0].position)){
+        if (spr->getGlobalBounds().contains(lineHorizontalUp[0].position) || spr->getGlobalBounds().contains(lineHorizontalDown[0].position)){
             incorrectDir.x = -1.f;
         }
-        else if (spr.getGlobalBounds().contains(lineHorizontalUp[1].position) || spr.getGlobalBounds().contains(lineHorizontalDown[1].position)){
+        else if (spr->getGlobalBounds().contains(lineHorizontalUp[1].position) || spr->getGlobalBounds().contains(lineHorizontalDown[1].position)){
             incorrectDir.x = 1.f;
         }
-        if (spr.getGlobalBounds().contains(lineVerticalLeft[0].position) || spr.getGlobalBounds().contains(lineVerticalRight[0].position)){
+        if (spr->getGlobalBounds().contains(lineVerticalLeft[0].position) || spr->getGlobalBounds().contains(lineVerticalRight[0].position)){
             incorrectDir.y = -1.f;
         }
-        else if (spr.getGlobalBounds().contains(lineVerticalLeft[1].position) || spr.getGlobalBounds().contains(lineVerticalRight[1].position)){
+        else if (spr->getGlobalBounds().contains(lineVerticalLeft[1].position) || spr->getGlobalBounds().contains(lineVerticalRight[1].position)){
             incorrectDir.y = 1.f;
         }
     }

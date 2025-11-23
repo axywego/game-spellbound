@@ -21,6 +21,8 @@ protected:
 
     sf::FloatRect attackArea;
 
+    PlayerClass playerClass;
+
     bool meleeAttacked = false;
     
 public:
@@ -35,6 +37,8 @@ public:
     void attack() override ;
 
     void attacking(const float& dt) override;
+
+    PlayerClass getPlayerClass() const;
 
     // move player
     void move(const float& dt) override;

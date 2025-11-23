@@ -1,15 +1,14 @@
 #include "Mage.hpp"
 
+#include "../mob/buffs/StatsBuilder.hpp"
+
 Mage::Mage(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_mage"), map) {
-    stats.setBaseAttribute(StatType::Speed, 425.f);
-    stats.setBaseAttribute(StatType::MaxHealth, 3.f);
-    stats.setBaseAttribute(StatType::Health, 3.f);
-    attackCooldownTime = 0.4f;
-    typeDamage = TypeDamage::Ranged;
-    stats.setBaseAttribute(StatType::Damage, 2.f);
-    stats.setBaseAttribute(StatType::MaxMana, 4.f);
-    stats.setBaseAttribute(StatType::Mana, 4.f);
-    stats.setBaseAttribute(StatType::ManaCost, 0.5f);
+	playerClass = PlayerClass::Mage;
+
+	stats = StatsBuilder::getBaseStatSetByPlayerClass(playerClass);
+
+	attackCooldownTime = 0.4f;
+	typeDamage = TypeDamage::Ranged;
 
     hasMana = true;
 

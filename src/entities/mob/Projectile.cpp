@@ -23,7 +23,7 @@ bool Projectile::checkCollisionWithWorld() {
     const auto collisions = map.getCollisionTiles();
 
     return std::ranges::any_of(collisions, [this](const auto& tile) {
-        return tile.getGlobalBounds().findIntersection(collisionRect).has_value();
+        return tile->getGlobalBounds().findIntersection(collisionRect).has_value();
     });
 }
 

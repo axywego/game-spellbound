@@ -16,6 +16,10 @@ void Enemy::setSpawnCallback(const std::function<void(std::unique_ptr<Enemy>, sf
     spawnCallback = callBack;
 }
 
+EnemyClass Enemy::getEnemyClass() const {
+    return enemyClass;
+}
+
 void Enemy::attacking(const float& dt) {
     if (isAttacking) {
         attackTimer -= dt;

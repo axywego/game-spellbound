@@ -86,6 +86,10 @@ add_executable(SPELLBOUND_GAME main.cpp
         src/core/SaveSystem.hpp
         src/core/SettingsManager.cpp
         src/core/SettingsManager.hpp
+        src/entities/mob/buffs/StatsBuilder.cpp
+        src/entities/mob/buffs/StatsBuilder.hpp
+        src/core/SaveLoaderManager.cpp
+        src/core/SaveLoaderManager.hpp
 )
 
 target_link_libraries(SPELLBOUND_GAME

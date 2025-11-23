@@ -73,6 +73,8 @@ void ResourceManager::loadTextures() {
         loadTexture("anim_background_menu_1", basePath + "img/background_menu_1.png");
         loadTexture("anim_background_menu_2", basePath + "img/background_menu_2.png");
         loadTexture("anim_background_menu_3", basePath + "img/background_menu_3.png");
+
+        loadTexture("continue_btn", basePath + "img/continue.png");
         //loadTexture("anim_background_menu_4", basePath + "img/background_menu_4.png");
 
         std::cout << "all textures was loaded!\n";

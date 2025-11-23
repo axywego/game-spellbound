@@ -11,6 +11,10 @@ const std::string& BuffItem::getName() const {
     return name;
 }
 
+std::vector<StatModifier> BuffItem::getOnPickupEffects() const {
+    return onPickupEffects;
+}
+
 bool BuffItem::getIsPickup() const {
     return isPickup;
 }

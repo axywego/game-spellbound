@@ -22,15 +22,22 @@ private:
     UI::Image backgroundImage;
 
     UI::Button startButton;
+    UI::Button continueButton;
     UI::Button settingsButton;
     UI::Button exitButton;
 
     std::function<void()> onStartClick;
     std::function<void()> onSettingsClick;
     std::function<void()> onExitClick;
+    std::function<void()> onContinueClick;
 
 public:
-    MenuScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &startCallback, const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback);
+    MenuScene(sf::RenderWindow& window_,
+        const std::string& name,
+        const std::function<void()> &startCallback,
+        const std::function<void()> &continueCallback,
+        const std::function<void()> &settingsCallback,
+        const std::function<void()> &exitCallback);
 
     void load() override ;
 

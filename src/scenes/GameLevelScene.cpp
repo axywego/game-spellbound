@@ -1,6 +1,8 @@
 #include "GameLevelScene.hpp"
 
 #include <utility>
+
+#include "../core/SaveSystem.hpp"
 #include "../generators/BuffsGenerator.hpp"
 
 GameLevelScene::GameLevelScene( sf::RenderWindow& window_, const std::string& name, GameWorld& world_, std::weak_ptr<Player> player_, std::function<void()> pauseCallback, std::function<void()> nextDungeonCallback):
@@ -13,16 +15,19 @@ requestPause(std::move(pauseCallback)),
 enemies(world_.getEnemies()),
 requestNextScene(std::move(nextDungeonCallback))
 {
-    auto generatedEnemies = EnemyGenerator::generateEnemies(gameWorld, player);
+    if (gameWorld.getEnemies().empty()) {
+        auto generatedEnemies = EnemyGenerator::generateEnemies(gameWorld, player);
 
-    for(auto& [enemy, pos] : generatedEnemies){
-        gameWorld.addEnemy(std::move(enemy), pos);
+        for(auto& [enemy, pos] : generatedEnemies){
+            gameWorld.addEnemy(std::move(enemy), pos);
+        }
     }
+    if (lastPlayerPos.x != 0.f && lastPlayerPos.y != 0.f)
+        player.lock()->setPosition(lastPlayerPos);
 }
 
 void GameLevelScene::load() {
-    if (lastPlayerPos.x != 0.f && lastPlayerPos.y != 0.f)
-        player.lock()->setPosition(lastPlayerPos);
+
 }
 
 void GameLevelScene::updateEnemies(const std::shared_ptr<Player>& playerPtr, const float &dt) const {
@@ -143,6 +148,8 @@ void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
                 case Key::Escape: {
                     lastPlayerPos = player.lock()->getSprite().getPosition();
                     requestPause();
+                    SaveSystem::getInstance().savePlayer(player);
+                    SaveSystem::getInstance().saveGameWorld(gameWorld);
                     break;
                 }
                 case Key::Space: {

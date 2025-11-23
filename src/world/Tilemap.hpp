@@ -120,12 +120,13 @@ public:
 class Tilemap {
 private:
     std::shared_ptr<sf::Texture> tileset;
-    std::vector<Tile> tiles;
-    std::vector<Tile> collisionTiles;
+    std::vector<Tile*> tiles;
+    std::vector<Tile*> collisionTiles;
     sf::Vector2u worldSize;
     const float tileSize = 16.f;
     const float worldScale = 5.0f;
     const float cellSize = 80.f;
+    TiledShape tiledShape;
 
     std::vector<std::vector<Tile*>> spatialGrid;
     std::vector<std::vector<Tile*>> spatialCollisionGrid;
@@ -135,21 +136,24 @@ public:
 
     Tilemap& operator=(const Tilemap& other);
 
-    std::vector<Tile> getCollisionTiles() const;
+    std::vector<Tile*> getCollisionTiles() const;
 
     void createFromTiledShape(const TiledShape& shape);
 
     void buildSpatialGrid();
     void buildSpatialCollisionGrid();
 
+    TiledShape getTiledShape() const;
+
     const sf::Vector2u& getWorldSize() const;
     float getTileSize() const;
     float getMapScale() const;
     const sf::Texture& getTileset() const;
-    std::vector<Tile> getCollisionTilesInRange(const sf::Vector2f& pos, const float& range) const;
+    std::vector<Tile*> getCollisionTilesInRange(const sf::Vector2f& pos, const float& range) const;
 
-    std::vector<Tile> getTiles() const;
+    std::vector<Tile*> getTiles() const;
 
     void render(sf::RenderTarget& target) const;
 
+    ~Tilemap();
 };

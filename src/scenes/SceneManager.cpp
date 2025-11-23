@@ -3,6 +3,7 @@
 #include "CharacterSelectScene.hpp"
 #include "SettingsScene.hpp"
 #include "../core/SettingsManager.hpp"
+#include "../core/SaveLoaderManager.hpp"
 
 SceneManager::SceneManager(sf::RenderWindow& window_): window(window_) {
     worlds.insert({"1_dungeon_world", {std::make_shared<GameWorld>(WorldGenerator::generateDungeon())}});
@@ -42,9 +43,42 @@ void SceneManager::createDungeonScene(int levelNumber) {
 void SceneManager::initScenes() {
 
     addScene<MenuScene>(window, "menu",
-                        [this]() { switchTo("select_character"); },
-                        [this]() { switchTo("settings"); },
-                        [this]() { window.close(); }
+        [this]() { switchTo("select_character"); },
+        [this]() {
+            player = SaveLoaderManager::getInstance().getSavedPlayer();
+            worlds["1_dungeon_world"] = std::move(SaveLoaderManager::getInstance().getSavedGameWorld(player));
+            std::cout << "SIZE OF TILES!!!" << worlds["1_dungeon_world"]->getTilemap().getTiles().size() << std::endl;
+
+            player->setTilemap(worlds["1_dungeon_world"]->getTilemap());
+
+            int levelNumber = 1;
+            auto onExitForScene = [this, levelNumber]() {
+                createDungeonScene(levelNumber + 1);
+
+                std::string newWorldKey = std::format("{}_dungeon_world", levelNumber + 1);
+                std::string newSceneKey = std::format("{}_dungeon_scene", levelNumber + 1);
+
+                player->setPosition({50 * 16 * 5 + 16.f / 2, 50 * 16 * 5 + 16.f / 2});
+                player->setTilemap(worlds[newWorldKey]->getTilemap());
+
+                switchTo(newSceneKey);
+
+                std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
+            };
+
+            auto onPauseForScene = [this]() {
+                this->pause();
+            };
+
+
+            addScene<GameLevelScene>(
+                window, "1_dungeon_scene", *worlds["1_dungeon_world"], getPlayer(), onPauseForScene, std::move(onExitForScene)
+            );
+
+            switchTo("1_dungeon_scene");
+        },
+        [this]() { switchTo("settings"); },
+        [this]() { window.close(); }
     );
 
     addScene<CharacterSelectScene>(window, "select_character",

@@ -27,6 +27,7 @@ private:
     sf::RectangleShape hpBackgroundShape;
 
 protected:
+    EnemyClass enemyClass;
 
     Raycast raycastView;
 
@@ -42,6 +43,8 @@ public:
 
     virtual void spawnProjectile() = 0;
     virtual void spawnMobs() = 0;
+
+    EnemyClass getEnemyClass() const;
 
     void attacking(const float& dt) override;
 

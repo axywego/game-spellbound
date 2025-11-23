@@ -315,14 +315,14 @@ TileType determineTileType(const TiledShape& map, int x, int y) {
     }
 
     const bool top = x > 0 && map[x-1][y].getFillColor() == sf::Color::Black;
-    const bool bottom = x < map.size() && map[x+1][y].getFillColor() == sf::Color::Black;
+    const bool bottom = x < map.size() - 1 && map[x+1][y].getFillColor() == sf::Color::Black;
     const bool left = y > 0 && map[x][y-1].getFillColor() == sf::Color::Black;
-    const bool right = y < map[0].size() && map[x][y+1].getFillColor() == sf::Color::Black;
+    const bool right = y < map[0].size() - 1 && map[x][y+1].getFillColor() == sf::Color::Black;
 
     const bool emptyTopLeft = x > 0 && y > 0 && map[x-1][y-1].getFillColor() == sf::Color::Black;
-    const bool emptyTopRight = x > 0 && y < map[0].size() && map[x-1][y+1].getFillColor() == sf::Color::Black;
-    const bool emptyBottomLeft = x < map.size() && y > 0 && map[x+1][y-1].getFillColor() == sf::Color::Black;
-    const bool emptyBottomRight = x < map.size() && y < map[0].size() && map[x+1][y+1].getFillColor() == sf::Color::Black;
+    const bool emptyTopRight = x > 0 && y < map[0].size() - 1 && map[x-1][y+1].getFillColor() == sf::Color::Black;
+    const bool emptyBottomLeft = x < map.size() - 1 && y > 0 && map[x+1][y-1].getFillColor() == sf::Color::Black;
+    const bool emptyBottomRight = x < map.size() - 1 && y < map[0].size() - 1 && map[x+1][y+1].getFillColor() == sf::Color::Black;
 
     if (top && !bottom && left && !right) return TileType::CornerTopLeft;
     if (!top && bottom && left && !right) return TileType::CornerBottomLeft;
@@ -375,11 +375,13 @@ Tilemap & Tilemap::operator=(const Tilemap &other) {
     }
     return *this;
 }
-std::vector<Tile> Tilemap::getCollisionTiles() const {
+std::vector<Tile*> Tilemap::getCollisionTiles() const {
     return collisionTiles;
 }
 
 void Tilemap::createFromTiledShape(const TiledShape& shape) {
+    tiledShape = shape;
+
     tiles.clear();
 
     tileset = std::make_shared<sf::Texture>(ResourceManager::getInstance().getTexture("dungeon"));
@@ -454,7 +456,7 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                     break;
             }
 
-            tiles.emplace_back(*tileset,
+            Tile* tile = new Tile(*tileset,
                 sf::IntRect({static_cast<int>(texX * tileSize), static_cast<int>(texY * tileSize)},
                             {static_cast<int>(tileSize), static_cast<int>(tileSize)}),
                 collision,
@@ -463,11 +465,13 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
                 texY,
                 type);
 
-            Tile& tileRef = tiles.back();
-            tileRef.setPosition({static_cast<float>(x), static_cast<float>(y)});
+            tiles.emplace_back(tile);
+
+            Tile* tileBack = tiles.back();
+            tileBack->setPosition({static_cast<float>(x), static_cast<float>(y)});
 
             if (collision) {
-                collisionTiles.push_back(tileRef);
+                collisionTiles.push_back(tileBack);
             }
         }
     }
@@ -487,13 +491,14 @@ void Tilemap::buildSpatialGrid() {
     spatialGrid.resize(gridWidth, std::vector<Tile*>(gridHeight));
 
     for (size_t i = 0; i < tiles.size(); ++i) {
-        const int gridX = tiles[i].getGlobalBounds().position.x / cellSize;
-        const int gridY = tiles[i].getGlobalBounds().position.y / cellSize;
+        const int gridX = tiles[i]->getGlobalBounds().position.x / cellSize;
+        const int gridY = tiles[i]->getGlobalBounds().position.y / cellSize;
 
         if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
-            spatialGrid[gridX][gridY] = &tiles[i];
+            spatialGrid[gridX][gridY] = tiles[i];
         }
     }
+    std::cout << "#########\nSPATIAL GRID CREATED\n#########" << std::endl;
 }
 
 void Tilemap::buildSpatialCollisionGrid() {
@@ -507,13 +512,17 @@ void Tilemap::buildSpatialCollisionGrid() {
     spatialCollisionGrid.resize(gridWidth, std::vector<Tile*>(gridHeight));
 
     for (size_t i = 0; i < collisionTiles.size(); ++i) {
-        const int gridX = collisionTiles[i].getGlobalBounds().position.x / cellSize;
-        const int gridY = collisionTiles[i].getGlobalBounds().position.y / cellSize;
+        const int gridX = collisionTiles[i]->getGlobalBounds().position.x / cellSize;
+        const int gridY = collisionTiles[i]->getGlobalBounds().position.y / cellSize;
 
         if (gridX >= 0 && gridX < gridWidth && gridY >= 0 && gridY < gridHeight) {
-            spatialCollisionGrid[gridX][gridY] = &collisionTiles[i];
+            spatialCollisionGrid[gridX][gridY] = collisionTiles[i];
         }
     }
+}
+
+TiledShape Tilemap::getTiledShape() const {
+    return tiledShape;
 }
 
 const sf::Vector2u& Tilemap::getWorldSize() const { return worldSize; }
@@ -521,8 +530,8 @@ float Tilemap::getTileSize() const { return tileSize; }
 float Tilemap::getMapScale() const { return worldScale; }
 const sf::Texture& Tilemap::getTileset() const { return *tileset; }
 
-std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
-    std::vector<Tile> ret;
+std::vector<Tile*> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
+    std::vector<Tile*> ret;
 
     const sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
 
@@ -541,7 +550,7 @@ std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, con
     for (int gy = minGridY; gy <= maxGridY; ++gy) {
         for (int gx = minGridX; gx <= maxGridX; ++gx) {
             if (spatialCollisionGrid[gx][gy]) {
-                ret.push_back(*spatialCollisionGrid[gx][gy]);
+                ret.push_back(spatialCollisionGrid[gx][gy]);
             }
         }
     }
@@ -549,7 +558,7 @@ std::vector<Tile> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, con
     return ret;
 }
 
-std::vector<Tile> Tilemap::getTiles() const {
+std::vector<Tile*> Tilemap::getTiles() const {
     return tiles;
 }
 
@@ -557,6 +566,8 @@ void Tilemap::render(sf::RenderTarget& target) const {
     const sf::View& view = target.getView();
     const sf::Vector2f viewCenter = view.getCenter();
     const sf::Vector2f viewSize = view.getSize();
+
+    std::cout << tiles.size() << std::endl;
 
     const sf::FloatRect viewBounds({{viewCenter.x - viewSize.x/2, viewCenter.y - viewSize.y/2},
         {viewSize.x, viewSize.y}});
@@ -569,6 +580,10 @@ void Tilemap::render(sf::RenderTarget& target) const {
     const int maxGridY = std::min(static_cast<int>(spatialGrid[0].size() - 1),
                            static_cast<int>((viewBounds.position.y + viewBounds.size.y) / cellSize));
 
+    // if (minGridX == -1 || maxGridX == -1 || minGridY == -1 || maxGridY == -1) {
+    //     return;
+    // }
+
     for (int gy = minGridY; gy <= maxGridY; ++gy) {
         for (int gx = minGridX; gx <= maxGridX; ++gx) {
             if (isOnScreen(spatialGrid[gx][gy]->getSprite(), target)) {
@@ -576,4 +591,25 @@ void Tilemap::render(sf::RenderTarget& target) const {
             }
         }
     }
+}
+
+Tilemap::~Tilemap() {
+    std::vector<std::vector<Tile*>> spatialGrid;
+    std::vector<std::vector<Tile*>> spatialCollisionGrid;
+    std::vector<Tile*> tiles;
+    std::vector<Tile*> collisionTiles;
+
+    std::unordered_set<Tile*> deletedTiles;
+
+    auto deleteTiles = [&](const std::vector<Tile*>& vec) {
+        for (Tile* tile : vec) {
+            if (tile && !deletedTiles.contains(tile)) {
+                delete tile;
+                deletedTiles.insert(tile);
+            }
+        }
+    };
+
+    deleteTiles(tiles);
+    deleteTiles(collisionTiles);
 }

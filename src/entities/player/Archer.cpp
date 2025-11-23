@@ -1,14 +1,15 @@
 #include "Archer.hpp"
 
 #include "../../core/ResourceManager.hpp"
+#include "../mob/buffs/StatsBuilder.hpp"
 
 Archer::Archer(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_archer"), map) {
-    stats.setBaseAttribute(StatType::Speed, 450.f);
-    stats.setBaseAttribute(StatType::MaxHealth, 4.f);
-    stats.setBaseAttribute(StatType::Health, 4.f);
-    attackCooldownTime = 0.5f;
-    typeDamage = TypeDamage::Ranged;
-    stats.setBaseAttribute(StatType::Damage, 1.5f);
+	playerClass = PlayerClass::Archer;
+
+	stats = StatsBuilder::getBaseStatSetByPlayerClass(playerClass);
+
+	attackCooldownTime = 0.5f;
+	typeDamage = TypeDamage::Ranged;
 }
 
 void Archer::spawnProjectile()  {

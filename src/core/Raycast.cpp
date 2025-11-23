@@ -27,7 +27,7 @@ void Raycast::update() {
 
     std::vector<sf::Vector2f> intersections;
     for (const auto& tile : collisionTiles) {
-        if (const auto intersection = findIntersection(tile.getGlobalBounds(), line[0].position, line[1].position)) {
+        if (const auto intersection = findIntersection(tile->getGlobalBounds(), line[0].position, line[1].position)) {
             intersections.emplace_back(intersection.value());
         }
     }

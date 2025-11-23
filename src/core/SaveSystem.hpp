@@ -6,13 +6,13 @@
 #include <nlohmann/json.hpp>
 
 class Player;
-class Scene;
+class GameWorld;
 
 class SaveSystem {
 private:
 
 	std::shared_ptr<Player> loadPlayer();
-	std::shared_ptr<Scene> loadScene();
+	std::shared_ptr<GameWorld> loadWorld();
 
 	SaveSystem() = default;
 	~SaveSystem() = default;
@@ -26,8 +26,8 @@ public:
 
 	void init();
 
-	void savePlayer(const Player& player);
-	void saveGameWorldScene(const std::shared_ptr<Scene>& scene);
+	void savePlayer(std::weak_ptr<Player> player);
+	void saveGameWorld(GameWorld& gameWorld);
 	void saveSettings();
 
 };

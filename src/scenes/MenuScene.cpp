@@ -1,14 +1,21 @@
 #include "MenuScene.hpp"
 
-MenuScene::MenuScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &startCallback,
-    const std::function<void()> &settingsCallback, const std::function<void()> &exitCallback):
+#include "../core/SaveLoaderManager.hpp"
 
+MenuScene::MenuScene(sf::RenderWindow& window_,
+    const std::string& name,
+    const std::function<void()> &startCallback,
+    const std::function<void()> &continueCallback,
+    const std::function<void()> &settingsCallback,
+    const std::function<void()> &exitCallback):
 Scene(window_, name),
 backgroundImage(window_, ResourceManager::getInstance().getTexture("anim_background_menu_1")),
 startButton(ResourceManager::getInstance().getTexture("anim_start_btn_1"), window),
+continueButton(ResourceManager::getInstance().getTexture("continue_btn"), window),
 settingsButton(ResourceManager::getInstance().getTexture("anim_settings_btn_1"), window),
 exitButton(ResourceManager::getInstance().getTexture("anim_exit_btn_1"), window),
 onStartClick(startCallback),
+onContinueClick(continueCallback),
 onSettingsClick(settingsCallback),
 onExitClick(exitCallback) {
 
@@ -89,6 +96,18 @@ onExitClick(exitCallback) {
         std::make_pair(animationStartBtn, true), std::make_pair(animationScaleStartButton, false)
     );
 
+    // Setting continueButton
+    continueButton.setTransform(Transform{
+            {50.f, 50.f},
+            0.f,
+            {1.f, 1.3f}
+        }
+    );
+    // continueButton.addAnimation(
+    //     UI::Button::TypeAnimation::Hovered,
+    //     std::make_pair(animationStartBtn, true), std::make_pair(animationScaleStartButton, false)
+    // );
+
     // Setting settingsButton
     settingsButton.setTransform(Transform{
             {720.f, 550.f},
@@ -132,6 +151,7 @@ void MenuScene::update(const float& dt)  {
         backgroundImage.update(dt);
 
         startButton.update(dt);
+        continueButton.update(dt);
         settingsButton.update(dt);
         exitButton.update(dt);
     }
@@ -143,6 +163,7 @@ void MenuScene::render(sf::RenderTarget& renderTarget)  {
     backgroundImage.render();
 
     startButton.render();
+    continueButton.render();
     settingsButton.render();
     exitButton.render();
 
@@ -152,6 +173,10 @@ void MenuScene::render(sf::RenderTarget& renderTarget)  {
 void MenuScene::handleEvent(const std::optional<sf::Event>& event)  {
     if(startButton.isClicked(event)) {
         onStartClick();
+    }
+
+    if (continueButton.isClicked(event)) {
+        onContinueClick();
     }
 
     if (settingsButton.isClicked(event)) {

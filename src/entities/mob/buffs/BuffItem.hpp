@@ -21,6 +21,8 @@ public:
 
     const std::string& getName() const;
 
+    std::vector<StatModifier> getOnPickupEffects() const;
+
     bool getIsPickup() const;
 
     sf::Sprite& getSprite();

@@ -22,5 +22,8 @@ public:
     std::optional<float*> getCurrentValue(StatType type);
 
     void addModifier(const StatModifier& modifier);
+
+    std::vector<StatModifier> getActiveModifiers() const;
+
     void clearAllModifiers();
 };

@@ -1,12 +1,15 @@
 #include "Knight.hpp"
 
+#include "../mob/buffs/StatsBuilder.hpp"
+
 Knight::Knight(const Tilemap& map): Player(ResourceManager::getInstance().getTexture("player_knight"), map) {
-    stats.setBaseAttribute(StatType::Speed, 400.f);
-    stats.setBaseAttribute(StatType::MaxHealth, 5.f);
-    stats.setBaseAttribute(StatType::Health, 5.f);
+    playerClass = PlayerClass::Knight;
+
+    stats = StatsBuilder::getBaseStatSetByPlayerClass(playerClass);
+
     attackCooldownTime = 0.25f;
     typeDamage = TypeDamage::Melee;
-    stats.setBaseAttribute(StatType::Damage, 2.5f);
+
 }
 
 void Knight::calculateAttackArea() {

@@ -3,12 +3,17 @@
 Shaman::Shaman(const Tilemap& map_, const std::weak_ptr<Player> &player_):
 Enemy(ResourceManager::getInstance().getTexture("enemy_shaman"), map_,
 sf::FloatRect({{32.f, 32.f},{60.f, 60.f}}), player_) {
+
+    enemyClass = EnemyClass::Shaman;
+
     stats.setBaseAttribute(StatType::Speed, 230.f);
     stats.setBaseAttribute(StatType::MaxHealth, 2.f);
     stats.setBaseAttribute(StatType::Health, 2.f);
+    stats.setBaseAttribute(StatType::Damage, 0.f);
+
     rangeRadius = 900.f;
     attackRange = 500.f;
-    stats.setBaseAttribute(StatType::Damage, 0.f);
+
     attackCooldownTime = 15.f;
     timeToStayAfterAttack = 1.f;
     typeDamage = TypeDamage::Summon;
