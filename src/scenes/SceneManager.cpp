@@ -28,7 +28,7 @@ void SceneManager::createDungeonScene(int levelNumber) {
 
         switchTo(newSceneKey);
 
-        std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
+        // std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
     };
 
     auto onPauseForScene = [this]() {
@@ -47,7 +47,7 @@ void SceneManager::initScenes() {
         [this]() {
             player = SaveLoaderManager::getInstance().getSavedPlayer();
             worlds["1_dungeon_world"] = std::move(SaveLoaderManager::getInstance().getSavedGameWorld(player));
-            std::cout << "SIZE OF TILES!!!" << worlds["1_dungeon_world"]->getTilemap().getTiles().size() << std::endl;
+            // std::cout << "SIZE OF TILES!!!" << worlds["1_dungeon_world"]->getTilemap().getTiles().size() << std::endl;
 
             player->setTilemap(worlds["1_dungeon_world"]->getTilemap());
 
@@ -63,7 +63,7 @@ void SceneManager::initScenes() {
 
                 switchTo(newSceneKey);
 
-                std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
+                // std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
             };
 
             auto onPauseForScene = [this]() {

@@ -23,7 +23,7 @@ StatSet StatsBuilder::getBaseStatSetByPlayerClass(const PlayerClass& playerClass
 			stats.setBaseAttribute(StatType::Mana, 4.f);
 			stats.setBaseAttribute(StatType::ManaCost, 0.5f);
 		default:
-			std::cout << "chego blyat?\n";
+			//std::cout << "chego blyat?\n";
 			break;
 	}
 	return stats;
@@ -57,7 +57,7 @@ StatSet StatsBuilder::getBaseStatSetByEnemyClass(const EnemyClass &enemyClass) {
 			stats.setBaseAttribute(StatType::Damage, 0.f);
 			return stats;
 		default:
-			std::cout << "chego blyat?\n";
+			//std::cout << "chego blyat?\n";
 			break;
 	}
 	return stats;

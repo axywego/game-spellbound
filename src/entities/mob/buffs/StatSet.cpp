@@ -38,7 +38,7 @@ void StatSet::recalculateStats() {
     }
 
     for (auto mod_it  = activeModifiers.begin(); mod_it != activeModifiers.end(); ) {
-        std::cout << static_cast<unsigned>(mod_it->targetStat) << std::endl;
+        // std::cout << static_cast<unsigned>(mod_it->targetStat) << std::endl;
         currentValues[mod_it->targetStat] += mod_it->value;
         if (mod_it->targetStat == StatType::Health || mod_it->targetStat == StatType::Mana) {
             mod_it = activeModifiers.erase(mod_it);

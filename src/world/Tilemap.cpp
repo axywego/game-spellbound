@@ -475,7 +475,7 @@ void Tilemap::createFromTiledShape(const TiledShape& shape) {
             }
         }
     }
-    std::cout << "sheesh" << std::endl;
+    // std::cout << "sheesh" << std::endl;
     buildSpatialGrid();
     buildSpatialCollisionGrid();
 }
@@ -498,7 +498,7 @@ void Tilemap::buildSpatialGrid() {
             spatialGrid[gridX][gridY] = tiles[i];
         }
     }
-    std::cout << "#########\nSPATIAL GRID CREATED\n#########" << std::endl;
+    // std::cout << "#########\nSPATIAL GRID CREATED\n#########" << std::endl;
 }
 
 void Tilemap::buildSpatialCollisionGrid() {
@@ -567,7 +567,7 @@ void Tilemap::render(sf::RenderTarget& target) const {
     const sf::Vector2f viewCenter = view.getCenter();
     const sf::Vector2f viewSize = view.getSize();
 
-    std::cout << tiles.size() << std::endl;
+    // std::cout << tiles.size() << std::endl;
 
     const sf::FloatRect viewBounds({{viewCenter.x - viewSize.x/2, viewCenter.y - viewSize.y/2},
         {viewSize.x, viewSize.y}});

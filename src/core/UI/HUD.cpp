@@ -183,7 +183,7 @@ namespace UI {
 
     void HUD::render() {
         if (!window) {
-            std::cout << "wtf\n";
+            // std::cout << "wtf\n";
             return;
         }
 
