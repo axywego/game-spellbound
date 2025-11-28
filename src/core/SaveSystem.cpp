@@ -30,14 +30,14 @@ void SaveSystem::savePlayer(std::weak_ptr<Player> player) {
 		modifiersMap[modifier.targetStat].emplace_back(modifier.modType, modifier.value);
 	}
 
-	float difference = stats.getCurrentValue(StatType::Health).value() - stats.getCurrentValue(StatType::MaxHealth).value();
+	float difference = *stats.getCurrentValue(StatType::Health).value() - *stats.getCurrentValue(StatType::MaxHealth).value();
 	if (difference < 0.f) {
-		modifiersMap[StatType::Health].push_back({ModifierType::Flat, difference});
+		modifiersMap[StatType::Health].emplace_back(ModifierType::Flat, difference);
 	}
 
-	difference = stats.getCurrentValue(StatType::Mana).value() - stats.getCurrentValue(StatType::MaxMana).value();
+	difference = *stats.getCurrentValue(StatType::Mana).value() - *stats.getCurrentValue(StatType::MaxMana).value();
 	if (difference < 0.f) {
-		modifiersMap[StatType::Mana].push_back({ModifierType::Flat, difference});
+		modifiersMap[StatType::Mana].emplace_back(ModifierType::Flat, difference);
 	}
 	json["active_modifiers"] = modifiersMap;
 

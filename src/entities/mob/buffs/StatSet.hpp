@@ -16,6 +16,8 @@ private:
     void recalculateStats();
 
 public:
+    void initBaseAttributes(const std::vector<std::pair<StatType, float>>& initValues);
+
     void setBaseAttribute(StatType type, float value);
     float getBaseAttribute(StatType type) const;
 
