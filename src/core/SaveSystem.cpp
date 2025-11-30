@@ -35,7 +35,8 @@ void SaveSystem::savePlayer(std::weak_ptr<Player> player) {
 		modifiersMap[StatType::Health].emplace_back(ModifierType::Flat, difference);
 	}
 
-	difference = *stats.getCurrentValue(StatType::Mana).value() - *stats.getCurrentValue(StatType::MaxMana).value();
+	float* ptr = new float(0.f);
+	difference = *stats.getCurrentValue(StatType::Mana).value_or(ptr) - *stats.getCurrentValue(StatType::MaxMana).value_or(ptr);
 	if (difference < 0.f) {
 		modifiersMap[StatType::Mana].emplace_back(ModifierType::Flat, difference);
 	}
