@@ -106,3 +106,13 @@ nlohmann::json getVariablesFromFile(const std::string &fileName) {
     file.close();
     return json;
 }
+
+bool isHasFile(const std::string &fileName) {
+    std::fstream file(fileName);
+    if (file.is_open()) {
+        file.close();
+        return true;
+    }
+    file.close();
+    return false;
+}

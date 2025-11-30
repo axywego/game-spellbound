@@ -25,3 +25,5 @@ bool isOnScreen(const sf::Sprite& obj, const sf::RenderTarget& window);
 bool isOnScreen(const sf::FloatRect& objRect, const sf::RenderTarget& window);
 
 nlohmann::json getVariablesFromFile(const std::string &fileName);
+
+bool isHasFile(const std::string &fileName);

@@ -180,7 +180,7 @@ void Player::render(sf::RenderTarget& target) {
     shape.setFillColor(sf::Color::Transparent);
     shape.setOutlineColor(sf::Color::White);
     shape.setOutlineThickness(1.f);
-    target.draw(shape);
+    //target.draw(shape);
     //collision.render(target);
 }
 

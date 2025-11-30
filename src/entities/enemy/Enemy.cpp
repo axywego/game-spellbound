@@ -216,10 +216,10 @@ void Enemy::updateShowingHP(const float& dt) {
 
 void Enemy::render(sf::RenderTarget& target) {
     target.draw(currentSprite);
-    collision.render(target);
+    // collision.render(target);
     if(isAlive && (isFading || isShowingHp)){
         target.draw(hpBackgroundShape);
         target.draw(hpRedShape);
     }
-    raycastView.render(target);
+    // raycastView.render(target);
 }

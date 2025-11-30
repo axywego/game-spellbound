@@ -31,6 +31,8 @@ private:
     std::function<void()> onExitClick;
     std::function<void()> onContinueClick;
 
+    bool isHasSave = false;
+
 public:
     MenuScene(sf::RenderWindow& window_,
         const std::string& name,

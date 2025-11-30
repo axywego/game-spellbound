@@ -1,13 +1,14 @@
 #include "MenuScene.hpp"
 
 #include "../core/SaveLoaderManager.hpp"
+#include "../core/Utils.hpp"
 
 MenuScene::MenuScene(sf::RenderWindow& window_,
-    const std::string& name,
-    const std::function<void()> &startCallback,
-    const std::function<void()> &continueCallback,
-    const std::function<void()> &settingsCallback,
-    const std::function<void()> &exitCallback):
+                     const std::string& name,
+                     const std::function<void()> &startCallback,
+                     const std::function<void()> &continueCallback,
+                     const std::function<void()> &settingsCallback,
+                     const std::function<void()> &exitCallback):
 Scene(window_, name),
 backgroundImage(window_, ResourceManager::getInstance().getTexture("background_menu")),
 startButton(ResourceManager::getInstance().getTexture("anim_start_btn_1"), window),
@@ -132,6 +133,9 @@ void MenuScene::load()  {
 }
 
 void MenuScene::update(const float& dt)  {
+    if (isHasFile("../saves/game_world.json") && isHasFile("../saves/player.json"))
+        isHasSave = true;
+
     if(isTransition) {
         circleScale -= transitionSpeed * dt;
 
@@ -143,7 +147,8 @@ void MenuScene::update(const float& dt)  {
     }
     else {
         startButton.update(dt);
-        continueButton.update(dt);
+        if (isHasSave)
+            continueButton.update(dt);
         settingsButton.update(dt);
         exitButton.update(dt);
     }
@@ -155,7 +160,8 @@ void MenuScene::render(sf::RenderTarget& renderTarget)  {
     backgroundImage.render();
 
     startButton.render();
-    continueButton.render();
+    if (isHasSave)
+        continueButton.render();
     settingsButton.render();
     exitButton.render();
 
@@ -167,7 +173,7 @@ void MenuScene::handleEvent(const std::optional<sf::Event>& event)  {
         onStartClick();
     }
 
-    if (continueButton.isClicked(event)) {
+    if (isHasSave && continueButton.isClicked(event)) {
         onContinueClick();
     }
 
