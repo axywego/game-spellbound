@@ -46,6 +46,11 @@ std::shared_ptr<GameWorld> SaveLoaderManager::getSavedGameWorld(const std::weak_
 	std::vector<std::pair<EnemyClass, std::pair<float, float>>> enemiesPosition = json["enemies"];
 	for (const auto& [enemyClass, pos] : enemiesPosition) {
 		std::unique_ptr<Enemy> enemy = EnemyFactory::create(enemyClass, gameWorld->getTilemap(), player);
+		if (enemyClass == EnemyClass::Shaman) {
+			enemy->setSpawnCallback([gameWorld](auto&& mob, auto&& pos) {
+			   gameWorld->addEnemy(std::move(mob), std::move(pos));
+		   });
+		}
 		gameWorld->addEnemy(std::move(enemy), {pos.first, pos.second});
 	}
 
