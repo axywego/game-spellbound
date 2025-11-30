@@ -4,13 +4,11 @@
 
 CharacterSelectScene::CharacterSelectScene(sf::RenderWindow& window, const std::string& name, const std::function<void()>& backToMenu, const std::function<void(PlayerClass)>& startGame):
 Scene(window, name),
+background(window, ResourceManager::getInstance().getTexture("background_menu")),
 selectButton(ResourceManager::getInstance().getTexture("select_button"), window),
 backButton(ResourceManager::getInstance().getTexture("back_button"), window),
 prevButton(ResourceManager::getInstance().getTexture("prev_button"), window),
 nextButton(ResourceManager::getInstance().getTexture("next_button"), window),
-// mageSprite(window, ResourceManager::getInstance().getTexture("player_mage")),
-// archerSprite(window, ResourceManager::getInstance().getTexture("player_archer")),
-// knightSprite(window, ResourceManager::getInstance().getTexture("player_knight")),
 mageSprite(ResourceManager::getInstance().getTexture("player_mage")),
 archerSprite(ResourceManager::getInstance().getTexture("player_archer")),
 knightSprite(ResourceManager::getInstance().getTexture("player_knight")),
@@ -21,28 +19,81 @@ startGameCallback(startGame)
     view.setSize({1920.f, 1080.f});
     view.setCenter(target);
 
-
-
     mageSprite.setTextureRect({{0,0}, {32, 32}});
     mageSprite.setScale({7.f, 7.f});
-    mageSprite.setPosition({900.f, 400.f});
+    mageSprite.setPosition({820.f, 450.f});
 
     knightSprite.setTextureRect({{0,0}, {32, 32}});
     knightSprite.setScale({7.f, 7.f});
-    knightSprite.setPosition({900.f, 400.f});
+    knightSprite.setPosition({820.f, 450.f});
 
     archerSprite.setTextureRect({{0,0}, {32, 32}});
     archerSprite.setScale({7.f, 7.f});
-    archerSprite.setPosition({900.f, 400.f});
+    archerSprite.setPosition({820.f, 450.f});
 
-    playerClasses.push_back({PlayerClass::Mage, mageSprite});
-    playerClasses.push_back({PlayerClass::Archer, archerSprite});
-    playerClasses.push_back({PlayerClass::Knight, knightSprite});
+    playerClasses.emplace_back(PlayerClass::Mage, mageSprite);
+    playerClasses.emplace_back(PlayerClass::Archer, archerSprite);
+    playerClasses.emplace_back(PlayerClass::Knight, knightSprite);
 
-    prevButton.setPosition({50.f, 400.f});
-    nextButton.setPosition({1800.f, 400.f});
-    selectButton.setPosition({700.f, 800.f});
-    backButton.setPosition({50.f, 50.f});
+    auto animationScalePrevNextButton = Animation::createScaleAnimation(
+        {0.4f, 0.4f}, {0.5f, 0.5f},
+        std::function{Animation::Easing::easeInOutCubic}, 0.2f
+    );
+
+    auto animationScaleSelectButton = Animation::createScaleAnimation(
+        {0.4f, 0.4f}, {0.5f, 0.5f},
+        std::function{Animation::Easing::easeInOutCubic}, 0.2f
+    );
+
+    auto animationScaleBackButton = Animation::createScaleAnimation(
+        {0.4f, 0.4f}, {0.5f, 0.5f},
+        std::function{Animation::Easing::easeInOutCubic}, 0.2f
+    );
+
+    prevButton.setTransform({
+        {700.f,500.f},
+        0.f,
+        {0.4f, 0.4f}
+    });
+
+    nextButton.setTransform({
+        {1100.f,500.f},
+        0.f,
+        {0.4f, 0.4f}
+    });
+
+    selectButton.setTransform({
+        {800.f,800.f},
+        0.f,
+        {0.4f, 0.4f}
+    });
+
+    backButton.setTransform({
+        {50.f,50.f},
+        0.f,
+        {0.4f, 0.4f}
+    });
+
+    prevButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationScalePrevNextButton, false)
+    );
+
+    nextButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationScalePrevNextButton, false)
+    );
+
+    selectButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationScaleSelectButton, false)
+    );
+
+    backButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationScaleBackButton, false)
+    );
+
 }
 
 void CharacterSelectScene::load() {
@@ -50,11 +101,14 @@ void CharacterSelectScene::load() {
 }
 
 void CharacterSelectScene::update(const float &dt) {
-
+    prevButton.update(dt);
+    nextButton.update(dt);
+    selectButton.update(dt);
+    backButton.update(dt);
 }
 
 void CharacterSelectScene::render(sf::RenderTarget &renderTarget) {
-    window.draw(background);
+    background.render();
     window.draw(playerClasses[currentPlayer].second);
     backButton.render();
     prevButton.render();

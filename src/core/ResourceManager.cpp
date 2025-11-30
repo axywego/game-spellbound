@@ -33,12 +33,6 @@ void ResourceManager::loadTextures() {
         loadTexture("dungeon", basePath + "real img/2 Dungeon Tileset/1 Tiles/Tileset.png");
         loadTexture("health", basePath + "real img/4 GUI/4 Bars/BarsMap.png");
         loadTexture("icons", basePath + "real img/4 GUI/3 Icons/Iconset1.png");
-        loadTexture("menu_background", basePath + "img/backgroundMenu.png");
-
-        loadTexture("back_button", basePath + "img/backBtn.png");
-        loadTexture("select_button", basePath + "img/selectBtn.png");
-        loadTexture("prev_button", basePath + "img/prevBtn.png");
-        loadTexture("next_button", basePath + "img/nextBtn.png");
 
         loadTexture("enemy_rat", basePath + "real img/3 Dungeon Enemies/1/1.png");
         loadTexture("enemy_goblin", basePath + "real img/3 Dungeon Enemies/2/2.png");
@@ -70,12 +64,16 @@ void ResourceManager::loadTextures() {
         loadTexture("anim_exit_btn_2", basePath + "img/exit_btn_2.png");
         loadTexture("anim_exit_btn_3", basePath + "img/exit_btn_3.png");
 
-        loadTexture("anim_background_menu_1", basePath + "img/background_menu_1.png");
-        loadTexture("anim_background_menu_2", basePath + "img/background_menu_2.png");
-        loadTexture("anim_background_menu_3", basePath + "img/background_menu_3.png");
+        loadTexture("background_menu", basePath + "img/background_menu_1.png");
 
-        loadTexture("continue_btn", basePath + "img/continue.png");
-        //loadTexture("anim_background_menu_4", basePath + "img/background_menu_4.png");
+        loadTexture("anim_continue_btn_1", basePath + "img/continue_btn_1.png");
+        loadTexture("anim_continue_btn_2", basePath + "img/continue_btn_2.png");
+        loadTexture("anim_continue_btn_3", basePath + "img/continue_btn_3.png");
+
+        loadTexture("back_button", basePath + "img/back_btn.png");
+        loadTexture("select_button", basePath + "img/select_btn.png");
+        loadTexture("prev_button", basePath + "img/back_choice_btn.png");
+        loadTexture("next_button", basePath + "img/next_choice_btn.png");
 
         std::cout << "all textures was loaded!\n";
 

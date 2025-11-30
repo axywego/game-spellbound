@@ -19,8 +19,7 @@ private:
     float transitionSpeed { 2.f };
     bool isTransition { true };
 
-    sf::Texture textureBackground {ResourceManager::getInstance().getTexture("menu_background")};
-    sf::Sprite backgroundImage;
+    UI::Image backgroundImage;
 
     UI::Slider sliderMusic;
     UI::Slider sliderSound;

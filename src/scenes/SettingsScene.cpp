@@ -4,11 +4,12 @@
 #include "../core/SettingsManager.hpp"
 
 SettingsScene::SettingsScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()>& backCallback, const std::function<void(float)> &setMusicVolumeCallback):
-Scene(window_, name), backgroundImage(textureBackground),
+Scene(window_, name),
+backgroundImage(window, ResourceManager::getInstance().getTexture("background_menu")),
 sliderMusic(window, 300.f, 0.2f),
 sliderSound(window, 300.f, 0.2f),
 checkbox(window, false),
-backButton(ResourceManager::getInstance().getTexture("anim_exit_btn_1"), window),
+backButton(ResourceManager::getInstance().getTexture("back_button"), window),
 onBackClick(backCallback),
 setMusicVolumeCallback(setMusicVolumeCallback) {
 
@@ -36,26 +37,20 @@ setMusicVolumeCallback(setMusicVolumeCallback) {
     //sliderMusic.setValue(1.f);
 
     auto animationScaleExitButton = Animation::createScaleAnimation(
-        {0.3f, 0.3f}, {0.34f, 0.34f},
+        {0.4f, 0.4f}, {0.44f, 0.44f},
         std::function{Animation::Easing::easeInOutQuad}, 0.2f
-    );
-
-    sf::Texture textureAnimExitBtn1 = ResourceManager::getInstance().getTexture("anim_exit_btn_1");
-    sf::Texture textureAnimExitBtn2 = ResourceManager::getInstance().getTexture("anim_exit_btn_2");
-    sf::Texture textureAnimExitBtn3 = ResourceManager::getInstance().getTexture("anim_exit_btn_3");
-    auto animationExitBtn = Animation::createSlideShowAnimation(
-        {textureAnimExitBtn1, textureAnimExitBtn2, textureAnimExitBtn3}, 0.75f
     );
 
     backButton.setTransform(Transform{
             sf::Vector2f{50.f, 50.f},
             0.f,
-            {0.3f, 0.3f}
+            {0.4f, 0.4f}
         }
     );
+
     backButton.addAnimation(
         UI::Button::TypeAnimation::Hovered,
-        std::make_pair(animationExitBtn, true), std::make_pair(animationScaleExitButton, false)
+        std::make_pair(animationScaleExitButton, false)
     );
 
     checkbox.setTransform(Transform{
@@ -94,6 +89,7 @@ void SettingsScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
+        backButton.update(dt);
         if (sliderMusic.isInChange()) {
             setMusicVolumeCallback(sliderMusic.getValue() * 100.f);
         }
@@ -105,7 +101,7 @@ void SettingsScene::update(const float& dt)  {
 void SettingsScene::render(sf::RenderTarget& renderTarget)  {
     renderTarget.setView(view);
 
-    renderTarget.draw(backgroundImage);
+    backgroundImage.render();
 
     backButton.render();
     sliderMusic.render();

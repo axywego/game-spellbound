@@ -9,15 +9,15 @@ MenuScene::MenuScene(sf::RenderWindow& window_,
     const std::function<void()> &settingsCallback,
     const std::function<void()> &exitCallback):
 Scene(window_, name),
-backgroundImage(window_, ResourceManager::getInstance().getTexture("anim_background_menu_1")),
+backgroundImage(window_, ResourceManager::getInstance().getTexture("background_menu")),
 startButton(ResourceManager::getInstance().getTexture("anim_start_btn_1"), window),
-continueButton(ResourceManager::getInstance().getTexture("continue_btn"), window),
+continueButton(ResourceManager::getInstance().getTexture("anim_continue_btn_1"), window),
 settingsButton(ResourceManager::getInstance().getTexture("anim_settings_btn_1"), window),
 exitButton(ResourceManager::getInstance().getTexture("anim_exit_btn_1"), window),
 onStartClick(startCallback),
-onContinueClick(continueCallback),
 onSettingsClick(settingsCallback),
-onExitClick(exitCallback) {
+onExitClick(exitCallback),
+onContinueClick(continueCallback) {
 
     target = { 960.f, 540.f };
     view.setSize({1920.f, 1080.f});
@@ -27,6 +27,11 @@ onExitClick(exitCallback) {
     circle.setFillColor(sf::Color::Black);
     circle.setOrigin( {circle.getRadius(), circle.getRadius()} );
     circle.setPosition(target);
+
+    auto animationScaleContinueButton = Animation::createScaleAnimation(
+        {0.5f, 0.5f}, {0.54f, 0.54f},
+        std::function{Animation::Easing::easeInOutQuad}, 0.2f
+    );
 
     auto animationScaleStartButton = Animation::createScaleAnimation(
         {0.3f, 0.3f}, {0.34f, 0.34f},
@@ -41,6 +46,13 @@ onExitClick(exitCallback) {
     auto animationScaleExitButton = Animation::createScaleAnimation(
         {0.3f, 0.3f}, {0.34f, 0.34f},
         std::function{Animation::Easing::easeInOutQuad}, 0.2f
+    );
+
+    sf::Texture textureAnimContinueBtn1 = ResourceManager::getInstance().getTexture("anim_continue_btn_1");
+    sf::Texture textureAnimContinueBtn2 = ResourceManager::getInstance().getTexture("anim_continue_btn_2");
+    sf::Texture textureAnimContinueBtn3 = ResourceManager::getInstance().getTexture("anim_continue_btn_3");
+    auto animationContinueBtn = Animation::createSlideShowAnimation(
+        {textureAnimContinueBtn1, textureAnimContinueBtn2, textureAnimContinueBtn3}, 0.75f
     );
 
     sf::Texture textureAnimStartBtn1 = ResourceManager::getInstance().getTexture("anim_start_btn_1");
@@ -64,25 +76,18 @@ onExitClick(exitCallback) {
         {textureAnimExitBtn1, textureAnimExitBtn2, textureAnimExitBtn3}, 0.75f
     );
 
-    // sf::Texture textureBackMenu1 = ResourceManager::getInstance().getTexture("anim_background_menu_1");
-    // sf::Texture textureBackMenu2 = ResourceManager::getInstance().getTexture("anim_background_menu_2");
-    // sf::Texture textureBackMenu3 = ResourceManager::getInstance().getTexture("anim_background_menu_3");
-    //
-    // auto animationBackground = Animation::createSlideShowAnimation(
-    //     {textureBackMenu1, textureBackMenu2}, 0.7f
-    // );
-    //
-    // Setting backgroundImage
-    // backgroundImage.setTransform(Transform{
-    //         {0.f, 0.f},
-    //         0.f,
-    //         {1.f, 1.f}
-    //     }
-    // );
-    // backgroundImage.addAnimation(
-    //     UI::Image::TypeAnimation::SlideShow,
-    //     std::make_pair(animationBackground, true)
-    // );
+
+    // Setting continueButton
+    continueButton.setTransform(Transform{
+            {680.f, 250.f},
+            -8.f,
+            {0.5f, 0.5f}
+        }
+    );
+    continueButton.addAnimation(
+        UI::Button::TypeAnimation::Hovered,
+        std::make_pair(animationContinueBtn, true), std::make_pair(animationScaleContinueButton, false)
+    );
 
     // Setting startButton
     startButton.setTransform(Transform{
@@ -96,17 +101,6 @@ onExitClick(exitCallback) {
         std::make_pair(animationStartBtn, true), std::make_pair(animationScaleStartButton, false)
     );
 
-    // Setting continueButton
-    continueButton.setTransform(Transform{
-            {50.f, 50.f},
-            0.f,
-            {1.f, 1.3f}
-        }
-    );
-    // continueButton.addAnimation(
-    //     UI::Button::TypeAnimation::Hovered,
-    //     std::make_pair(animationStartBtn, true), std::make_pair(animationScaleStartButton, false)
-    // );
 
     // Setting settingsButton
     settingsButton.setTransform(Transform{
@@ -148,8 +142,6 @@ void MenuScene::update(const float& dt)  {
         circle.setScale( {circleScale, circleScale} );
     }
     else {
-        backgroundImage.update(dt);
-
         startButton.update(dt);
         continueButton.update(dt);
         settingsButton.update(dt);

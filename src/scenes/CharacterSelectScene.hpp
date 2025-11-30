@@ -11,7 +11,7 @@ private:
     sf::View view;
     sf::Vector2f target;
 
-    sf::Sprite background {ResourceManager::getInstance().getTexture("menu_background")};
+    UI::Image background;
     UI::Button selectButton;
     UI::Button backButton;
     UI::Button prevButton;
@@ -20,10 +20,6 @@ private:
     sf::Sprite mageSprite;
     sf::Sprite archerSprite;
     sf::Sprite knightSprite;
-
-    // UI::Image mageSprite;
-    // UI::Image archerSprite;
-    // UI::Image knightSprite;
 
     std::function<void()> backToMenuCallback;
     std::function<void(PlayerClass)> startGameCallback;
