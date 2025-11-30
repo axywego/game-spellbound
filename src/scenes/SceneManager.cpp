@@ -28,7 +28,8 @@ void SceneManager::createDungeonScene(int levelNumber) {
 
         switchTo(newSceneKey);
 
-        // std::cout << newWorldKey << ' ' << newSceneKey << std::endl;
+        scenes.erase(std::format("{}_dungeon_scene", levelNumber - 1));
+        worlds.erase(std::format("{}_dungeon_world", levelNumber - 1));
     };
 
     auto onPauseForScene = [this]() {
