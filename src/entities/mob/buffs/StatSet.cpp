@@ -19,8 +19,7 @@ void StatSet::setBaseAttribute(StatType type, float value) {
 }
 
 float StatSet::getBaseAttribute(StatType type) const {
-    auto it = baseAttributes.find(type);
-    if (it != baseAttributes.end()) {
+    if (const auto it = baseAttributes.find(type); it != baseAttributes.end()) {
         return it->second;
     }
     return -1.f;
@@ -60,7 +59,16 @@ void StatSet::recalculateStats() {
     }
 
     for (auto mod_it = activeModifiers.begin(); mod_it != activeModifiers.end(); ) {
-        currentValues[mod_it->targetStat] += mod_it->value;
+        //[mod_it->targetStat] += mod_it->value;
+
+        currentValues[mod_it->targetStat] = std::clamp(
+            currentValues[mod_it->targetStat] += mod_it->value,
+            0.f,
+            mod_it->targetStat == StatType::Health && mod_it->targetStat == StatType::Mana
+                ? (mod_it->targetStat == StatType::Health ? currentValues[StatType::MaxHealth] : currentValues[StatType::MaxMana])
+                : (mod_it->targetStat == StatType::ManaCost ? 1.f : statLimits.at(mod_it->targetStat))
+        );
+
         if (mod_it->targetStat == StatType::Health || mod_it->targetStat == StatType::Mana) {
             mod_it = activeModifiers.erase(mod_it);
         }
@@ -69,7 +77,7 @@ void StatSet::recalculateStats() {
         }
     }
 
-    std::cout << std::format("Current HEALTH after recalculate = {}", *getCurrentValue(StatType::Health).value_or(ptr)) << '\n';
+    //std::cout << std::format("Current HEALTH after recalculate = {}", *getCurrentValue(StatType::Health).value_or(ptr)) << '\n';
 }
 
 void StatSet::addModifier(const StatModifier& modifier) {

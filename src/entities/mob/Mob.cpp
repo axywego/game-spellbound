@@ -152,7 +152,7 @@ void Mob::initAnimations() {
     animController.addAnimation("hurt_down", hurtDown, 0.1f);
     animController.addAnimation("hurt_up", hurtUp, 0.1f);
     animController.addAnimation("hurt_left", hurtLeft, 0.1f);
-    animController.addAnimation("hurt_right", hurtLeft, 0.1f, true, true);
+    animController.addAnimation("hurt_right", hurtLeft, 0.1f, false, true);
 
     animController.addAnimation("death_down", deathDown, 0.1f);
     animController.addAnimation("death_up", deathUp, 0.1f);

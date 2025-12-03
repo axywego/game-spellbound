@@ -149,7 +149,7 @@ void Enemy::update(const float& dt) {
         }
     }
 
-    if(!isTakingDamage && !isAttacking && !isDying) {
+    if(player.lock()->getIsAlive() && !isTakingDamage && !isAttacking && !isDying) {
         bool isInView = raycastView.isInView(player.lock()->getSprite().getGlobalBounds());
 
         if (timerStayAfterAttack > 0.f || !isInView) {

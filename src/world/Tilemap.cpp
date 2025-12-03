@@ -536,12 +536,25 @@ std::vector<Tile*> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, co
     const sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
 
     const int minGridX = std::max(0, static_cast<int>(bounds.position.x / cellSize));
+    std::cout << "1" << static_cast<int>(bounds.position.x / cellSize) << "\n\n";
+
     const int maxGridX = std::min(static_cast<int>(spatialCollisionGrid.size() - 1),
                            static_cast<int>((bounds.position.x + bounds.size.x) / cellSize));
 
+    std::cout << "2" <<  static_cast<int>(spatialCollisionGrid.size() - 1) << "\n\n" << static_cast<int>((bounds.position.x + bounds.size.x) / cellSize) << "\n\n";
+
     const int minGridY = std::max(0, static_cast<int>(bounds.position.y / cellSize));
+
+    std::cout << "3" << static_cast<int>(bounds.position.y / cellSize) << "\n\n";
+
     const int maxGridY = std::min(static_cast<int>(spatialCollisionGrid[0].size() - 1),
                            static_cast<int>((bounds.position.y + bounds.size.y) / cellSize));
+
+    std::cout << "4" << static_cast<int>(spatialCollisionGrid[0].size() - 1) << "\n\n" << static_cast<int>((bounds.position.y + bounds.size.y) / cellSize) << "\n\n";
+
+    if (minGridX <= 0 || maxGridX <= 0 || minGridY <= 0 || maxGridY <= 0) {
+        std::cout << "wtf?\n";
+    }
 
     if (minGridX > maxGridX || minGridY > maxGridY) {
         return ret;

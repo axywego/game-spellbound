@@ -32,6 +32,10 @@ namespace UI {
 
         size_t numOfEnemies{0};
 
+        sf::RectangleShape deathBackground;
+        Text deathText;
+        std::pair<float, float> timerDeath = {0.f, 4.f};
+
         float timer{0.f};
 
         HUD() = default;

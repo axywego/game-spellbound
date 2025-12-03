@@ -27,3 +27,5 @@ bool isOnScreen(const sf::FloatRect& objRect, const sf::RenderTarget& window);
 nlohmann::json getVariablesFromFile(const std::string &fileName);
 
 bool isHasFile(const std::string &fileName);
+
+void deleteFile(const std::string &fileName);

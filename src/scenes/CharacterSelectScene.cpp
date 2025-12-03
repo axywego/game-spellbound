@@ -121,6 +121,8 @@ void CharacterSelectScene::handleEvent(const std::optional<sf::Event> &event) {
         backToMenuCallback();
     }
     if (selectButton.isClicked(event)) {
+        deleteFile("../saves/game_world.json");
+        deleteFile("../saves/player.json");
         startGameCallback(playerClasses[currentPlayer].first);
     }
 

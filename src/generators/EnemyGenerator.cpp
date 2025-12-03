@@ -18,13 +18,12 @@ std::vector<std::pair<std::unique_ptr<Enemy>, sf::Vector2f>> EnemyGenerator::gen
         if(tile->getType() == TileType::Floor) {
             const auto& bounds = tile->getGlobalBounds();
             const auto& center = WorldGenerator::getCenter();
-            const float radius = WorldGenerator::getRadius() - (limitsTiles.x / 2) * tileSize;
+            const float radius = WorldGenerator::getRadius() - limitsTiles.x / 2 * tileSize;
 
-            float dx = bounds.position.x - center.x;
-            float dy = bounds.position.y - center.y;
-            float squaredDist = dx*dx + dy*dy;
+            const float dx = bounds.position.x - center.x;
+            const float dy = bounds.position.y - center.y;
             if(dx*dx + dy*dy >= radius * radius){
-                positionsFloor.push_back(bounds.position);
+                positionsFloor.push_back(bounds.position + bounds.size / 2.f);
             }
         }
     }

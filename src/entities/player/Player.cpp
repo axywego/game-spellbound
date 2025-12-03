@@ -7,6 +7,14 @@ Mob(texture_, map_, sf::FloatRect {{40.f, 44.f},
 {64.f, 52.f}}) { }
 
 void Player::update(const float& dt) {
+    if (!isAlive) {
+        if (isHasFile("../saves/player.json")) {
+            deleteFile("../saves/game_world.json");
+            deleteFile("../saves/player.json");
+        }
+        return;
+    }
+
     if (isDying) {
         currentState = State::Dying;
         if(animController.hasLastFrame()){

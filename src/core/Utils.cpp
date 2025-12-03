@@ -3,6 +3,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <filesystem>
 
 float distance(const sf::Vector2f& a, const sf::Vector2f& b) {
     return sqrtf(powf(a.x - b.x, 2) + powf(a.y - b.y, 2));
@@ -115,4 +116,8 @@ bool isHasFile(const std::string &fileName) {
     }
     file.close();
     return false;
+}
+
+void deleteFile(const std::string &fileName) {
+    std::cout << "POLUCHILOS?" << std::filesystem::remove(fileName) << '\n';
 }
