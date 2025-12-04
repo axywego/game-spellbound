@@ -6,33 +6,32 @@
 #include "src/scenes/SceneManager.hpp"
 #include "src/core/UI/HUD.hpp"
 
-class FPSCounter {
-private:
-    sf::Clock clock;
-    unsigned int frameCount = 0;
-    float updateTime = 0.5f;
-    float timeSinceLastUpdate = 0.f;
-    float currentFPS = 0.f;
-
-public:
-    FPSCounter() = default;
-
-    void update(float dt) {
-        frameCount++;
-        timeSinceLastUpdate += dt;
-
-        if (timeSinceLastUpdate >= updateTime) {
-            currentFPS = frameCount / timeSinceLastUpdate;
-            frameCount = 0;
-            timeSinceLastUpdate = 0.f;
-
-            std::ostringstream ss;
-            ss << "FPS: " << static_cast<int>(currentFPS);
-            std::cout << ss.str() << std::endl;
-        }
-    }
-};
-
+// class FPSCounter {
+// private:
+//     sf::Clock clock;
+//     unsigned int frameCount = 0;
+//     float updateTime = 0.5f;
+//     float timeSinceLastUpdate = 0.f;
+//     float currentFPS = 0.f;
+//
+// public:
+//     FPSCounter() = default;
+//
+//     void update(float dt) {
+//         frameCount++;
+//         timeSinceLastUpdate += dt;
+//
+//         if (timeSinceLastUpdate >= updateTime) {
+//             currentFPS = frameCount / timeSinceLastUpdate;
+//             frameCount = 0;
+//             timeSinceLastUpdate = 0.f;
+//
+//             std::ostringstream ss;
+//             ss << "FPS: " << static_cast<int>(currentFPS);
+//             std::cout << ss.str() << std::endl;
+//         }
+//     }
+// };
 
 int main() {
     sf::RenderWindow window(sf::VideoMode({1920, 1080}), "aga", sf::State::Fullscreen);
@@ -51,14 +50,14 @@ int main() {
 
     SceneManager manager(window);
 
-    FPSCounter fpsCounter;
+    //FPSCounter fpsCounter;
 
     while(window.isOpen()) {
 
         sf::Time deltaTime = clock.restart();
         float dt = deltaTime.asSeconds();
 
-        fpsCounter.update(dt);
+        //fpsCounter.update(dt);
 
         while (const std::optional event = window.pollEvent()) {
             manager.handleEvent(event);

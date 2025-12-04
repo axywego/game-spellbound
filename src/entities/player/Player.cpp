@@ -17,7 +17,7 @@ void Player::update(const float& dt) {
 
     if (isDying) {
         currentState = State::Dying;
-        if(animController.hasLastFrame()){
+        if(animController.hasLastFrame() && animController.isSameAnimation("death")){
             isAlive = false;
         }
     }

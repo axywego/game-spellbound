@@ -33,6 +33,7 @@ namespace UI {
         deathText.setOutlineColor(sf::Color::Black);
         deathText.setOutlineThickness(3.f);
         deathBackground.setSize({1920.f, 1080.f});
+        deathBackground.setFillColor(sf::Color(0,0,0,0));
 
     }
 
