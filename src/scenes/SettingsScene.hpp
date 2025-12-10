@@ -7,6 +7,7 @@
 #include <functional>
 
 #include "../core/UI/CheckBox.hpp"
+#include "../core/UI/Text.hpp"
 
 class SettingsScene: public Scene {
 private:
@@ -24,6 +25,10 @@ private:
     UI::Slider sliderMusic;
     UI::Slider sliderSound;
     UI::CheckBox checkbox;
+
+    UI::Text sliderMusicText;
+    UI::Text sliderSoundText;
+    UI::Text checkboxText;
 
     UI::Button backButton;
 

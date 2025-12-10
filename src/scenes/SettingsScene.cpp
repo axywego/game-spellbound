@@ -9,6 +9,9 @@ backgroundImage(window, ResourceManager::getInstance().getTexture("background_me
 sliderMusic(window, 300.f, 0.2f),
 sliderSound(window, 300.f, 0.2f),
 checkbox(window, false),
+sliderMusicText(window, "Music Volume"),
+sliderSoundText(window, "Sound Volume"),
+checkboxText(window, "Vertical Sync"),
 backButton(ResourceManager::getInstance().getTexture("back_button"), window),
 onBackClick(backCallback),
 setMusicVolumeCallback(setMusicVolumeCallback) {
@@ -72,6 +75,24 @@ setMusicVolumeCallback(setMusicVolumeCallback) {
     sliderMusic.setValue(SettingsManager::getInstance().getMusicValue());
     sliderSound.setValue(SettingsManager::getInstance().getSoundValue());
     checkbox.setValue(SettingsManager::getInstance().getIsVerticalSync());
+
+    sliderMusicText.setColor(sf::Color::White);
+    sliderMusicText.setPosition({80.f, 300.f});
+    sliderMusicText.setOutlineThickness(3.f);
+    sliderMusicText.setOutlineColor(sf::Color::Black);
+    sliderMusicText.setScale({1.5f, 1.5f});
+
+    sliderSoundText.setColor(sf::Color::White);
+    sliderSoundText.setPosition({480.f, 300.f});
+    sliderSoundText.setOutlineThickness(3.f);
+    sliderSoundText.setOutlineColor(sf::Color::Black);
+    sliderSoundText.setScale({1.5f, 1.5f});
+
+    checkboxText.setColor(sf::Color::White);
+    checkboxText.setPosition({80.f, 500.f});
+    checkboxText.setOutlineThickness(3.f);
+    checkboxText.setOutlineColor(sf::Color::Black);
+    checkboxText.setScale({1.5f, 1.5f});
 }
 
 void SettingsScene::load()  {
@@ -107,6 +128,10 @@ void SettingsScene::render(sf::RenderTarget& renderTarget)  {
     sliderMusic.render();
     sliderSound.render();
     checkbox.render();
+
+    sliderMusicText.render();
+    sliderSoundText.render();
+    checkboxText.render();
 
     if(isTransition) renderTarget.draw(circle);
 }

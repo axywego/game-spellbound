@@ -533,28 +533,34 @@ const sf::Texture& Tilemap::getTileset() const { return *tileset; }
 std::vector<Tile*> Tilemap::getCollisionTilesInRange(const sf::Vector2f &pos, const float &range) const {
     std::vector<Tile*> ret;
 
-    const sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
+    try {
+        const sf::FloatRect bounds {{pos.x - range, pos.y - range}, {range * 2, range * 2}};
 
-    const int minGridX = std::max(0, static_cast<int>(bounds.position.x / cellSize));
+        const int minGridX = std::max(0, static_cast<int>(bounds.position.x / cellSize));
 
-    const int maxGridX = std::min(static_cast<int>(worldSize.x - 1),
-                           static_cast<int>((bounds.position.x + bounds.size.x) / cellSize));
+        const int maxGridX = std::min(static_cast<int>(worldSize.x - 1),
+                               static_cast<int>((bounds.position.x + bounds.size.x) / cellSize));
 
-    const int minGridY = std::max(0, static_cast<int>(bounds.position.y / cellSize));
+        const int minGridY = std::max(0, static_cast<int>(bounds.position.y / cellSize));
 
-    const int maxGridY = std::min(static_cast<int>(worldSize.y - 1),
-                           static_cast<int>((bounds.position.y + bounds.size.y) / cellSize));
+        const int maxGridY = std::min(static_cast<int>(worldSize.y - 1),
+                               static_cast<int>((bounds.position.y + bounds.size.y) / cellSize));
 
-    if (minGridX > maxGridX || minGridY > maxGridY) {
-        return ret;
-    }
+        if (minGridX > maxGridX || minGridY > maxGridY) {
+            return ret;
+        }
 
-    for (int gy = minGridY; gy <= maxGridY; ++gy) {
-        for (int gx = minGridX; gx <= maxGridX; ++gx) {
-            if (spatialCollisionGrid[gx][gy]) {
-                ret.push_back(spatialCollisionGrid[gx][gy]);
+        for (int gy = minGridY; gy <= maxGridY; ++gy) {
+            for (int gx = minGridX; gx <= maxGridX; ++gx) {
+                if (spatialCollisionGrid[gx][gy]) {
+                    ret.push_back(spatialCollisionGrid[gx][gy]);
+                }
             }
         }
+    }
+    catch (const std::exception &e) {
+        std::cerr << e.what() << '\n';
+        //while (true) {;}
     }
 
     return ret;

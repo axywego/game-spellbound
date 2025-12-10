@@ -28,12 +28,12 @@ namespace UI {
         textCompletedDungeon.setOutlineThickness(3.f);
 
         deathText.setFont(ResourceManager::getInstance().getFont("font_game"));
-        deathText.setText("You lost. To exit to the menu, press Escape");
+        // deathText.setText("You lost. To exit to the menu, press Escape");
         deathText.setScale({1.3f, 1.3f});
         deathText.setOutlineColor(sf::Color::Black);
         deathText.setOutlineThickness(3.f);
-        deathBackground.setSize({1920.f, 1080.f});
-        deathBackground.setFillColor(sf::Color(0,0,0,0));
+        // deathBackground.setSize({1920.f, 1080.f});
+        // deathBackground.setFillColor(sf::Color(0,0,0,0));
 
     }
 
@@ -188,16 +188,32 @@ namespace UI {
             currentTitle.first->setOutlineThickness(3.0f);
         }
 
-
+        auto& [timerDeathCurrent, timerDeathMax] = timerDeath;
         if (!player.getIsAlive()) {
-            deathBackground.setPosition(cameraDelta);
+            if (timerDeathCurrent == 0.f) {
+                deathText.setText("You lost. To exit to the menu, press Escape");
+                deathBackground.setSize({1920.f, 1080.f});
+                deathBackground.setFillColor(sf::Color(0,0,0,0));
+            }
+            // setPosition here because camera is dynamic and can change its position while player was in motion
             deathText.setPosition(cameraDelta + sf::Vector2f{500.f, 500.f});
-            const auto alpha = static_cast<uint8_t>(255 * timerDeath.first / timerDeath.second);
+            deathBackground.setPosition(cameraDelta);
+
+            const auto alpha = static_cast<uint8_t>(255 * timerDeathCurrent / timerDeathMax);
             deathBackground.setFillColor(sf::Color(0, 0, 0, alpha));
             deathText.setColor(sf::Color(255, 255, 255, alpha));
             deathText.setOutlineColor(sf::Color(0, 0, 0, alpha));
 
-            if (timerDeath.first < timerDeath.second) timerDeath.first += dt;
+            if (timerDeathCurrent + dt < timerDeathMax) timerDeathCurrent += dt;
+        }
+        else {
+            if (timerDeathCurrent != 0.f) {
+                timerDeathCurrent = 0.f;
+                deathBackground.setSize({0.f, 0.f});
+                deathBackground.setFillColor(sf::Color(0, 0, 0, 0));
+                deathBackground.setPosition({0.f, 0.f});
+                deathText.setText("");
+            }
         }
 
         if (timer < currentTitle.second) timer += dt;

@@ -62,9 +62,9 @@ void StatSet::recalculateStats() {
         //[mod_it->targetStat] += mod_it->value;
 
         currentValues[mod_it->targetStat] = std::clamp(
-            currentValues[mod_it->targetStat] += mod_it->value,
+            currentValues[mod_it->targetStat] + mod_it->value,
             0.f,
-            mod_it->targetStat == StatType::Health && mod_it->targetStat == StatType::Mana
+            mod_it->targetStat == StatType::Health || mod_it->targetStat == StatType::Mana
                 ? (mod_it->targetStat == StatType::Health ? currentValues[StatType::MaxHealth] : currentValues[StatType::MaxMana])
                 : (mod_it->targetStat == StatType::ManaCost ? 1.f : statLimits.at(mod_it->targetStat))
         );
@@ -77,7 +77,8 @@ void StatSet::recalculateStats() {
         }
     }
 
-    //std::cout << std::format("Current HEALTH after recalculate = {}", *getCurrentValue(StatType::Health).value_or(ptr)) << '\n';
+    //std::cout << std::format("Current HEALTH = {}", *getCurrentValue(StatType::Health).value_or(ptr)) << '\n';
+    //std::cout << std::format("Current MAX_HEALTH = {}", *getCurrentValue(StatType::MaxHealth).value_or(ptr)) << '\n';
 }
 
 void StatSet::addModifier(const StatModifier& modifier) {

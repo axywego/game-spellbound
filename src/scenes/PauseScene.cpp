@@ -1,5 +1,7 @@
 #include "PauseScene.hpp"
 
+#include "../core/Utils.hpp"
+
 PauseScene::PauseScene(sf::RenderWindow& window_, const std::string& name, const std::function<void()> &resumeCallback,
     const std::function<void()> &menuCallback):
 
@@ -94,7 +96,10 @@ void PauseScene::handleEvent(const std::optional<sf::Event>& event)  {
     if (resumeButton.isClicked(event)) {
         onResumeClick();
     }
+
     if (menuButton.isClicked(event)) {
+        deleteFile("../saves/game_world.json");
+        deleteFile("../saves/player.json");
         onMenuClick();
     }
 }
