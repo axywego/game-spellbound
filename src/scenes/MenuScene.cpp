@@ -129,12 +129,20 @@ onContinueClick(continueCallback) {
 }
 
 void MenuScene::load()  {
-
+    if (isHasFile("../saves/game_world.json") && isHasFile("../saves/player.json"))
+        isHasSave = true;
+    else {
+        isHasSave = false;
+    }
+    
 }
 
 void MenuScene::update(const float& dt)  {
     if (isHasFile("../saves/game_world.json") && isHasFile("../saves/player.json"))
         isHasSave = true;
+    else {
+        isHasSave = false;
+    }
 
     if(isTransition) {
         circleScale -= transitionSpeed * dt;

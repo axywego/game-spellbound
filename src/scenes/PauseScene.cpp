@@ -97,9 +97,7 @@ void PauseScene::handleEvent(const std::optional<sf::Event>& event)  {
         onResumeClick();
     }
 
-    if (menuButton.isClicked(event)) {
-        deleteFile("../saves/game_world.json");
-        deleteFile("../saves/player.json");
+    if (menuButton.isClicked(event)) {        
         onMenuClick();
     }
 }

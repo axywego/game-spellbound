@@ -9,21 +9,21 @@ const sf::Vector2i WorldGenerator::mapSize{100, 100};
 const float WorldGenerator::radius{mapSize.x * 0.34f};
 
 std::vector<std::pair<size_t, size_t>> checkNeighbors(const TiledShape& room, const std::pair<size_t, size_t>& pair){
-std::vector<std::pair<size_t, size_t>> neighbors;
-if(pair.first > 0 && room[pair.first - 1][pair.second].getFillColor() == sf::Color::White){
-    neighbors.push_back({pair.first - 1, pair.second});
-}
-if(pair.first < room.size() - 1 && room[pair.first + 1][pair.second].getFillColor() == sf::Color::White) {
-    neighbors.push_back({pair.first + 1, pair.second});
-}
+    std::vector<std::pair<size_t, size_t>> neighbors;
+    if(pair.first > 0 && room[pair.first - 1][pair.second].getFillColor() == sf::Color::White){
+        neighbors.push_back({pair.first - 1, pair.second});
+    }
+    if(pair.first < room.size() - 1 && room[pair.first + 1][pair.second].getFillColor() == sf::Color::White) {
+        neighbors.push_back({pair.first + 1, pair.second});
+    }
 
-if(pair.second > 0 && room[pair.first][pair.second - 1].getFillColor() == sf::Color::White){
-    neighbors.push_back({pair.first, pair.second - 1});
-}
-if(pair.second < room[0].size() - 1 && room[pair.first][pair.second + 1].getFillColor() == sf::Color::White) {
-    neighbors.push_back({pair.first, pair.second + 1});
-}
-return neighbors;
+    if(pair.second > 0 && room[pair.first][pair.second - 1].getFillColor() == sf::Color::White){
+        neighbors.push_back({pair.first, pair.second - 1});
+    }
+    if(pair.second < room[0].size() - 1 && room[pair.first][pair.second + 1].getFillColor() == sf::Color::White) {
+        neighbors.push_back({pair.first, pair.second + 1});
+    }
+    return neighbors;
 }
 
 size_t MyHash::operator()(const std::pair<size_t, size_t>& p) const {
@@ -35,125 +35,125 @@ bool EqualTuples::operator()(const std::pair<size_t, size_t>& t1, const std::pai
 }
 
 bool isConnected(const TiledShape& room) {
-std::vector<std::vector<bool>> damn(room.size(), std::vector<bool>(room[0].size()));
-std::vector<std::vector<bool>> checked(room.size(), std::vector<bool>(room[0].size()));
-size_t countWhites = 0;
+    std::vector<std::vector<bool>> damn(room.size(), std::vector<bool>(room[0].size()));
+    std::vector<std::vector<bool>> checked(room.size(), std::vector<bool>(room[0].size()));
+    size_t countWhites = 0;
 
-for(size_t i = 0; i < room.size(); i++){
-    for(size_t j = 0; j < room[0].size(); j++){
-        damn[i][j] = (room[i][j].getFillColor() == sf::Color::White);
-        if (damn[i][j]) countWhites++;
-    }
-}
-
-if (countWhites == 0) return false;
-
-std::unordered_set<std::pair<size_t, size_t>, MyHash, EqualTuples> visited;
-std::queue<std::pair<size_t, size_t>> needToVisit;
-
-bool found = false;
-for(size_t i = 0; i < room.size() && !found; i++){
-    for(size_t j = 0; j < room[0].size() && !found; j++){
-        if (damn[i][j]) {
-            needToVisit.push({i, j});
-            checked[i][j] = true;
-            found = true;
+    for(size_t i = 0; i < room.size(); i++){
+        for(size_t j = 0; j < room[0].size(); j++){
+            damn[i][j] = (room[i][j].getFillColor() == sf::Color::White);
+            if (damn[i][j]) countWhites++;
         }
     }
-}
 
-while(!needToVisit.empty()){
-    auto currTile = needToVisit.front();
-    needToVisit.pop();
-    visited.insert(currTile);
+    if (countWhites == 0) return false;
 
-    auto neighbors = checkNeighbors(room, currTile);
-    for(const auto& neighbor : neighbors){
-        if(!checked[neighbor.first][neighbor.second]) {
-            needToVisit.push(neighbor);
-            checked[neighbor.first][neighbor.second] = true;
-        }
-    }
-}
+    std::unordered_set<std::pair<size_t, size_t>, MyHash, EqualTuples> visited;
+    std::queue<std::pair<size_t, size_t>> needToVisit;
 
-return visited.size() == countWhites;
-}
-
-TiledShape createRectangle(const sf::Vector2i& pos, const sf::Vector2i& size){
-TiledShape shape(limitsTiles.y, std::vector<sf::RectangleShape>(limitsTiles.x));
-
-for(int i = 0; i < limitsTiles.y; i++){
-    for(int j = 0; j < limitsTiles.x; j++){
-        auto& el = shape[i][j];
-        el.setPosition({static_cast<float>(j * tileSize), static_cast<float>(i * tileSize)});
-        el.setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
-        if(i == std::clamp(i, pos.y, pos.y + size.y) && j == std::clamp(j, pos.x, pos.x + size.x)){
-            el.setFillColor(sf::Color::White);
-        }
-        else
-            el.setFillColor(sf::Color::Black);
-    }
-}
-return shape;
-}
-
-TiledShape createRectangle(const sf::Vector2i& start, const sf::Vector2i& end, int thickness) {
-TiledShape shape(std::max(start.y, end.y), TiledShape::value_type(std::max(start.x, end.x)));
-
-for (int i = 0; i < std::max(start.y, end.y); i++) {
-    for (int j = 0; j < std::max(start.x, end.x); j++) {
-        auto& el = shape[i][j];
-        el.setPosition({static_cast<float>(j * tileSize), static_cast<float>(i * tileSize)});
-        el.setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
-        el.setFillColor(sf::Color::Black);
-    }
-}
-
-int dx = abs(end.x - start.x);
-int dy = -abs(end.y - start.y);
-int sx = start.x < end.x ? 1 : -1;
-int sy = start.y < end.y ? 1 : -1;
-int err = dx + dy;
-int x = start.x;
-int y = start.y;
-
-while (true) {
-    for (int i = -thickness/2; i <= thickness/2; i++) {
-        for (int j = -thickness/2; j <= thickness/2; j++) {
-            int nx = x + i;
-            int ny = y + j;
-            if (nx >= 0 && nx < abs(end.x - start.x) && ny >= 0 && ny < abs(end.y - start.y)) {
-                shape[ny][nx].setFillColor(sf::Color::White);
+    bool found = false;
+    for(size_t i = 0; i < room.size() && !found; i++){
+        for(size_t j = 0; j < room[0].size() && !found; j++){
+            if (damn[i][j]) {
+                needToVisit.push({i, j});
+                checked[i][j] = true;
+                found = true;
             }
         }
     }
 
-    if (x == end.x && y == end.y) break;
-    int e2 = 2 * err;
-    if (e2 >= dy) {
-        err += dy;
-        x += sx;
+    while(!needToVisit.empty()){
+        auto currTile = needToVisit.front();
+        needToVisit.pop();
+        visited.insert(currTile);
+
+        auto neighbors = checkNeighbors(room, currTile);
+        for(const auto& neighbor : neighbors){
+            if(!checked[neighbor.first][neighbor.second]) {
+                needToVisit.push(neighbor);
+                checked[neighbor.first][neighbor.second] = true;
+            }
+        }
     }
-    if (e2 <= dx) {
-        err += dx;
-        y += sy;
-    }
+
+    return visited.size() == countWhites;
 }
 
-return shape;
+TiledShape createRectangle(const sf::Vector2i& pos, const sf::Vector2i& size){
+    TiledShape shape(limitsTiles.y, std::vector<sf::RectangleShape>(limitsTiles.x));
+
+    for(int i = 0; i < limitsTiles.y; i++){
+        for(int j = 0; j < limitsTiles.x; j++){
+            auto& el = shape[i][j];
+            el.setPosition({static_cast<float>(j * tileSize), static_cast<float>(i * tileSize)});
+            el.setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
+            if(i == std::clamp(i, pos.y, pos.y + size.y) && j == std::clamp(j, pos.x, pos.x + size.x)){
+                el.setFillColor(sf::Color::White);
+            }
+            else
+                el.setFillColor(sf::Color::Black);
+        }
+    }
+    return shape;
+}
+
+TiledShape createRectangle(const sf::Vector2i& start, const sf::Vector2i& end, int thickness) {
+    TiledShape shape(std::max(start.y, end.y), TiledShape::value_type(std::max(start.x, end.x)));
+
+    for (int i = 0; i < std::max(start.y, end.y); i++) {
+        for (int j = 0; j < std::max(start.x, end.x); j++) {
+            auto& el = shape[i][j];
+            el.setPosition({static_cast<float>(j * tileSize), static_cast<float>(i * tileSize)});
+            el.setSize({static_cast<float>(tileSize), static_cast<float>(tileSize)});
+            el.setFillColor(sf::Color::Black);
+        }
+    }
+
+    int dx = abs(end.x - start.x);
+    int dy = -abs(end.y - start.y);
+    int sx = start.x < end.x ? 1 : -1;
+    int sy = start.y < end.y ? 1 : -1;
+    int err = dx + dy;
+    int x = start.x;
+    int y = start.y;
+
+    while (true) {
+        for (int i = -thickness/2; i <= thickness/2; i++) {
+            for (int j = -thickness/2; j <= thickness/2; j++) {
+                int nx = x + i;
+                int ny = y + j;
+                if (nx >= 0 && nx < abs(end.x - start.x) && ny >= 0 && ny < abs(end.y - start.y)) {
+                    shape[ny][nx].setFillColor(sf::Color::White);
+                }
+            }
+        }
+
+        if (x == end.x && y == end.y) break;
+        int e2 = 2 * err;
+        if (e2 >= dy) {
+            err += dy;
+            x += sx;
+        }
+        if (e2 <= dx) {
+            err += dx;
+            y += sy;
+        }
+    }
+
+    return shape;
 }
 
 TiledShape generateRectangle(){
 
-sf::Vector2i posRectangle {limitsTiles}, sizeRectangle {limitsTiles};
+    sf::Vector2i posRectangle {limitsTiles}, sizeRectangle {limitsTiles};
 
-while(posRectangle.x + sizeRectangle.x >= limitsTiles.x &&
-      posRectangle.y + sizeRectangle.y >= limitsTiles.y){
-    posRectangle = {static_cast<int>(generate8Bytes(0, limitsTiles.x * 3 / 4 )), static_cast<int>(generate8Bytes(0, limitsTiles.y * 3 / 4))};
-    sizeRectangle = {static_cast<int>(generate8Bytes(limitsTiles.x / 4, limitsTiles.x * 3 / 4)), static_cast<int>(generate8Bytes(limitsTiles.y / 4, limitsTiles.y * 3 / 4))};
-}
+    while(posRectangle.x + sizeRectangle.x >= limitsTiles.x &&
+        posRectangle.y + sizeRectangle.y >= limitsTiles.y){
+        posRectangle = {static_cast<int>(generate8Bytes(0, limitsTiles.x * 3 / 4 )), static_cast<int>(generate8Bytes(0, limitsTiles.y * 3 / 4))};
+        sizeRectangle = {static_cast<int>(generate8Bytes(limitsTiles.x / 4, limitsTiles.x * 3 / 4)), static_cast<int>(generate8Bytes(limitsTiles.y / 4, limitsTiles.y * 3 / 4))};
+    }
 
-return createRectangle(posRectangle, sizeRectangle);
+    return createRectangle(posRectangle, sizeRectangle);
 }
 
 Room::Room(): part(TiledShape(limitsTiles.y, std::vector<sf::RectangleShape>(limitsTiles.x))) {

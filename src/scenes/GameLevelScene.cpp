@@ -148,8 +148,10 @@ void GameLevelScene::handleEvent(const std::optional<sf::Event>& event) {
                 case Key::Escape: {
                     lastPlayerPos = player.lock()->getSprite().getPosition();
                     requestPause();
-                    SaveSystem::getInstance().savePlayer(player);
-                    SaveSystem::getInstance().saveGameWorld(gameWorld);
+                    if(player.lock()->getIsAlive()){
+                        SaveSystem::getInstance().savePlayer(player);
+                        SaveSystem::getInstance().saveGameWorld(gameWorld);
+                    }
                     break;
                 }
                 case Key::Space: {
